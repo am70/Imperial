@@ -1,0 +1,20 @@
+starting worker pid=4100 on localhost:11338 at 10:34:57.192
+[ context   ]  ece2816d8acb6791bd876684b5ec1d82
+[ library   ]  lhs, VGAM, deSolve, odin, lubridate, odinPackage, dde
+
+Attaching package: 'lubridate'
+
+The following object is masked from 'package:base':
+
+    date
+
+Loading required package: stats4
+Loading required package: splines
+[ namespace ]
+[ source    ]  data_functions.R
+[ cluster   ]  Cluster started
+[ root      ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts
+[ context   ]  ece2816d8acb6791bd876684b5ec1d82
+[ task      ]  57609f933a106cb0bf19e8a8e544ca5a
+[ expr      ]  parRunS(1:100, 9000)
+[ start     ]  2017-04-25 10:34:59.833

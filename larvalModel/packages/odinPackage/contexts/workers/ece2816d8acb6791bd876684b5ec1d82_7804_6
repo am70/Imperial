@@ -1,0 +1,28 @@
+starting worker pid=4484 on localhost:11932 at 10:23:14.170
+[ context   ]  ece2816d8acb6791bd876684b5ec1d82
+[ library   ]  lhs, VGAM, deSolve, odin, lubridate, odinPackage, dde
+
+Attaching package: 'lubridate'
+
+The following object is masked from 'package:base':
+
+    date
+
+Loading required package: stats4
+Loading required package: splines
+[ namespace ]
+[ source    ]  data_functions.R
+[ cluster   ]  Cluster started
+[ root      ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts
+[ context   ]  ece2816d8acb6791bd876684b5ec1d82
+[ task      ]  3b8e018862344966b90aabd397323a6b
+[ expr      ]  parRunS(1:100, 2000)
+[ start     ]  2017-04-25 10:23:20.748
+[ ok        ]
+[ end       ]  2017-04-25 10:29:26.926
+[ cluster   ]  Stopping 16 nodes
+Warning messages:
+1: package 'lubridate' was built under R version 3.3.3 
+2: package 'deSolve' was built under R version 3.3.3 
+3: package 'VGAM' was built under R version 3.3.3 
+4: package 'lhs' was built under R version 3.3.3 

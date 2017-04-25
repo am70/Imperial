@@ -1,0 +1,3 @@
+difeq                   Solve difference equation
+dopri                   Integrate ODE/DDE with dopri
+dopri_interpolate       Interpolate Dormand-Prince output

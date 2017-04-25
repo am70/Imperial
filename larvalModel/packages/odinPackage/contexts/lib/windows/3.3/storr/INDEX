@@ -1,0 +1,9 @@
+encode64                Base64 encoding and decoding
+fetch_hook_read         Hook to fetch a resource from a file.
+storr                   Object cache
+storr_dbi               DBI storr driver
+storr_environment       Environment object cache driver
+storr_external          Storr that kooks for external resources
+storr_rds               rds object cache driver
+storr_redis_api         Redis object cache driver
+test_driver             Test a storr driver

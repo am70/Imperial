@@ -1,0 +1,56 @@
+[ hello     ]  2017-04-25 10:23:10.862
+[ wd        ]  Q:/ImperialMalaria/larvalModel/packages/odinPackage
+[ bootstrap ]
+[ lib       ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/lib/windows/3.3
+[ init      ]  2017-04-25 10:23:10.909
+[ hostname  ]  FI--DIDEMRC52
+[ process   ]  8676
+[ version   ]  0.1.0
+[ open:db   ]  rds
+[ context   ]  ece2816d8acb6791bd876684b5ec1d82
+[ library   ]  lhs, VGAM, deSolve, odin, lubridate, odinPackage, dde
+
+Attaching package: 'lubridate'
+
+The following object is masked from 'package:base':
+
+    date
+
+Loading required package: stats4
+Loading required package: splines
+[ namespace ]
+[ source    ]  data_functions.R
+[ parallel  ]  running as parallel job [16 cores]
+[ cluster   ]  Starting cluster
+[ cluster   ]  Starting 16 nodes
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_8676_1
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_8676_2
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_8676_3
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_8676_4
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_8676_5
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_8676_6
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_8676_7
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_8676_8
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_8676_9
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_8676_10
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_8676_11
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_8676_12
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_8676_13
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_8676_14
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_8676_15
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_8676_16
+[ cluster   ]  pids: 7852, 5328, 6660, 2224, 7696, 5504, 8348, 6244, 8988, 1204, 8100, 6412, 4052, 4128, 5596, 7624
+[ cluster   ]  Cluster started
+[ root      ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts
+[ context   ]  ece2816d8acb6791bd876684b5ec1d82
+[ task      ]  55c0dac1688d30d19ee00875a6a5112a
+[ expr      ]  parRunS(1:100, 5000)
+[ start     ]  2017-04-25 10:23:21.051
+[ ok        ]
+[ end       ]  2017-04-25 10:38:39.674
+[ cluster   ]  Stopping 16 nodes
+Warning messages:
+1: package 'lubridate' was built under R version 3.3.3 
+2: package 'deSolve' was built under R version 3.3.3 
+3: package 'VGAM' was built under R version 3.3.3 
+4: package 'lhs' was built under R version 3.3.3 

@@ -1,0 +1,14 @@
+> median(as.vector(run$samp[,c('uoE')][[1]]))
+[1] 0.02482532
+> median(as.vector(run$samp[,c('uoL')][[1]]))
+[1] 0.01732656
+> median(as.vector(run$samp[,c('uP')][[1]]))
+[1] 0.2660997
+> median(as.vector(run$samp[,c('Y')][[1]]))
+[1] 1.616756
+> median(as.vector(run$samp[,c('sf')][[1]]))
+[1] 1.480035
+> median(as.vector(run$samp[,c('n')][[1]]))
+[1] 2.824056
+> run$aratio
+[1] 0.2559744

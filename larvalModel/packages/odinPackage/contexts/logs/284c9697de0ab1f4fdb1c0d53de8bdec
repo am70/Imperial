@@ -1,0 +1,48 @@
+[ hello     ]  2017-04-25 10:34:49.406
+[ wd        ]  Q:/ImperialMalaria/larvalModel/packages/odinPackage
+[ bootstrap ]
+[ lib       ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/lib/windows/3.3
+[ init      ]  2017-04-25 10:34:49.438
+[ hostname  ]  FI--DIDEMRC54
+[ process   ]  6736
+[ version   ]  0.1.0
+[ open:db   ]  rds
+[ context   ]  ece2816d8acb6791bd876684b5ec1d82
+[ library   ]  lhs, VGAM, deSolve, odin, lubridate, odinPackage, dde
+
+Attaching package: 'lubridate'
+
+The following object is masked from 'package:base':
+
+    date
+
+Loading required package: stats4
+Loading required package: splines
+[ namespace ]
+[ source    ]  data_functions.R
+[ parallel  ]  running as parallel job [16 cores]
+[ cluster   ]  Starting cluster
+[ cluster   ]  Starting 16 nodes
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_6736_1
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_6736_2
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_6736_3
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_6736_4
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_6736_5
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_6736_6
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_6736_7
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_6736_8
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_6736_9
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_6736_10
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_6736_11
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_6736_12
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_6736_13
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_6736_14
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_6736_15
+[ worker    ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts/workers/ece2816d8acb6791bd876684b5ec1d82_6736_16
+[ cluster   ]  pids: 4120, 7744, 4268, 1340, 3408, 7644, 2268, 7632, 4296, 7600, 4212, 7260, 6860, 7248, 5364, 5608
+[ cluster   ]  Cluster started
+[ root      ]  q:\ImperialMalaria\larvalModel\packages\odinPackage\contexts
+[ context   ]  ece2816d8acb6791bd876684b5ec1d82
+[ task      ]  284c9697de0ab1f4fdb1c0d53de8bdec
+[ expr      ]  parRunS(1:100, 10000)
+[ start     ]  2017-04-25 10:34:54.156

@@ -1,0 +1,18 @@
+Package: odin
+Title: Ode Generation and Integration
+Version: 0.0.2
+Author: Rich FitzJohn
+Maintainer: Rich FitzJohn <rich.fitzjohn@gmail.com>
+Description: Generate systems of ODEs and integrate them.
+License: MIT + file LICENSE
+LazyData: true
+URL: https://github.com/richfitz/odin
+BugReports: https://github.com/richfitz/odin/issues
+Imports: R6, crayon, deSolve
+Suggests: dde (>= 0.0.5), knitr, rmarkdown, testthat
+Remotes: richfitz/ring, richfitz/dde
+VignetteBuilder: knitr
+RoxygenNote: 5.0.1
+NeedsCompilation: no
+Packaged: 2017-04-25 09:15:52 UTC; alm210
+Built: R 3.3.2; ; 2017-04-25 09:16:09 UTC; windows

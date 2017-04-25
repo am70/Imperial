@@ -1,0 +1,23 @@
+Package: storr
+Title: Simple Key Value Stores
+Version: 1.0.3
+Description: Creates and manages simple key-value stores.  These can
+    use a variety of approaches for storing the data.  This package
+    implements the base methods and support for file system and
+    in-memory stores.  A vignette shows how additional drivers can be
+    created, and stubs exist for supporting 'Redis' databases.
+Depends: R (>= 3.1.0)
+License: MIT + file LICENSE
+LazyData: true
+Author: Rich FitzJohn
+Maintainer: Rich FitzJohn <rich.fitzjohn@gmail.com>
+URL: https://github.com/richfitz/storr
+BugReports: https://github.com/richfitz/storr/issues
+Imports: R6 (>= 2.1.0), digest
+Suggests: DBI (>= 0.5-1), RSQLite (>= 1.1), knitr, rbenchmark, testthat
+        (>= 1.0.0)
+VignetteBuilder: knitr
+RoxygenNote: 5.0.1
+NeedsCompilation: no
+Packaged: 2017-04-10 15:45:43 UTC; rich
+Built: R 3.3.2; ; 2017-04-25 09:16:13 UTC; windows

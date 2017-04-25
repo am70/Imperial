@@ -1,0 +1,39 @@
+Package: dde
+Version: 0.0.5
+Depends: R (>= 3.0.2)
+LinkingTo: ring (>= 0.0.5)
+Suggests: deSolve, knitr, microbenchmark, rcmdshlib, rmarkdown, testthat
+License: MIT + file LICENSE
+MD5sum: c3af82725c4cf7a0bceb6ef1623d1c90
+NeedsCompilation: yes
+
+Package: odin
+Version: 0.0.2
+Imports: R6, crayon, deSolve
+Suggests: dde (>= 0.0.5), knitr, rmarkdown, testthat
+License: MIT + file LICENSE
+MD5sum: 39105759a0d2054cd4e4fbe228a1ba57
+NeedsCompilation: no
+
+Package: odinPackage
+Version: 1.0
+Imports: odin
+MD5sum: 1e8784b0e60f4759ad7a909394521003
+NeedsCompilation: yes
+
+Package: rcmdshlib
+Version: 0.0.2
+Imports: crayon
+Suggests: testthat, knitr, rmarkdown
+License: MIT + file LICENSE
+MD5sum: 7c388f1b413407bc1e35536b6fef7184
+NeedsCompilation: no
+
+Package: ring
+Version: 1.0.0
+Imports: R6
+Suggests: knitr, rmarkdown, testthat
+License: MIT + file LICENSE
+MD5sum: 593924c1b38369a09e4ac179eab97ec6
+NeedsCompilation: yes
+
