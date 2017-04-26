@@ -63,12 +63,11 @@ llikePrior <- function(fit.params=NULL, ## parameters to fit
     for(nm in names(fit.params)) assign(nm, as.numeric(fit.params[nm]))
     rm(nm)
   })
-    print(fit.params)
-    particleFilter(larvalModP, ###particle filter
+    particleFilterMCMC(larvalModP, ###particle filter
                    params=fit.params,
                    init.state = init.state,
                    data = garkiObs,
-                   n.particles = 500) + lprior(parms)
+                   n.particles = 200000) + lprior(parms)
 }
 
 
