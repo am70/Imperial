@@ -19,7 +19,7 @@ library(parallel)
 
 
 ##load in Garki rainfall data NOT YET VILLAGE SPECIFIC
-rainfall<-read.csv("C:\\ImperialMalaria\\larval model\\Data\\garkiRainfall.csv",head=F)
+rainfall<-read.csv("C:\\Imperial\\larval model\\Data\\garkiRainfall.csv",head=F)
 colnames(rainfall)<-c("date","rainfall")
 rainfall$date<-dmy(rainfall$date)
 #limit data to one year
@@ -27,7 +27,7 @@ rainfall<-subset(rainfall, date >= as.Date("1973-05-27") & date <= as.Date("1974
 rainfall$time<-(1:nrow(rainfall))
 
 #load in mosquito data
-garki<-read.table("C:\\ImperialMalaria\\larval model\\Data\\spraycollect.csv",sep=",",head=T)
+garki<-read.table("C:\\Imperial\\larval model\\Data\\spraycollect.csv",sep=",",head=T)
 garki$ag_sum<-rowSums(garki[,c(8:16)])#create sum of A.gambiae spray samples
 garki$Date<-as.Date(garki$Date)
 #garki$Date<-dmy(as.character(garki$Date))
@@ -57,17 +57,16 @@ lprior <- function(parms) with(parms, {
 
 ##function that sums log-likelihood & log-prior inside MCMC sampler
 llikePrior <- function(fit.params=NULL, ## parameters to fit
-                       ref.params = mosParams(), ## reference parameters
+                       ref.params = mosParamsP(), ## reference parameters
                        obsDat=myDat) { ## observed data
     parms <- within(ref.params, { ## switch out old parameters in mos_params for new ones, keeping fixed parameters in place
     for(nm in names(fit.params)) assign(nm, as.numeric(fit.params[nm]))
     rm(nm)
   })
-    particleFilterMCMC(larvalModP, ###particle filter
-                   params=fit.params,
-                   init.state = init.state,
-                   data = garkiObs,
-                   n.particles = 200000) + lprior(parms)
+
+   particleTemp<- obj$enqueue(parRunSAll(runs=1,particles=1600,theta=fit.params),name="particle MCMC") 
+   pt<-particleTemp$wait(Inf)     
+   as.numeric(unlist(pt)) + lprior(parms)
 }
 
 
@@ -211,7 +210,7 @@ run <- mcmcSampler(init.params = c(uoE=0.02527205,uoL=0.01730906,uP=0.2652799,Y=
                         , seed = 1
                         , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.1,0.1))
                         , randInit = T
-                        , niter = 20000)
+                        , niter = 10000)
 
 
 

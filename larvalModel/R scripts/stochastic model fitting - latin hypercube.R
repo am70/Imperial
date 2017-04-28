@@ -89,31 +89,28 @@ larvalR <- odin::odin({
   dim(rF) <- user()
   trx<-(tr/dt)
   Emax<-user()
-
+  E0<-user()
+  L0<-user()
+  P0<-user()
+  M0<-user()
+  
+  
   #initial values
   initial(Be)<-0
   initial(Bl)<-0
   initial(Bp)<-0
-
-  initial(E) <- 176.7445
-  initial(L) <- 8.19819
-  initial(P) <- 1.06495
-  initial(M) <- 6.80566
   initial(Bm)<-0
   initial(nt)<-0
+  
+  initial(E) <- E0
+  initial(L) <- L0
+  initial(P) <- P0
+  initial(M) <- M0
+  
   initial(Reff)<-0
   
-  initial(uEx)<-0
-  initial(uLx)<-0
-  initial(Kx)<-0
- 
-  initial(eMx)<-0
-  initial(uElx)<-0
-  initial(uLlx)<-0
-  initial(uPlx)<-0
-  
-  K <-if (step<=trx) (1+(sf*((1/trx)*(0)))) else (1+(sf*((1/trx)*(sum(rF[(step-trx):step])))))
-  
+  K <-if (step<=trx) 1+(sf*(1/(trx*(1-exp(-step/trx)))))else 1+(sf*(1/(trx*(1-exp(-step/trx)))))*(sum(rF[(step-trx):step]))
+
   uE<-uoE*dt*(1+((E+L)/(K)))
   uL<-uoL*dt*(1+(Y*(E+L)/(K)))
   
@@ -125,39 +122,14 @@ larvalR <- odin::odin({
   
   update(Reff)<-0.5*(Emax/(exp(uM*S)-1))*(1/(1+uE/dE))*(1/(1+uL/dL))*(1/(1+(uP*dt)/dP))
   
-  update(uEx)<-uE
-  update(uLx)<-uL
-  update(Kx)<-K
-  update(uElx)<-(1/(1+uE/dE))
-  update(uLlx)<-(1/(1+uL/dL))
-  update(uPlx)<-(1/(1+uP/dP))
-  update(eMx)<-(Emax/(exp(uM*S)-1))
-  
-  
-  update(E)<-if(E-Be>0)E-Be+rpois(nt*n) else rpois(nt*n) 
-  update(L)<-if(L-Bl>0)L-Bl+rbinom(Be,(dE/(uE+dE))) else rbinom(Be,(dE/(uE+dE))) 
+  update(E)<-if(E-Be>0)E-Be+rpois(nt*n) else rpois(nt*n)
+  update(L)<-if(L-Bl>0)L-Bl+rbinom(Be,(dE/(uE+dE))) else rbinom(Be,(dE/(uE+dE)))
   update(P)<-if(P-Bp>0)P-Bp+rbinom(Bl,(dL/(uL+dL))) else rbinom(Bl,(dL/(uL+dL)))
   update(M)<-if(M-Bm>0)M+(0.5*(rbinom(Bp,(dP/(uP+dP)))))-Bm else M+(0.5*(rbinom(Bp,(dP/(uP+dP)))))
   
-
-  
-  
 })
 
-##run and plot model with set parameter values
-set.seed(10) 
-mod <- larvalR(user=mos_params(dE=mins$dE,dL=mins$dL,dP=mins$dP,
-                               uoE=mins$uoE,uoL=mins$uoL,uP=mins$uP,
-                               Y=mins$Y,sf=mins$sf,n=mins$n)) #parameters estimated from LHC sampling
-sim <- as.data.frame(mod$run(0:20000))
 
-df<-sim[seq(1, NROW(sim), by = 1/delta),]
-df$time<-df$step*delta
-
-ggplot(data=df, aes(time))+ 
-  geom_line(data=df,aes(x=time, y=M), color='blue',lwd=1,alpha=0.5)+
-  geom_point(data=garkiObs,(aes(x=time,y=M)),col="red")+
-  theme_bw()
 
 
 #########################################################################################################################################
@@ -168,94 +140,69 @@ ggplot(data=df, aes(time))+
 
 ##model simulation function - starts simulation from same random seed each time
 modSim <- function(parms, obsDat) {
-  old<-.Random.seed
-  on.exit( { .Random.seed <<- old } )
-  set.seed(10)
   modR <- larvalR(user=parms)
-  simDat <- as.data.frame(modR$run(0:20000))
+  simDat <- as.data.frame(modR$run(0:2000))
   simDat<-simDat[seq(1, NROW(simDat), by = 1/delta),]
   simDat$step<-simDat$step*delta
   matchedTimes <- simDat$step %in% garkiObs$time
   simDat$M[simDat$M<=0|is.na(simDat$M)] = 1e-3
   return(simDat)
 }
-
 ##goodness of fit function - log liklihood
 GOF<-function(pr){ #add parameters
   parameters<-read.table(text = pr, sep = ",", colClasses = "numeric")
-  modSim <- modSim(parms=mos_params(sf=parameters$V1,Y=parameters$V2,n=parameters$V3),obsDat = garkiObs)
+  modSim <- modSim(parms=mosParamsP(uoE=parameters$V1,uoL=parameters$V2,uP=parameters$V3,
+                                    sf=parameters$V4,Y=parameters$V5,n=parameters$V6,
+                                    E0=177,L0=9,P0=1,M0=7),obsDat = garkiObs)
   matchedTimes <- modSim$step %in% garkiObs$time
   log_like <- sum(-dzipois(garkiObs$M,modSim$M[matchedTimes], log = TRUE))
   if (!is.na(log_like)){
-    res<-c(parameters$V1,parameters$V2,parameters$V3,log_like)
+    res<-c(parameters$V1,parameters$V2,parameters$V3,parameters$V4,parameters$V5,parameters$V6,log_like)
   }
   return(res)
 }
 
-##logistic regression function
-logisticReg <- function(parms) {
-  old<-.Random.seed
-  on.exit( { .Random.seed <<- old } )
-  set.seed(10)
-  modR <- larvalR(user=parms)
-  simDat <- as.data.frame(modR$run(0:10000))
-  simDat<-simDat[seq(1, NROW(simDat), by = 1/delta),]
-  simDat$step<-simDat$step*delta
-  simDat<-simDat[c(20:80),]##data for parametric fit
-  #fit parametric non least squares model
-  population=simDat$M
-  time=simDat$step
-  #guesstimate intial starting parameters
-  SS<-getInitial(M~SSlogis(step,alpha,xmid,scale),data=simDat)
-  K_start<-SS["alpha"]
-  R_start<-1/SS["scale"]
-  N0_start<-SS["alpha"]/(exp(SS["xmid"]/SS["scale"])+1)
-  #fit the nonlinear least squares model
-  m<-nls(population~K*N0*exp(R*time)/(K+N0*(exp(R*time)-N0)),start=list(K=K_start,R=R_start,N0=N0_start))
-  return((coef(m)[2]))
-}
 
 
-##function to run multiple LHC parameterisations 
-mHyperC<-function(sites){
-  print(sites)
+HC<-NULL
 ##initialise latin hypercube
-HC<- randomLHS(250, 2) 
-HC[,1] <- (100*HC[,1])#scale for parameters
-HC[,2] <- (50*HC[,2])
-#HC[,3] <- (20*HC[,3])
-HC<- paste( HC[,1] ,  HC[,2] ,sites, sep=",") #concatonate into single vector - better for parLapply
-  
-##parallel processing not working with Odin - need to check with Rich
-#num_cores <- detectCores()
-#cl <- makeCluster(num_cores)
-#clusterCall(cl, function() library(odin))
-#clusterExport(cl, varlist=c("HC","modSim","GOF","larvalR","mos_params","rFx","delta"), envir=environment())
-#lhcResults<-parLapply(cl,HC,GOF)
+HCtemp<- randomLHS(5000, 6)
+HC$uoE <- (HCtemp[,1])
+HC$uoL <- (HCtemp[,2])
+HC$uP <- (HCtemp[,3])
+HC$Y <- (100*HCtemp[,4])
+HC$n <- (25*HCtemp[,5])
+HC$sf<-(25*HCtemp[,6])
 
-lhcResults<-data.frame(t(sapply(lapply(HC,GOF), `[`)))#convert results to dataframe
-mins<-lhcResults[which(lhcResults$X4 == min(lhcResults$X4)), ]#find minimum values
-##plot results
-#par(mfrow=c(1,2))
-#plot(lhcResults$X1,log(lhcResults$X3))
-#points(mins$X1,log(mins$X3),col="red",pch=16)
-#plot(lhcResults$X2,log(lhcResults$X3))
-#points(mins$X2,log(mins$X3),col="red",pch=16)
+HC<-as.data.frame(HC)
+
+
+HC<- paste(HC$uoE,HC$uoL,HC$uP, HC$sf,HC$Y, HC$n, sep=",")#concatonate into single vector 
+
+clusterExport(cl, c("rFx","delta","garkiObs","modSim"), envir=environment())
+
+
+system.time(lhcResults<-data.frame(t(sapply(lapply(HC,GOF), `[`))))#convert results to dataframe
+
+colnames(lhcResults)<-c("uoE","uoL","uP","Y","sf","n","logLike")
+
+mins<-lhcResults[which(lhcResults$logLike == min(lhcResults$logLike)), ]#find minimum values
+
+
 
 ##run and plot model with set parameter values
-set.seed(10)
-mod <- larvalR(user=mos_params(sf=mins$X1,Y=mins$X2,n=sites)) #parameters estimated from LHC sampling
-sim <- as.data.frame(mod$run(0:20000))
-print(max(sim$Reff))
-#plot(sim$M,col="white")
-plot(sim$M,col="blue")
+set.seed(10) 
+mod <- larvalR(user=mosParamsP(
+                               uoE=mins$uoE,uoL=mins$uoL,uP=mins$uP,
+                               Y=mins$Y,sf=mins$sf,n=mins$n, E0=177,L0=9,P0=1,M0=7)) #parameters estimated from LHC sampling
+sim <- as.data.frame(mod$run(0:2000))
 
-##run logistic regression to find max growth rate
-R<-logisticReg(mos_params(sf=mins$X1,Y=mins$X2,n=sites))
-return((sim$Reff))
-}
+df<-sim[seq(1, NROW(sim), by = 1/delta),]
+df$time<-df$step*delta
+
+ggplot(data=df, aes(time))+ 
+  geom_line(data=df,aes(x=time, y=M), color='blue',lwd=1,alpha=0.5)+
+  geom_point(data=garkiObs,(aes(x=time,y=M)),col="red")+
+  theme_bw()
 
 
-
-
-results<-as.vector(sapply(c(5), function(x) mHyperC(x)))
