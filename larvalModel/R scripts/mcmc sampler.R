@@ -63,11 +63,73 @@ llikePrior <- function(fit.params=NULL, ## parameters to fit
     for(nm in names(fit.params)) assign(nm, as.numeric(fit.params[nm]))
     rm(nm)
   })
+    
+    print(fit.params)
+##apply particle filter function on cluster
+   particleTemp1<- obj$enqueue(parRunSAll(runs=1,particles=400,theta=fit.params),name="particle MCMC")
+   particleTemp2<- obj$enqueue(parRunSAll(runs=1,particles=400,theta=fit.params),name="particle MCMC") 
+   particleTemp3<- obj$enqueue(parRunSAll(runs=1,particles=400,theta=fit.params),name="particle MCMC") 
+   particleTemp4<- obj$enqueue(parRunSAll(runs=1,particles=400,theta=fit.params),name="particle MCMC") 
+   particleTemp5<- obj$enqueue(parRunSAll(runs=1,particles=400,theta=fit.params),name="particle MCMC") 
+   particleTemp6<- obj$enqueue(parRunSAll(runs=1,particles=400,theta=fit.params),name="particle MCMC")
+   particleTemp7<- obj$enqueue(parRunSAll(runs=1,particles=400,theta=fit.params),name="particle MCMC") 
+   particleTemp8<- obj$enqueue(parRunSAll(runs=1,particles=400,theta=fit.params),name="particle MCMC") 
+   particleTemp9<- obj$enqueue(parRunSAll(runs=1,particles=400,theta=fit.params),name="particle MCMC") 
+   particleTemp10<- obj$enqueue(parRunSAll(runs=1,particles=400,theta=fit.params),name="particle MCMC") 
+   
+   
+   
+   pt1<-particleTemp1$wait(Inf)
+   pt2<-particleTemp2$wait(Inf)  
+   pt3<-particleTemp3$wait(Inf)  
+   pt4<-particleTemp4$wait(Inf)  
+   pt5<-particleTemp5$wait(Inf)  
+   pt6<-particleTemp1$wait(Inf)
+   pt7<-particleTemp2$wait(Inf)  
+   pt8<-particleTemp3$wait(Inf)  
+   pt9<-particleTemp4$wait(Inf)  
+   pt10<-particleTemp5$wait(Inf)  
 
-   particleTemp<- obj$enqueue(parRunSAll(runs=1,particles=1600,theta=fit.params),name="particle MCMC") 
-   pt<-particleTemp$wait(Inf)     
-   as.numeric(unlist(pt)) + lprior(parms)
+   px<-c(pt1)#,pt2,pt3,pt4,pt5,pt6,pt7,pt8,pt9,pt10)
+   
+   mean(as.numeric(unlist(px))) + lprior(parms)
 }
+
+
+##function that sums log-likelihood & log-prior inside MCMC sampler - use for when submitting to cluster at each p filter step
+llikePriorBigClust <- function(fit.params=NULL, ## parameters to fit
+                       ref.params = mosParams(), ## reference parameters
+                       obsDat=myDat) { ## observed data
+  parms <- within(ref.params, { ## switch out old parameters in mos_params for new ones, keeping fixed parameters in place
+    for(nm in names(fit.params)) assign(nm, as.numeric(fit.params[nm]))
+    rm(nm)
+  })
+  print(fit.params)
+  
+  particleFilterMCMC(larvalModP, ###particle filter
+                     theta=fit.params,
+                     init.state = init.state,
+                     data = garkiObs,
+                     n.particles = 20) + lprior(parms)
+}
+
+##function that sums log-likelihood & log-prior inside MCMC sampler - use for when submitting to cluster at each p filter step
+llikePriorLocal <- function(fit.params=NULL, ## parameters to fit
+                               ref.params = mosParams(), ## reference parameters
+                               obsDat=myDat) { ## observed data
+  parms <- within(ref.params, { ## switch out old parameters in mos_params for new ones, keeping fixed parameters in place
+    for(nm in names(fit.params)) assign(nm, as.numeric(fit.params[nm]))
+    rm(nm)
+  })
+  print(fit.params)
+  
+  particleFilter(larvalModP, ###particle filter
+                     theta=fit.params,
+                     init.state = init.state,
+                     data = garkiObs,
+                     n.particles = 800) + lprior(parms)
+}
+
 
 
 ## functions for logging and unlogging
@@ -90,12 +152,12 @@ initBounds <- data.frame(rbind( ## for initial conditions
   c(log(0.01),log(0.06)), ## uoE
 c(log(0.01),log(0.06)), ## uoL
 c(log(0.1),log(0.99)), ## uP
-c(log(1),log(2)), ## Y
-c(log(1),log(100)),##n
-c(log(1),log(100)))) ## sf
+c(log(1),log(20)), ## Y
+c(log(7),log(7)),##n
+c(log(1),log(50)))) ## sf
 
 colnames(initBounds) <- c('lower','upper')
-rownames(initBounds) <- c('loguoE','loguoL','loguP','logY','logsf','logn')
+rownames(initBounds) <- c('loguoE','loguoL','loguP','logY','logn','logsf')
 class(initBounds[,2]) <- class(initBounds[,1]) <- 'numeric'
 initBounds
 
@@ -135,7 +197,7 @@ mcmcSampler <- function(init.params, ## initial parameter guess
                         obsDat = myDat, ## data
                         proposer = sequential.proposer(sdProps=sdProps), ## proposal distribution
                         niter = 100, ## MCMC iterations
-                        nburn = 1000, ## iterations to automatically burn
+                        nburn = 1, ## iterations to automatically burn
                         adaptiveMCMC = F, ## adapt proposal distribution?
                         startAdapt = 150, ## start adapting at what iteration?
                         adptBurn = 200, ## ignore first so many iterations for adapting posterior
@@ -148,7 +210,7 @@ mcmcSampler <- function(init.params, ## initial parameter guess
   vv <- 2 ## mcmc iteration (started at 1 so we're already on 2
   accept <- 0 ## initialize proportion of iterations accepted
   ## Calculate log(likelihood X prior) for first value
-  curVal <- llikePrior(current.params, ref.params = ref.params, obsDat=obsDat)
+  curVal <- llikePriorLocal(current.params, ref.params = ref.params, obsDat=obsDat)
   print(curVal)
   ## Initialize matrix to store MCMC chain
   out <- matrix(NA, nr = niter, nc=length(current.params)+1)
@@ -157,6 +219,8 @@ mcmcSampler <- function(init.params, ## initial parameter guess
   ## Store original covariance matrix
   if(proposer$type=='block') originalCovar <- get('covar', envir = environment(proposer$fxn)) 
   while(vv <= niter) {
+    obj <- didehpc::queue_didehpc(ctx,didehpc::didehpc_config(cluster="mrc",cores = 16,home="//fi--san02/homes/alm210",credentials = creds))
+    
     if ((verbose > 1) || (verbose && (vv%%tell == 0))) print(paste("on iteration",vv,"of", niter + 1))
     ## Adaptive MCMC: adapt covariance every 50 iterations (don't
     ## do it more often because it adds to coputational burden.
@@ -173,7 +237,7 @@ mcmcSampler <- function(init.params, ## initial parameter guess
     }
     proposal <- proposer$fxn(logParms(current.params))
     proposal <- unlogParms(proposal)
-    propVal <- llikePrior(proposal, ref.params = ref.params, obsDat=obsDat)
+    propVal <- llikePriorLocal(proposal, ref.params = ref.params, obsDat=obsDat)
     lmh <- propVal - curVal ## likelihood ratio = log likelihood difference
     print(propVal)
     print("curval")
@@ -187,11 +251,26 @@ mcmcSampler <- function(init.params, ## initial parameter guess
         current.params <- proposal
         if (vv>nburn) accept <- accept + 1 ## only track acceptance after burn-in
         curVal <- propVal
+        
+        out[vv, ] <- c(current.params, ll=curVal)
+        vv <- vv+1
+        aratio <- accept/((vv-nburn))
+        
+        colnames(out) <- c(names(current.params), 'll')
+        outT<<-out
+        
+        samp <- as.mcmc(out[1:nrow(out)>(nburn+1),])
+
+        resTemp<<-(list(ref.params=ref.params
+                       , seed = seed
+                       , init.params = init.params
+                       , aratio = aratio
+                       , samp = samp
+        ))
+        
       }
     }
-    out[vv, ] <- c(current.params, ll=curVal)
-    vv <- vv+1
-    aratio <- accept/((vv-nburn))
+
   }
   colnames(out) <- c(names(current.params), 'll')
   samp <- as.mcmc(out[1:nrow(out)>(nburn+1),])
@@ -206,11 +285,12 @@ mcmcSampler <- function(init.params, ## initial parameter guess
 
 
 set.seed(10)
-run <- mcmcSampler(init.params = c(uoE=0.02527205,uoL=0.01730906,uP=0.2652799,Y=1.964498,sf=2.172569,n=2.367782)
+run <- mcmcSampler(init.params = c(uoE=0.02507989,uoL=0.01657317,uP=0.28016918,Y=7.37661308,n=2.367782,sf=2.28966396)
                         , seed = 1
-                        , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.1,0.1))
+                        ,nburn=1
+                        , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.1))
                         , randInit = T
-                        , niter = 10000)
+                        , niter = 5000)
 
 
 

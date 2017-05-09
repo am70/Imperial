@@ -6,45 +6,14 @@ library(odin)
 library(parallel)
 library(devtools)
 
-setwd("C:\\Users\\Aaron\\Documents\\Imperial\\larval model\\data")
 
 
-
-
-#########################################################################################################################################
-#                                                                                                                                       #
-#                                                     load in data                                                                      #
-#                                                                                                                                       #
-#########################################################################################################################################
-
-##load in Garki rainfall data
-rainfall<-read.csv("garkiRainfall.csv",head=F)
-colnames(rainfall)<-c("date","rainfall")
-rainfall$date<-dmy(rainfall$date)
-#limit data to one year
-rainfall<-subset(rainfall, date >= as.Date("1973-05-27") & date <= as.Date("1974-06-03"))
-rainfall$time<-(1:nrow(rainfall))
-
-#load in mosquito data
-garki<-read.table("spraycollect.csv",sep=",",head=T)
-garki$ag_sum<-rowSums(garki[,c(8:16)])#create sum of A.gambiae spray samples
-garki$Date<-as.Date(garki$Date)
-#garki$Date<-dmy(as.character(garki$Date))
-garki72<-subset(garki,Date >= as.Date("1973-05-27") & Date <= as.Date("1974-06-03"))
-garki72_101<-subset(garki72,E_Station==101) ##subset by village - needs checking with michael specific villagse
-garki72_101<-merge(garki72_101,rainfall,by.x="Date",by.y="date",all=T) #merge rainfall and mosquito data
-garkiObs<-garki72_101[,c(39,37)]
-colnames(garkiObs)<-c("time","M")
-garkiObs<-subset(garkiObs,M>=0)
 
 #########################################################################################################################################
 #                                                                                                                                       #
 #                                                     stochastic larval model                                                           #
 #                                                                                                                                       #
 #########################################################################################################################################
-delta<-0.01#discrete time period
-rF<-as.data.frame(rainfall$rainfall)
-rFx<-rF[rep(seq_len(nrow(rF)), each=1/delta),] #split rainfall data into discreet time periods
 
 
 mos_params <- function(
@@ -56,16 +25,20 @@ mos_params <- function(
   uoE = 0.034, #per capita daily mortality rate of early instars (low density)
   uoL = 0.035, #per capita daily mortality rate of late instars (low density)
   uP = 0.25, #per capita daily mortality rate of pupae
-  uM = 0.096, # per capita daily mortality rate of adult An.gambiae
+  uM = 0.096, # per capita daily mortality rate of adult An.gambiae - KEEP
   B = 21.19, #No. of eggs laid per day per mosquito
-  Y = 10, #effect of density dependence on late instars relative to early instars
-  S = 3, #duration of gonotrophic cycle
-  Emax = 93.6, #max number of eggs per oviposition per mosquito
+  Y = 13.25, #effect of density dependence on late instars relative to early instars
+  S = 3, #duration of gonotrophic cycle - KEEP
+  Emax = 93.6, #max number of eggs per oviposition per mosquito - KEEP
   tr = 4, #days of rainfall contributing to carrying capacity
-  sf = 64, #scaling factor
+  sf = 10, #scaling factor
   dt=delta,
   O=1,
-  n=10 #clutch size
+  n=10,
+  E0=177,
+  L0=8,
+  P0=1,
+  M0=7
 )
 return(as.list(environment()))
 
@@ -109,8 +82,8 @@ larvalR <- odin::odin({
   
   initial(Reff)<-0
   
-  K <-if (step<=trx) 1+(sf*(1/(trx*(1-exp(-step/trx)))))else 1+(sf*(1/(trx*(1-exp(-step/trx)))))*(sum(rF[(step-trx):step]))
-
+  K <-if (step<=trx) (1+(sf*((1/trx)))) else (1+(sf*((1/trx)*(sum(rF[(step-trx):step])))))
+  
   uE<-uoE*dt*(1+((E+L)/(K)))
   uL<-uoL*dt*(1+(Y*(E+L)/(K)))
   
@@ -140,7 +113,7 @@ larvalR <- odin::odin({
 
 ##model simulation function - starts simulation from same random seed each time
 modSim <- function(parms, obsDat) {
-  modR <- larvalR(user=parms)
+  modR <- larvalModP(user=parms)
   simDat <- as.data.frame(modR$run(0:2000))
   simDat<-simDat[seq(1, NROW(simDat), by = 1/delta),]
   simDat$step<-simDat$step*delta
@@ -152,10 +125,11 @@ modSim <- function(parms, obsDat) {
 GOF<-function(pr){ #add parameters
   parameters<-read.table(text = pr, sep = ",", colClasses = "numeric")
   modSim <- modSim(parms=mosParamsP(uoE=parameters$V1,uoL=parameters$V2,uP=parameters$V3,
-                                    sf=parameters$V4,Y=parameters$V5,n=parameters$V6,
+                                    Y=parameters$V4,n=parameters$V5,sf=parameters$V6,
                                     E0=177,L0=9,P0=1,M0=7),obsDat = garkiObs)
   matchedTimes <- modSim$step %in% garkiObs$time
   log_like <- sum(-dzipois(garkiObs$M,modSim$M[matchedTimes], log = TRUE))
+
   if (!is.na(log_like)){
     res<-c(parameters$V1,parameters$V2,parameters$V3,parameters$V4,parameters$V5,parameters$V6,log_like)
   }
@@ -166,36 +140,37 @@ GOF<-function(pr){ #add parameters
 
 HC<-NULL
 ##initialise latin hypercube
-HCtemp<- randomLHS(5000, 6)
-HC$uoE <- (HCtemp[,1])
-HC$uoL <- (HCtemp[,2])
+HCtemp<- randomLHS(10000, 6)
+HC$uoE <-(HCtemp[,1])
+HC$uoL <-(HCtemp[,2])
 HC$uP <- (HCtemp[,3])
-HC$Y <- (100*HCtemp[,4])
-HC$n <- (25*HCtemp[,5])
+HC$Y <- (20*HCtemp[,4])
+HC$n <- (10*HCtemp[,5])
 HC$sf<-(25*HCtemp[,6])
 
 HC<-as.data.frame(HC)
 
 
-HC<- paste(HC$uoE,HC$uoL,HC$uP, HC$sf,HC$Y, HC$n, sep=",")#concatonate into single vector 
+HC<- paste(HC$uoE,HC$uoL,HC$uP, HC$Y, HC$n, HC$sf, sep=",")#concatonate into single vector 
 
 clusterExport(cl, c("rFx","delta","garkiObs","modSim"), envir=environment())
 
 
 system.time(lhcResults<-data.frame(t(sapply(lapply(HC,GOF), `[`))))#convert results to dataframe
 
-colnames(lhcResults)<-c("uoE","uoL","uP","Y","sf","n","logLike")
+colnames(lhcResults)<-c("uoE","uoL","uP","Y","n","sf","logLike")
 
 mins<-lhcResults[which(lhcResults$logLike == min(lhcResults$logLike)), ]#find minimum values
 
+#pr<-paste(mins$uoE,mins$uoL,mins$uP, mins$sf,mins$Y, mins$n, sep=",")#concatonate into single vector 
 
 
 ##run and plot model with set parameter values
 set.seed(10) 
-mod <- larvalR(user=mosParamsP(
-                               uoE=mins$uoE,uoL=mins$uoL,uP=mins$uP,
+mod <- odinPackage::larvalModP(user=mos_params(uoE=mins$uoE,uoL=mins$uoL,uP=mins$uP,
                                Y=mins$Y,sf=mins$sf,n=mins$n, E0=177,L0=9,P0=1,M0=7)) #parameters estimated from LHC sampling
 sim <- as.data.frame(mod$run(0:2000))
+plot(sim$M)
 
 df<-sim[seq(1, NROW(sim), by = 1/delta),]
 df$time<-df$step*delta
