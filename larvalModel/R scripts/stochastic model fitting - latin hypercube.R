@@ -156,7 +156,7 @@ HC<- paste(HC$uoE,HC$uoL,HC$uP, HC$Y, HC$n, HC$sf, sep=",")#concatonate into sin
 clusterExport(cl, c("rFx","delta","garkiObs","modSim"), envir=environment())
 
 
-system.time(lhcResults<-data.frame(t(sapply(lapply(HC,GOF), `[`))))#convert results to dataframe
+system.time(lhcResults<-data.frame(t(sapply(parLapply(cl,HC,GOF), `[`))))#convert results to dataframe
 
 colnames(lhcResults)<-c("uoE","uoL","uP","Y","n","sf","logLike")
 
@@ -170,7 +170,6 @@ set.seed(10)
 mod <- odinPackage::larvalModP(user=mos_params(uoE=mins$uoE,uoL=mins$uoL,uP=mins$uP,
                                Y=mins$Y,sf=mins$sf,n=mins$n, E0=177,L0=9,P0=1,M0=7)) #parameters estimated from LHC sampling
 sim <- as.data.frame(mod$run(0:2000))
-plot(sim$M)
 
 df<-sim[seq(1, NROW(sim), by = 1/delta),]
 df$time<-df$step*delta

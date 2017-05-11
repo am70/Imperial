@@ -7,7 +7,7 @@ runFilt<-function(runs, particles,thetaList,parameter){
   parms[parameter] <- th 
   
   x<-particleFilter(larvalModP,
-                    theta=parms,
+                    thetaX=parms,
                     init.state,
                     data = garkiObs,
                     nParticles = particles)
@@ -18,7 +18,7 @@ runFilt<-function(runs, particles,thetaList,parameter){
 runFiltAll<-function(runs, particles,theta){
 
   x<-particleFilter(larvalModP,
-                    theta=theta,
+                    thetaX=theta,
                     init.state,
                     data = garkiObs,
                     nParticles = particles)
@@ -32,7 +32,11 @@ parRunSAll<-function(runs,particles,theta){parallel::parLapply(NULL,runs,functio
 parRunWorker<-function(x,y,z,p){lapply(x,function(x)runFilt(x,y,z,p))}#for use with single node workers
 
 
+
+
+##model step function - runs model in steps taking the liklihood of the subsequent observed data point
 modStep<-function(pr, initialState, times){
+  print(pr[1])
   params<-mosParamsP(E0=initialState[1],L0=initialState[2],P0=initialState[3],M0=initialState[4],
                      uoE=pr[1],uoL=pr[2],uP=pr[3],Y=pr[4],n=pr[5],sf=pr[6])
   modR <- larvalModP(user=params)
@@ -45,7 +49,7 @@ modStep<-function(pr, initialState, times){
 
 
 
-# set up data likelihood
+# set up data likelihood function 
 dataLik <- function(simPoint, obsDat, theta, log = TRUE)
 {
   ll = sum(dzipois(obsDat[2]*25, simPoint[4]*25, log = TRUE))
@@ -56,20 +60,27 @@ dataLik <- function(simPoint, obsDat, theta, log = TRUE)
 
 particleFilter <-
   function(fitmodel,
-           theta,
+           thetaX,
            init.state,
            data,
            nParticles) {
     
+  
     margLogLike <- 0
     
+    #create initial particle states
     stateParticles  <- rep(list(init.state), nParticles)
     
+    #weight particles evenly
     weightParticles <- rep(1 / nParticles, length = nParticles)
     
+    #initiate start time
     currentTime <- 0
     
-    for (i in seq_len(nrow(data))) {
+    #loop to run the model in steps using starting values drawn at random 
+    #but weighted in favour of the most likely values from the previous step. 
+   
+     for (i in seq_len(nrow(data))) {
       dataPoint <- unlist(data[i,])
       nextTime <- dataPoint["time"]
       
@@ -79,13 +90,12 @@ particleFilter <-
         x = nParticles,
         size = nParticles,
         replace = TRUE,
-        prob = 0.001+as.numeric(weightParticles)
+        prob = 0.001+as.numeric(weightParticles) # incase of NA's add a baseline probability
       )
-      
-      
       
       stateParticles <- stateParticles[indexResampled]
       
+      #main function for weighting particles
       weightP<-function(weightInput){
         
         dataInput<-read.table(text = weightInput, sep = ",", colClasses = "numeric")
@@ -94,7 +104,7 @@ particleFilter <-
         nextTime<-as.numeric(dataInput[,c(6)])
         current.state.particle <- stateParticles
         # Propagate the particle from current observation time to the next one 
-        traj <-  modStep(pr = theta(),
+        traj <-  modStep(pr = thetaX,
                          initialState = current.state.particle,
                          times =c(currentTime,nextTime))
         # Extract state of the model at next observation time
@@ -103,7 +113,7 @@ particleFilter <-
         # Weight the particle with the likelihood of the observed
         weightX <-dataLik(obsDat = dataPoint,
                           simPoint = modelPoint,
-                          theta = theta())
+                          theta = thetaX)
         
         res<-(c(as.numeric(weightX),as.numeric(modelPoint)))
         return(res)
@@ -135,6 +145,11 @@ particleFilter <-
 theta <-
   function(
     uoE = 0.1736114,uoL = 0.4792658,uP = 0.2163627,y = 0.1301954,n =  2.932363,sf = 13.74987)
+    return(c(uoE=uoE,uoL=uoL,uP=uP,y=y,n=n,sf=sf))
+
+thetaGarki <-
+  function(
+    uoE = 0.1392127,uoL = 0.03115276,uP = 0.7523195,y = 3.150944,n =  3.911705,sf = 21.89244)
     return(c(uoE=uoE,uoL=uoL,uP=uP,y=y,n=n,sf=sf))
 
 

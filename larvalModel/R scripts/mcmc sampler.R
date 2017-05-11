@@ -18,30 +18,6 @@ library(parallel)
 
 
 
-##load in Garki rainfall data NOT YET VILLAGE SPECIFIC
-rainfall<-read.csv("C:\\Imperial\\larval model\\Data\\garkiRainfall.csv",head=F)
-colnames(rainfall)<-c("date","rainfall")
-rainfall$date<-dmy(rainfall$date)
-#limit data to one year
-rainfall<-subset(rainfall, date >= as.Date("1973-05-27") & date <= as.Date("1974-06-03"))
-rainfall$time<-(1:nrow(rainfall))
-
-#load in mosquito data
-garki<-read.table("C:\\Imperial\\larval model\\Data\\spraycollect.csv",sep=",",head=T)
-garki$ag_sum<-rowSums(garki[,c(8:16)])#create sum of A.gambiae spray samples
-garki$Date<-as.Date(garki$Date)
-#garki$Date<-dmy(as.character(garki$Date))
-garki72<-subset(garki,Date >= as.Date("1973-05-27") & Date <= as.Date("1974-06-03"))
-garki72_101<-subset(garki72,E_Station==101) ##subset by village - needs checking with michael specific villagse
-garki72_101<-merge(garki72_101,rainfall,by.x="Date",by.y="date",all=T) #merge rainfall and mosquito data
-#garki72_101$ag_sum[is.na(garki72_101$ag_sum)]<-0
-
-
-garkiObs<-garki72_101[,c(39,37)]
-colnames(garkiObs)<-c("time","M")
-garkiObs<-subset(garkiObs,M>=0)
-
-
 
 ## Log-Prior 
 lprior <- function(parms) with(parms, {
@@ -67,30 +43,12 @@ llikePrior <- function(fit.params=NULL, ## parameters to fit
     print(fit.params)
 ##apply particle filter function on cluster
    particleTemp1<- obj$enqueue(parRunSAll(runs=1,particles=400,theta=fit.params),name="particle MCMC")
-   particleTemp2<- obj$enqueue(parRunSAll(runs=1,particles=400,theta=fit.params),name="particle MCMC") 
-   particleTemp3<- obj$enqueue(parRunSAll(runs=1,particles=400,theta=fit.params),name="particle MCMC") 
-   particleTemp4<- obj$enqueue(parRunSAll(runs=1,particles=400,theta=fit.params),name="particle MCMC") 
-   particleTemp5<- obj$enqueue(parRunSAll(runs=1,particles=400,theta=fit.params),name="particle MCMC") 
-   particleTemp6<- obj$enqueue(parRunSAll(runs=1,particles=400,theta=fit.params),name="particle MCMC")
-   particleTemp7<- obj$enqueue(parRunSAll(runs=1,particles=400,theta=fit.params),name="particle MCMC") 
-   particleTemp8<- obj$enqueue(parRunSAll(runs=1,particles=400,theta=fit.params),name="particle MCMC") 
-   particleTemp9<- obj$enqueue(parRunSAll(runs=1,particles=400,theta=fit.params),name="particle MCMC") 
-   particleTemp10<- obj$enqueue(parRunSAll(runs=1,particles=400,theta=fit.params),name="particle MCMC") 
-   
-   
+
    
    pt1<-particleTemp1$wait(Inf)
-   pt2<-particleTemp2$wait(Inf)  
-   pt3<-particleTemp3$wait(Inf)  
-   pt4<-particleTemp4$wait(Inf)  
-   pt5<-particleTemp5$wait(Inf)  
-   pt6<-particleTemp1$wait(Inf)
-   pt7<-particleTemp2$wait(Inf)  
-   pt8<-particleTemp3$wait(Inf)  
-   pt9<-particleTemp4$wait(Inf)  
-   pt10<-particleTemp5$wait(Inf)  
 
-   px<-c(pt1)#,pt2,pt3,pt4,pt5,pt6,pt7,pt8,pt9,pt10)
+
+   px<-c(pt1)
    
    mean(as.numeric(unlist(px))) + lprior(parms)
 }
@@ -110,7 +68,7 @@ llikePriorBigClust <- function(fit.params=NULL, ## parameters to fit
                      theta=fit.params,
                      init.state = init.state,
                      data = garkiObs,
-                     n.particles = 20) + lprior(parms)
+                     nParticles = 20) + lprior(parms)
 }
 
 ##function that sums log-likelihood & log-prior inside MCMC sampler - use for when submitting to cluster at each p filter step
@@ -127,7 +85,7 @@ llikePriorLocal <- function(fit.params=NULL, ## parameters to fit
                      theta=fit.params,
                      init.state = init.state,
                      data = garkiObs,
-                     n.particles = 800) + lprior(parms)
+                     nParticles = 80) + lprior(parms)
 }
 
 
@@ -219,7 +177,7 @@ mcmcSampler <- function(init.params, ## initial parameter guess
   ## Store original covariance matrix
   if(proposer$type=='block') originalCovar <- get('covar', envir = environment(proposer$fxn)) 
   while(vv <= niter) {
-    obj <- didehpc::queue_didehpc(ctx,didehpc::didehpc_config(cluster="mrc",cores = 16,home="//fi--san02/homes/alm210",credentials = creds))
+   # obj <- didehpc::queue_didehpc(ctx,didehpc::didehpc_config(cluster="mrc",cores = 16,home="//fi--san02/homes/alm210",credentials = creds))
     
     if ((verbose > 1) || (verbose && (vv%%tell == 0))) print(paste("on iteration",vv,"of", niter + 1))
     ## Adaptive MCMC: adapt covariance every 50 iterations (don't
