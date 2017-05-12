@@ -30,7 +30,9 @@ garki$ag_sum<-rowSums(garki[,c(8:16)])#create sum of A.gambiae spray samples
 garki$Date<-as.Date(garki$Date)
 #garki$Date<-dmy(as.character(garki$Date))
 garki72<-subset(garki,Date >= as.Date("1973-05-27") & Date <= as.Date("1974-06-03"))
-garki72_101<-subset(garki72,E_Station==101) ##subset by village - needs checking with michael specific villagse
+
+garkiSubs<-c(201, 202, 203 ,204 ,206 ,219 ,220, 221, 222, 225, 226, 227, 228)
+garki72_101<-subset(garki72,E_Station%in%garkiSubs) ##subset by village - needs checking with michael specific villagse
 garki72_101<-merge(garki72_101,rainfall,by.x="Date",by.y="date",all=T) #merge rainfall and mosquito data
 #garki72_101$ag_sum[is.na(garki72_101$ag_sum)]<-0
 
@@ -38,7 +40,7 @@ garki72_101<-merge(garki72_101,rainfall,by.x="Date",by.y="date",all=T) #merge ra
 garkiObs<-garki72_101[,c(39,37)]
 colnames(garkiObs)<-c("time","M")
 garkiObs<-subset(garkiObs,M>=0)
-
+garkiObs<-round(aggregate(M~time, data=garkiObs, FUN=mean),0)
 
 
 delta<-0.1#discrete time period
@@ -98,14 +100,17 @@ p1<-obj$enqueue(parRunWorker(1:100,1,seq(1, 1.5, length.out = 100),"n"),name="pa
 
 
 ##################particle filter MCMC tester#######################################
+simDat2<-read.table("C:\\Imperial\\simDat.csv",sep=" ")
+
+
 runPf<-function(x){
 s<-odinPackage::particleFilter(fitmodel=larvalModP, 
-                   theta=theta(),
+                   theta=thetaGarki(),
                    init.state = init.state,
                    data = garkiObs,
-                   nParticles = 100)
+                   nParticles = 10000)
 print(s)
 }
 
-lapply(1:100,runPf)
+res<-lapply(1:100,runPf)
 

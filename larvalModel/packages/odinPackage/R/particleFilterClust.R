@@ -36,7 +36,6 @@ parRunWorker<-function(x,y,z,p){lapply(x,function(x)runFilt(x,y,z,p))}#for use w
 
 ##model step function - runs model in steps taking the liklihood of the subsequent observed data point
 modStep<-function(pr, initialState, times){
-  print(pr[1])
   params<-mosParamsP(E0=initialState[1],L0=initialState[2],P0=initialState[3],M0=initialState[4],
                      uoE=pr[1],uoL=pr[2],uP=pr[3],Y=pr[4],n=pr[5],sf=pr[6])
   modR <- larvalModP(user=params)
@@ -50,11 +49,10 @@ modStep<-function(pr, initialState, times){
 
 
 # set up data likelihood function 
-dataLik <- function(simPoint, obsDat, theta, log = TRUE)
+dataLik <- function(simPoint, obsDat, phi, log = TRUE)
 {
-  ll = dzipois(obsDat[2]*25, simPoint[4]*25, pstr0=0, log = TRUE)
-  ell=exp(ifelse(ll<-700,-700,ll))
-  return (ell)
+  ll = dzipois(obsDat[2], simPoint[4], pstr0=0, log = TRUE)
+  return (exp(ll))
 }
 
 #return log likelihood subtract off the maximum value at each point, exp then add back in
@@ -85,21 +83,24 @@ particleFilter <-
      for (i in seq_len(nrow(data))) {
       dataPoint <- unlist(data[i,])
       nextTime <- dataPoint["time"]
-      
       # Resample particles according to their weights.
       weightParticles=as.numeric(weightParticles)
-      weightParticles[is.na(weightParticles)] <- 0
+
+      weightParticles<-log(weightParticles)-max(log(weightParticles))
+      weightParticles<-(exp(weightParticles))
+     
       swP=sum(weightParticles)
       norm.weightedParticles=weightParticles/swP
+
       indexResampled <- sample(
         x = nParticles,
         size = nParticles,
         replace = TRUE,
-        prob = norm.weightedParticles # incase of NA's add a baseline probability
+        prob = norm.weightedParticles 
       )
-      
       stateParticles <- stateParticles[indexResampled]
-      
+
+
       #main function for weighting particles
       weightP<-function(weightInput){
         
@@ -112,14 +113,14 @@ particleFilter <-
         traj <-  modStep(pr = thetaX,
                          initialState = current.state.particle,
                          times =c(currentTime,nextTime))
+     
         # Extract state of the model at next observation time
         modelPoint <- unlist(traj[2, c("E","L","P","M")])
         
         # Weight the particle with the likelihood of the observed
         weightX <-dataLik(obsDat = dataPoint,
-                          simPoint = modelPoint,
-                          theta = thetaX)
-        
+                          simPoint = modelPoint
+                          )
         res<-(c(as.numeric(weightX),as.numeric(modelPoint)))
         return(res)
       }
@@ -128,11 +129,11 @@ particleFilter <-
       dat<-data.frame(t(sapply(stateParticles,c)))
       colnames(dat)<-c("E","L","P","M")
       
-      partWeights<-parallel::parLapply(cl,paste(dat$E,dat$L,dat$P, dat$M,currentTime,nextTime,sep=","),weightP)     
+      partWeights<-parLapply(cl,paste(dat$E,dat$L,dat$P, dat$M,currentTime,nextTime,sep=","),weightP)     
       
       stateParticles <- lapply(partWeights, '[', c(2:5))
       weightParticles<-lapply(partWeights, '[', 1)
-      
+
       # Increment time
       currentTime <- nextTime
       
@@ -154,7 +155,7 @@ theta <-
 
 thetaGarki <-
   function(
-    uoE = 0.1392127,uoL = 0.03115276,uP = 0.7523195,y = 3.150944,n =  3.911705,sf = 21.89244)
+    uoE = 0.2732377,uoL = 0.4218158,uP = 0.5580947,y = 1.168431,n =  4.397768,sf = 24.79025)
     return(c(uoE=uoE,uoL=uoL,uP=uP,y=y,n=n,sf=sf))
 
 

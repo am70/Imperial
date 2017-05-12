@@ -140,7 +140,7 @@ GOF<-function(pr){ #add parameters
 
 HC<-NULL
 ##initialise latin hypercube
-HCtemp<- randomLHS(10000, 6)
+HCtemp<- randomLHS(100000, 6)
 HC$uoE <-(HCtemp[,1])
 HC$uoL <-(HCtemp[,2])
 HC$uP <- (HCtemp[,3])
