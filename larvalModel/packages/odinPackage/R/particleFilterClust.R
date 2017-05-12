@@ -52,11 +52,13 @@ modStep<-function(pr, initialState, times){
 # set up data likelihood function 
 dataLik <- function(simPoint, obsDat, theta, log = TRUE)
 {
-  ll = sum(dzipois(obsDat[2]*25, simPoint[4]*25, log = TRUE))
-  return(exp(ll/25))
+  ll = dzipois(obsDat[2]*25, simPoint[4]*25, pstr0=0, log = TRUE)
+  ell=exp(ifelse(ll<-700,-700,ll))
+  return (ell)
 }
 
-
+#return log likelihood subtract off the maximum value at each point, exp then add back in
+#write down log likelihood of poisson, rather than rely on function calls
 
 particleFilter <-
   function(fitmodel,
@@ -85,12 +87,15 @@ particleFilter <-
       nextTime <- dataPoint["time"]
       
       # Resample particles according to their weights.
+      weightParticles=as.numeric(weightParticles)
       weightParticles[is.na(weightParticles)] <- 0
+      swP=sum(weightParticles)
+      norm.weightedParticles=weightParticles/swP
       indexResampled <- sample(
         x = nParticles,
         size = nParticles,
         replace = TRUE,
-        prob = 0.001+as.numeric(weightParticles) # incase of NA's add a baseline probability
+        prob = norm.weightedParticles # incase of NA's add a baseline probability
       )
       
       stateParticles <- stateParticles[indexResampled]

@@ -102,8 +102,8 @@ runPf<-function(x){
 s<-odinPackage::particleFilter(fitmodel=larvalModP, 
                    theta=theta(),
                    init.state = init.state,
-                   data = simDat,
-                   nParticles = 1)
+                   data = garkiObs,
+                   nParticles = 100)
 print(s)
 }
 
