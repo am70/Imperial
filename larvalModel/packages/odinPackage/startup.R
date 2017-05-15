@@ -15,9 +15,9 @@ library(provisionr)
 #                                                     load in data                                                                      #
 #                                                                                                                                       #
 #########################################################################################################################################
-simDat<-read.csv("C:\\simDat.csv",sep=" ")
+simDat<-read.csv("Q:\\simDat.csv",sep=" ")
 ##load in Garki rainfall data NOT YET VILLAGE SPECIFIC
-rainfall<-read.csv("C:\\Imperial\\larvalModel\\Data\\garkiRainfall.csv",head=F)
+rainfall<-read.csv("Q:\\Imperial\\larvalModel\\Data\\garkiRainfall.csv",head=F)
 colnames(rainfall)<-c("date","rainfall")
 rainfall$date<-dmy(rainfall$date)
 #limit data to one year
@@ -25,13 +25,13 @@ rainfall<-subset(rainfall, date >= as.Date("1973-05-27") & date <= as.Date("1974
 rainfall$time<-(1:nrow(rainfall))
 
 #load in mosquito data
-garki<-read.table("C:\\Imperial\\larvalModel\\Data\\spraycollect.csv",sep=",",head=T)
+garki<-read.table("Q:\\Imperial\\larvalModel\\Data\\spraycollect.csv",sep=",",head=T)
 garki$ag_sum<-rowSums(garki[,c(8:16)])#create sum of A.gambiae spray samples
 garki$Date<-as.Date(garki$Date)
 #garki$Date<-dmy(as.character(garki$Date))
 garki72<-subset(garki,Date >= as.Date("1973-05-27") & Date <= as.Date("1974-06-03"))
 
-garkiSubs<-c(201, 202, 203 ,204 ,206 ,219 ,220, 221, 222, 225, 226, 227, 228)
+garkiSubs<-c(101)
 garki72_101<-subset(garki72,E_Station%in%garkiSubs) ##subset by village - needs checking with michael specific villagse
 garki72_101<-merge(garki72_101,rainfall,by.x="Date",by.y="date",all=T) #merge rainfall and mosquito data
 #garki72_101$ag_sum[is.na(garki72_101$ag_sum)]<-0
@@ -53,7 +53,7 @@ rFx<-rF[rep(seq_len(nrow(rF)), each=1/delta),] #split rainfall data into discree
 #                                                                                                                                       #
 #########################################################################################################################################
 
-odin_package("C:\\Imperial\\larvalModel\\packages\\odinPackage")
+odin_package("Q:\\Imperial\\larvalModel\\packages\\odinPackage")
 load_all()
 document()
 
@@ -100,17 +100,18 @@ p1<-obj$enqueue(parRunWorker(1:100,1,seq(1, 1.5, length.out = 100),"n"),name="pa
 
 
 ##################particle filter MCMC tester#######################################
-simDat2<-read.table("C:\\Imperial\\simDat.csv",sep=" ")
+simDat2<-read.table("Q:\\Imperial\\simDat.csv",sep=" ")
 
 
-runPf<-function(x){
-s<-odinPackage::particleFilter(fitmodel=larvalModP, 
+runPf<-function(x,pNumber){
+  print(pNumber)
+s<-particleFilter(fitmodel=larvalModP, 
                    theta=thetaGarki(),
                    init.state = init.state,
                    data = garkiObs,
-                   nParticles = 10000)
+                   nParticles = pNumber)
 print(s)
 }
 
-res<-lapply(1:100,runPf)
+res<-mapply(runPf,1:100,200)
 

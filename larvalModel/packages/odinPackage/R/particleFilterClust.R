@@ -67,6 +67,9 @@ particleFilter <-
     
   
     margLogLike <- 0
+    wpM<-data.frame(1:nParticles)
+    colnames(wpM)<-c("particleNumber")
+    
     
     #create initial particle states
     stateParticles  <- rep(list(init.state), nParticles)
@@ -129,10 +132,13 @@ particleFilter <-
       dat<-data.frame(t(sapply(stateParticles,c)))
       colnames(dat)<-c("E","L","P","M")
       
-      partWeights<-parLapply(cl,paste(dat$E,dat$L,dat$P, dat$M,currentTime,nextTime,sep=","),weightP)     
+      partWeights<-lapply(paste(dat$E,dat$L,dat$P, dat$M,currentTime,nextTime,sep=","),weightP)     
       
       stateParticles <- lapply(partWeights, '[', c(2:5))
       weightParticles<-lapply(partWeights, '[', 1)
+      wpMtemp<-as.data.frame(as.vector(log(unlist(weightParticles))))
+      colnames(wpMtemp) <- paste("Obs", i, sep = "_")
+      wpM<-cbind(wpM,wpMtemp)
 
       # Increment time
       currentTime <- nextTime
@@ -142,9 +148,20 @@ particleFilter <-
       margLogLike <- margLogLike + log(mean(as.numeric(weightParticles)))
     }
     
-    ## Return marginal log-likelihood
-    return(margLogLike)
+    wpMRes<-sample(
+      x = nParticles,
+      size = 1,
+      replace = TRUE,
+      prob = exp(wpM$Obs_12) 
+    )
+   
+    resLike<-( wpM[wpM$particleNumber == wpMRes,])
     
+    ## Return marginal log-likelihood
+    return(sum(resLike[,-1]))
+    
+    
+    #NEED TO KEEP RUNNING LIKLIHOOD TOTAL FOR EACH PARTICLE THEN SAMPLE A FINAL SINGLE PARTICLE BASED ON FINAL WEIGHTS
   }
 
 
