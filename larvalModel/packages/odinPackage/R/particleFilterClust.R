@@ -49,9 +49,10 @@ modStep<-function(pr, initialState, times){
 
 
 # set up data likelihood function 
-dataLik <- function(simPoint, obsDat, phi, log = TRUE)
+dataLik <- function(simPoint, obsDat, obsDatAnc,simPointAnc, phi)
 {
-  ll = dzipois(obsDat[2], simPoint[4], pstr0=0, log = TRUE)
+  llanc = dzipois(obsDatAnc[2], simPointAnc[4], pstr0=0, log = T)
+  ll = dzipois(obsDat[2], simPoint[4], pstr0=0, log = T)
   return (exp(ll))
 }
 
@@ -85,6 +86,8 @@ particleFilter <-
    
      for (i in seq_len(nrow(data))) {
       dataPoint <- unlist(data[i,])
+      dataPointAnc <- if(i>1)unlist(data[i-1,]) else unlist(data[i,])
+      
       nextTime <- dataPoint["time"]
       # Resample particles according to their weights.
       weightParticles=as.numeric(weightParticles)
@@ -122,8 +125,12 @@ particleFilter <-
         
         # Weight the particle with the likelihood of the observed
         weightX <-dataLik(obsDat = dataPoint,
-                          simPoint = modelPoint
+                          simPoint = modelPoint,
+                          obsDatAnc= dataPointAnc,
+                          simPointAnc=current.state.particle
                           )
+        
+        
         res<-(c(as.numeric(weightX),as.numeric(modelPoint)))
         return(res)
       }
@@ -136,6 +143,7 @@ particleFilter <-
       
       stateParticles <- lapply(partWeights, '[', c(2:5))
       weightParticles<-lapply(partWeights, '[', 1)
+      print(weightParticles)
       wpMtemp<-as.data.frame(as.vector(log(unlist(weightParticles))))
       colnames(wpMtemp) <- paste("Obs", i, sep = "_")
       wpM<-cbind(wpM,wpMtemp)
@@ -154,6 +162,7 @@ particleFilter <-
       replace = TRUE,
       prob = exp(wpM$Obs_12) 
     )
+    
    
     resLike<-( wpM[wpM$particleNumber == wpMRes,])
     
