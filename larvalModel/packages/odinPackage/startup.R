@@ -105,13 +105,37 @@ simDat2<-read.table("Q:\\Imperial\\simDat.csv",sep=" ")
 
 runPf<-function(x,pNumber){
   print(pNumber)
+  set.seed(10)
 s<-particleFilter(fitmodel=larvalModP, 
-                   theta=thetaGarki(),
+                   theta=theta(),
                    init.state = init.state,
                    data = garkiObs,
                    nParticles = pNumber)
 print(s)
 }
 
-res<-mapply(runPf,1:100,200)
+res<-mapply(runPf,1:100,100)
+
+
+
+
+
+# convert the time series to a timed data matrix
+# create marginal log-likelihood functions, based on a particle filter
+system.time(odinPackage::pfMLLik(300,simx0,0,modStep2,dataLik2,garkiObs,pr=theta()))
+
+
+
+runPf<-function(x,pNumber){
+  print(pNumber)
+  s<-odinPackage::pfMLLik(pNumber,simx0,0,modStep2,dataLik2,garkiObs,pr=theta())
+  print(s)
+}
+
+res2<-mapply(runPf,1:100,100)
+
+
+
+
+
 

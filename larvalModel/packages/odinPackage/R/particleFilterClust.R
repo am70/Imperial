@@ -49,9 +49,8 @@ modStep<-function(pr, initialState, times){
 
 
 # set up data likelihood function 
-dataLik <- function(simPoint, obsDat, obsDatAnc,simPointAnc, phi)
+dataLik <- function(simPoint, obsDat,phi)
 {
-  llanc = dzipois(obsDatAnc[2], simPointAnc[4], pstr0=0, log = T)
   ll = dzipois(obsDat[2], simPoint[4], pstr0=0, log = T)
   return (exp(ll))
 }
@@ -60,6 +59,7 @@ dataLik <- function(simPoint, obsDat, obsDatAnc,simPointAnc, phi)
 #write down log likelihood of poisson, rather than rely on function calls
 
 particleFilter <-
+
   function(fitmodel,
            thetaX,
            init.state,
@@ -122,12 +122,10 @@ particleFilter <-
      
         # Extract state of the model at next observation time
         modelPoint <- unlist(traj[2, c("E","L","P","M")])
-        
+
         # Weight the particle with the likelihood of the observed
         weightX <-dataLik(obsDat = dataPoint,
-                          simPoint = modelPoint,
-                          obsDatAnc= dataPointAnc,
-                          simPointAnc=current.state.particle
+                          simPoint = modelPoint
                           )
         
         
@@ -143,7 +141,8 @@ particleFilter <-
       
       stateParticles <- lapply(partWeights, '[', c(2:5))
       weightParticles<-lapply(partWeights, '[', 1)
-      print(weightParticles)
+      print((stateParticles))
+      print(log(unlist(weightParticles)))
       wpMtemp<-as.data.frame(as.vector(log(unlist(weightParticles))))
       colnames(wpMtemp) <- paste("Obs", i, sep = "_")
       wpM<-cbind(wpM,wpMtemp)
@@ -166,9 +165,10 @@ particleFilter <-
    
     resLike<-( wpM[wpM$particleNumber == wpMRes,])
     
+    wpM$sumLikes<-rowSums(wpM[,-1])
     ## Return marginal log-likelihood
-    return(sum(resLike[,-1]))
-    
+    #return(sum(resLike[,-1]))
+    return(wpM)
     
     #NEED TO KEEP RUNNING LIKLIHOOD TOTAL FOR EACH PARTICLE THEN SAMPLE A FINAL SINGLE PARTICLE BASED ON FINAL WEIGHTS
   }
@@ -189,3 +189,74 @@ init.state <-
   c(E = 177,L = 8,P = 1,M = 7)
 
 
+
+####second method#########################
+
+t0=0
+
+
+# now define a sampler for the prior on the initial state
+simx0 <- function(N,t0)
+{
+  mat=cbind(rpois(N,177),rpois(N,8),rpois(N,1),rpois(N,7))
+  colnames(mat)=c("E","L","P","M")
+  mat
+}
+
+##model step function - runs model in steps taking the liklihood of the subsequent observed data point
+modStep2<-function(weightInput){
+  
+  dataInput<-read.table(text = weightInput, sep = ",", colClasses = "numeric")
+  initialState<-as.numeric(dataInput[,c(1:4)])
+  currentTime<-as.numeric(dataInput[,c(5)])
+  nextTime<-as.numeric(dataInput[,c(6)])
+  pr<-as.numeric(dataInput[,c(7:12)])
+  params<-mosParamsP(E0=initialState[1],L0=initialState[2],P0=initialState[3],M0=initialState[4],
+                     uoE=pr[1],uoL=pr[2],uP=pr[3],Y=pr[4],n=pr[5],sf=pr[6])
+  modR <- larvalModP(user=params)
+  simDat <- as.data.frame(modR$run(seq(currentTime*10, nextTime*10, length.out=nextTime-currentTime)))
+  res2<-(simDat[simDat$step/10 == nextTime,])
+  return(as.data.frame(rbind(res2[,c(8:11)])))
+}
+
+
+dataLik2 <- function(input)
+{
+  dataInput<-read.table(text = input, sep = ",", colClasses = "numeric")
+  ll = dzipois(dataInput[2], dataInput[1], pstr0=0, log = T)
+  return (exp(ll))
+}
+
+#n=particle number
+#simx0 =
+
+pfMLLik2 <- function (n, simx0, t0, stepFun, dataLik, data,pr) 
+{
+  times = c(as.numeric(data$time))
+  xmat = simx0(n, t0) #initial state
+  ll = 0
+  for (i in 1:length(times[-length(times)])) {
+    wp<-paste(xmat[,1],xmat[,2],xmat[,3], xmat[,4],times[i],
+              times[i + 1],pr[1],pr[2],pr[3],pr[4],pr[5],pr[6],sep=",")
+    
+    xmatTemp = parLapply(cl,wp,stepFun)
+    xmat<-data.frame(t(sapply(xmatTemp, `[`)))
+    
+    likeDat<-paste(xmat$M,times[i],sep=",")
+    w = lapply(likeDat,dataLik)
+    w<-as.vector(unlist(w))
+    
+    swP=sum(w)
+    w=w/swP
+    
+    w<-log(w)-max(log(w))
+    w<-(exp(w))
+    
+    ll = ll + log(mean(w))
+    rows = sample(1:n, n, replace = TRUE, prob = w)
+    xmat = xmat[rows, ]
+  }
+  
+  ll
+  
+}

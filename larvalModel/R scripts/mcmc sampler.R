@@ -81,11 +81,7 @@ llikePriorLocal <- function(fit.params=NULL, ## parameters to fit
   })
   print(fit.params)
   
-  particleFilter(larvalModP, ###particle filter
-                     theta=fit.params,
-                     init.state = init.state,
-                     data = garkiObs,
-                     nParticles = 80) + lprior(parms)
+  pfMLLik(50,simx0,0,modStep2,dataLik2,garkiObs,pr=fit.params)+ lprior(parms)
 }
 
 
@@ -248,7 +244,7 @@ run <- mcmcSampler(init.params = c(uoE=0.02507989,uoL=0.01657317,uP=0.28016918,Y
                         ,nburn=1
                         , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.1))
                         , randInit = T
-                        , niter = 5000)
+                        , niter = 100000)
 
 
 
