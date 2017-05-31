@@ -45,7 +45,7 @@ llikePriorLocal <- function(fit.params=NULL, ## parameters to fit
     rm(nm)
   })
   print(fit.params)
-  pFilt(50,simx0,0,modStep2,dataLik2,garkiObs,pr=fit.params)+ lprior(parms)
+  pFilt(25,simx0,0,modStep2,dataLik2,garkiObs,pr=fit.params)+ lprior(parms)
 }
 
 
@@ -173,41 +173,34 @@ mcmcSampler <- function(init.params, ## initial parameter guess
         out[vv, ] <- c(current.params, ll=curVal)
         vv <- vv+1
         aratio <- accept/((vv-nburn))
-        
-        colnames(out) <- c(names(current.params), 'll')
-        outT<<-out
-        
-        samp <- as.mcmc(out[1:nrow(out)>(nburn+1),])
-        
-        resTemp<<-(list(ref.params=ref.params
-                        , seed = seed
-                        , init.params = init.params
-                        , aratio = aratio
-                        , samp = samp
-        ))
+
+      
         
       }
     }
-    
+    4
   }
   colnames(out) <- c(names(current.params), 'll')
   samp <- as.mcmc(out[1:nrow(out)>(nburn+1),])
+  write.table(samp,"C:\\Users\\ALM210\\Dropbox (SPH Imperial College)\\pMCMC.csv")
   return(list(ref.params=ref.params
               , seed = seed
               , init.params = init.params
               , aratio = aratio
               , samp = samp
+              
+
   ))
 }
 
 
 
 set.seed(10)
-runX <- mcmcSampler(init.params = c(uoE=0.5,uoL=0.03,uP=0.5,Y=13,n=15,sf=19)
+runX100 <- system.time(mcmcSampler(init.params = c(uoE=0.5,uoL=0.03,uP=0.5,Y=13,n=15,sf=19)
                     , seed = 1
-                    ,nburn=500
+                    ,nburn=1000
                     , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.0,0.1))
                     , randInit = T
-                    , niter = 5000)
+                    , niter = 30000))
 
 
