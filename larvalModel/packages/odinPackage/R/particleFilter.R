@@ -9,12 +9,19 @@ simx0 <- function(N,t0)
   mat
 }
 
-
+ziP<-function(x,lambda,p0,log=FALSE){
+  if(log==FALSE){
+    ifelse(x==0,p0+(1-p0)*dpois(x,lambda),(1-p0)*dpois(x,lambda))
+  }
+  else{
+    ifelse(x==0,log(p0+(1-p0)*dpois(x,lambda)),log((1-p0)*dpois(x,lambda)))
+  }
+}
 
 dataLik2 <- function(input)
 {
   dataInput<-read.table(text = input, sep = ",", colClasses = "numeric")
-  ll = dzipois(dataInput[2], dataInput[1], pstr0=0, log = T)
+  ll = ziP(dataInput[2], dataInput[1], pstr0=0, log = T)
   return (exp(ll))
 }
 
@@ -28,7 +35,7 @@ pFilt <- function (n, simx0, t0, stepFun, dataLik, data,pr)
     wp<-paste(xmat[,1],xmat[,2],xmat[,3], xmat[,4],times[i],
               times[i + 1],pr[1],pr[2],pr[3],pr[4],pr[5],pr[6],sep=",")
     
-    xmatTemp = parLapply(cl,wp,stepFun)
+    xmatTemp = parLapply(NULL,wp,stepFun)
     xmat<-data.frame(t(sapply(xmatTemp, `[`)))
     
     likeDat<-paste(xmat$M,times[i],sep=",")
