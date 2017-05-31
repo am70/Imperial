@@ -1,22 +1,28 @@
-require(boot)
-require(deSolve)
-require(ellipse)
-require(coda)
-require(mnormt)
-require(emdbook)
-library(odin)
-library(stringr)
-library(ggplot2)
-library(lattice)
-library(growthrates)
-library(FME)
-library(lubridate)
-library(VGAM)
-library(parallel)
-#setwd("C:\\Users\\Aaron\\Documents\\Imperial\\larval model\\Data")
-#setwd("C:\\ImperialMalaria\\larval model\\Data")
 
 
+
+
+
+##model step function - runs model in steps taking the liklihood of the subsequent observed data point
+modStep2<-function(weightInput){
+  
+  dataInput<-read.table(text = weightInput, sep = ",", colClasses = "numeric")
+  initialState<-as.numeric(dataInput[,c(1:4)])
+  currentTime<-as.numeric(dataInput[,c(5)])
+  nextTime<-as.numeric(dataInput[,c(6)])
+  pr<-as.numeric(dataInput[,c(7:12)])
+  params<-mosParamsP(E0=initialState[1],L0=initialState[2],P0=initialState[3],M0=initialState[4],
+                     uoE=pr[1],uoL=pr[2],uP=pr[3],Y=pr[4],n=pr[5],sf=pr[6])
+  modR <- larvalModP(user=params)
+  simDat <- as.data.frame(modR$run(seq(currentTime, nextTime, length.out=nextTime-currentTime)))
+  res2<-(simDat[simDat$step == nextTime,])
+  return(as.data.frame(rbind(res2[,c(8:11)])))
+}
+
+
+
+
+####MCMC sampler
 
 
 ## Log-Prior 
@@ -30,56 +36,16 @@ lprior <- function(parms) with(parms, {
   return(priorSum)
 })
 
-
-##function that sums log-likelihood & log-prior inside MCMC sampler
-llikePrior <- function(fit.params=NULL, ## parameters to fit
-                       ref.params = mosParamsP(), ## reference parameters
-                       obsDat=myDat) { ## observed data
-    parms <- within(ref.params, { ## switch out old parameters in mos_params for new ones, keeping fixed parameters in place
-    for(nm in names(fit.params)) assign(nm, as.numeric(fit.params[nm]))
-    rm(nm)
-  })
-    
-##apply particle filter function on cluster
-   particleTemp1<- obj$enqueue(parRunSAll(runs=1,particles=400,theta=fit.params),name="particle MCMC")
-
-   
-   pt1<-particleTemp1$wait(Inf)
-
-
-   px<-c(pt1)
-   
-   mean(as.numeric(unlist(px))) + lprior(parms)
-}
-
-
-##function that sums log-likelihood & log-prior inside MCMC sampler - use for when submitting to cluster at each p filter step
-llikePriorBigClust <- function(fit.params=NULL, ## parameters to fit
-                       ref.params = mosParams(), ## reference parameters
-                       obsDat=myDat) { ## observed data
-  parms <- within(ref.params, { ## switch out old parameters in mos_params for new ones, keeping fixed parameters in place
-    for(nm in names(fit.params)) assign(nm, as.numeric(fit.params[nm]))
-    rm(nm)
-  })
-
-  particleFilterMCMC(larvalModP, ###particle filter
-                     theta=fit.params,
-                     init.state = init.state,
-                     data = garkiObs,
-                     nParticles = 20) + lprior(parms)
-}
-
 ##function that sums log-likelihood & log-prior inside MCMC sampler - use for when submitting to cluster at each p filter step
 llikePriorLocal <- function(fit.params=NULL, ## parameters to fit
-                               ref.params = mosParams(), ## reference parameters
-                               obsDat=myDat) { ## observed data
+                            ref.params = mosParams(), ## reference parameters
+                            obsDat=myDat) { ## observed data
   parms <- within(ref.params, { ## switch out old parameters in mos_params for new ones, keeping fixed parameters in place
     for(nm in names(fit.params)) assign(nm, as.numeric(fit.params[nm]))
     rm(nm)
   })
   print(fit.params)
-  
-  pfMLLik(50,simx0,0,modStep2,dataLik2,garkiObs,pr=fit.params)#+ lprior(parms)
+  pFilt(50,simx0,0,modStep2,dataLik2,garkiObs,pr=fit.params)+ lprior(parms)
 }
 
 
@@ -101,12 +67,12 @@ unlogParms <- function(fit.params) {
 
 # set bounds on initial parameter guesses
 initBounds <- data.frame(rbind( ## for initial conditions
-  c(log(0.3),log(0.6)), ## uoE
-c(log(0.01),log(0.06)), ## uoL
-c(log(0.3),log(0.99)), ## uP
-c(log(10),log(20)), ## Y
-c(log(15),log(15)),##n
-c(log(15),log(50)))) ## sf
+  c(log(0.01),log(0.05)), ## uoE
+  c(log(0.001),log(0.01)), ## uoL
+  c(log(0.1),log(0.99)), ## uP
+  c(log(10),log(15)), ## Y
+  c(log(20),log(20)),##n
+  c(log(1),log(10)))) ## sf
 
 colnames(initBounds) <- c('lower','upper')
 rownames(initBounds) <- c('loguoE','loguoL','loguP','logY','logn','logsf')
@@ -116,7 +82,7 @@ initBounds
 
 ##  randomly select a value that is uniformly distributed between these bounds
 initRand <- function(fit.params) {
-    fit.params <- logParms(fit.params)
+  fit.params <- logParms(fit.params)
   tempnm <- names(fit.params)
   for(nm in tempnm) fit.params[nm] <- runif(1, min = initBounds[rownames(initBounds)==nm, 'lower'], 
                                             max =  initBounds[row.names(initBounds)==nm, 'upper'])
@@ -171,7 +137,7 @@ mcmcSampler <- function(init.params, ## initial parameter guess
   ## Store original covariance matrix
   if(proposer$type=='block') originalCovar <- get('covar', envir = environment(proposer$fxn)) 
   while(vv <= niter) {
-   # obj <- didehpc::queue_didehpc(ctx,didehpc::didehpc_config(cluster="mrc",cores = 16,home="//fi--san02/homes/alm210",credentials = creds))
+    # obj <- didehpc::queue_didehpc(ctx,didehpc::didehpc_config(cluster="mrc",cores = 16,home="//fi--san02/homes/alm210",credentials = creds))
     
     if ((verbose > 1) || (verbose && (vv%%tell == 0))) print(paste("on iteration",vv,"of", niter + 1))
     ## Adaptive MCMC: adapt covariance every 50 iterations (don't
@@ -195,7 +161,7 @@ mcmcSampler <- function(init.params, ## initial parameter guess
     print("curval")
     print(curVal)
     if (is.na(lmh)) { ## if NA, print informative info but don't accept it
-     # print(list(lmh=lmh, proposal=exp(proposal), vv=vv, seed=seed))
+      # print(list(lmh=lmh, proposal=exp(proposal), vv=vv, seed=seed))
     } else { ## if it's not NA then do acception/rejection algorithm
       if (verbose > 1) print( c(lmh=lmh, propVal=propVal) )
       ## if MHR >= 1 or a uniform random # in [0,1] is <= MHR, accept otherwise reject
@@ -212,17 +178,17 @@ mcmcSampler <- function(init.params, ## initial parameter guess
         outT<<-out
         
         samp <- as.mcmc(out[1:nrow(out)>(nburn+1),])
-
+        
         resTemp<<-(list(ref.params=ref.params
-                       , seed = seed
-                       , init.params = init.params
-                       , aratio = aratio
-                       , samp = samp
+                        , seed = seed
+                        , init.params = init.params
+                        , aratio = aratio
+                        , samp = samp
         ))
         
       }
     }
-
+    
   }
   colnames(out) <- c(names(current.params), 'll')
   samp <- as.mcmc(out[1:nrow(out)>(nburn+1),])
@@ -237,29 +203,11 @@ mcmcSampler <- function(init.params, ## initial parameter guess
 
 
 set.seed(10)
-runX <- mcmcSampler(init.params = c(uoE=0.5,uoL=0.03,uP=0.5,Y=13,n=15,sf=16)
-                        , seed = 1
-                        ,nburn=1000
-                        , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.0,0.1))
-                        , randInit = T
-                        , niter = 1000)
+runX <- mcmcSampler(init.params = c(uoE=0.5,uoL=0.03,uP=0.5,Y=13,n=15,sf=19)
+                    , seed = 1
+                    ,nburn=500
+                    , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.0,0.1))
+                    , randInit = T
+                    , niter = 5000)
 
 
-
-
-
-
-par(oma = c(0,0,2,0), bty='n', 'ps' = 18)
-plot(run$samp)
-mtext('mcmc', side = 3, outer = T, line = 0)
-
-
-
-class(run$samp)
-median(as.vector(run$samp[,c('uoE')][[1]]))
-median(as.vector(run$samp[,c('uoL')][[1]]))
-median(as.vector(run$samp[,c('uP')][[1]]))
-median(as.vector(run$samp[,c('Y')][[1]]))
-median(as.vector(run$samp[,c('sf')][[1]]))
-median(as.vector(run$samp[,c('n')][[1]]))
-run$aratio

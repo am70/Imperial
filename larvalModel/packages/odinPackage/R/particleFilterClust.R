@@ -185,6 +185,10 @@ thetaGarki <-
     return(c(uoE=uoE,uoL=uoL,uP=uP,y=y,n=n,sf=sf))
 
 
+#test params for simDat2
+# uoE        uoL        uP        Y  n sf  
+# 0.5496511 0.03253728 0.5188584 13 15 17.63029 
+
 init.state <-
   c(E = 177,L = 8,P = 1,M = 7)
 
@@ -214,8 +218,8 @@ modStep2<-function(weightInput){
   params<-mosParamsP(E0=initialState[1],L0=initialState[2],P0=initialState[3],M0=initialState[4],
                      uoE=pr[1],uoL=pr[2],uP=pr[3],Y=pr[4],n=pr[5],sf=pr[6])
   modR <- larvalModP(user=params)
-  simDat <- as.data.frame(modR$run(seq(currentTime*10, nextTime*10, length.out=nextTime-currentTime)))
-  res2<-(simDat[simDat$step/10 == nextTime,])
+  simDat <- as.data.frame(modR$run(seq(currentTime, nextTime, length.out=nextTime-currentTime)))
+  res2<-(simDat[simDat$step == nextTime,])
   return(as.data.frame(rbind(res2[,c(8:11)])))
 }
 
@@ -230,7 +234,7 @@ dataLik2 <- function(input)
 #n=particle number
 #simx0 =
 
-pfMLLik2 <- function (n, simx0, t0, stepFun, dataLik, data,pr) 
+pfMLLik <- function (n, simx0, t0, stepFun, dataLik, data,pr) 
 {
   times = c(as.numeric(data$time))
   xmat = simx0(n, t0) #initial state
@@ -253,6 +257,7 @@ pfMLLik2 <- function (n, simx0, t0, stepFun, dataLik, data,pr)
     w<-(exp(w))
     
     ll = ll + log(mean(w))
+    w[is.na(w)] <- 1e-200
     rows = sample(1:n, n, replace = TRUE, prob = w)
     xmat = xmat[rows, ]
   }
@@ -260,3 +265,5 @@ pfMLLik2 <- function (n, simx0, t0, stepFun, dataLik, data,pr)
   ll
   
 }
+
+

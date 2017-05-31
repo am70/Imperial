@@ -124,12 +124,14 @@ modSim <- function(parms, obsDat) {
 ##goodness of fit function - log liklihood
 GOF<-function(pr){ #add parameters
   parameters<-read.table(text = pr, sep = ",", colClasses = "numeric")
+  print(parameters)
   modSim <- modSim(parms=mosParamsP(uoE=parameters$V1,uoL=parameters$V2,uP=parameters$V3,
                                     Y=parameters$V4,n=parameters$V5,sf=parameters$V6,
                                     E0=177,L0=9,P0=1,M0=7),obsDat = garkiObs)
   matchedTimes <- modSim$step %in% garkiObs$time
-  log_like <- sum(-dzipois(garkiObs$M,modSim$M[matchedTimes], log = TRUE))
-
+  log_like <- (sum(dzipois(garkiObs$M,modSim$M[matchedTimes], log = TRUE)))+ lprior(parms=mosParamsP(uoE=parameters$V1,uoL=parameters$V2,uP=parameters$V3,
+                                                                                                    Y=parameters$V4,n=parameters$V5,sf=parameters$V6))
+  print(log_like)
   if (!is.na(log_like)){
     res<-c(parameters$V1,parameters$V2,parameters$V3,parameters$V4,parameters$V5,parameters$V6,log_like)
   }
@@ -144,8 +146,8 @@ HCtemp<- randomLHS(100000, 6)
 HC$uoE <-(HCtemp[,1])
 HC$uoL <-(HCtemp[,2])
 HC$uP <- (HCtemp[,3])
-HC$Y <- (20*HCtemp[,4])
-HC$n <- (10*HCtemp[,5])
+HC$Y <- 13#(10*HCtemp[,4])
+HC$n <- 20#(25*HCtemp[,5])
 HC$sf<-(25*HCtemp[,6])
 
 HC<-as.data.frame(HC)
@@ -160,7 +162,7 @@ system.time(lhcResults<-data.frame(t(sapply(parLapply(cl,HC,GOF), `[`))))#conver
 
 colnames(lhcResults)<-c("uoE","uoL","uP","Y","n","sf","logLike")
 
-mins<-lhcResults[which(lhcResults$logLike == min(lhcResults$logLike)), ]#find minimum values
+mins<-lhcResults[which(lhcResults$logLike == max(lhcResults$logLike)), ]#find minimum values
 
 #pr<-paste(mins$uoE,mins$uoL,mins$uP, mins$sf,mins$Y, mins$n, sep=",")#concatonate into single vector 
 
@@ -178,5 +180,25 @@ ggplot(data=df, aes(time))+
   geom_line(data=df,aes(x=time, y=M), color='blue',lwd=1,alpha=0.5)+
   geom_point(data=garkiObs,(aes(x=time,y=M)),col="red")+
   theme_bw()
+
+
+###make simulated data
+resSim<-c(0:2000)
+for (i in 1:1000){
+  
+  mod <- odinPackage::larvalModP(user=mos_params(uoE=mins$uoE,uoL=mins$uoL,uP=mins$uP,
+                                                 Y=mins$Y,sf=mins$sf,n=mins$n, E0=177,L0=9,P0=1,M0=7)) #parameters estimated from LHC sampling
+  sim <- as.data.frame(mod$run(0:2000))
+  
+  resSim<- cbind(resSim,sim$M)
+  
+}
+
+resSim<-as.data.frame(resSim)
+resSim<-resSim[ , colSums(is.na(resSim)) == 0]
+resSimMean<-rowMeans(resSim[,-1])
+resSimMean[1:20*100]
+
+simDat2$M<-resSimMean[1:20*100]
 
 
