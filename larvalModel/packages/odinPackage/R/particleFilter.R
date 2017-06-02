@@ -51,7 +51,7 @@ pFilt <- function (n, iState, t0, stepFun, dataLik, obsData,prms)
     weights<-(exp(weights))
     
     ll = ll + log(mean(weights))
-    #weights[is.na(weights)] <- 1e-200##only keep in if needed
+    weights[is.na(weights)] <- 1e-200##only keep in if needed
     rows = sample(1:n, n, replace = TRUE, prob = weights)
     particles = particles[rows, ]
   }
@@ -73,8 +73,8 @@ init.state <-
   c(E = 177,L = 8,P = 1,M = 7)
 
 ###test parms
-#uoE         uoL        uP          Y  n      sf   
-# 0.03188414 0.005738873 0.2690644 13 20 0.9429963 
+#uoE        uoL        uP  Y  n       sf   
+# 0.05985359 0.01074641 0.3381503 13 20 4.207474 
 
 ###
 

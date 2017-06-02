@@ -194,6 +194,8 @@ for (i in 1:1000){
   
 }
 
+simDat2<-as.data.frame(c(1:20*10))
+colnames(simDat2)<-c("time")
 resSim<-as.data.frame(resSim)
 resSim<-resSim[ , colSums(is.na(resSim)) == 0]
 resSimMean<-rowMeans(resSim[,-1])

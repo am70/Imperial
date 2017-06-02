@@ -1,4 +1,18 @@
-
+require(boot)
+require(deSolve)
+require(ellipse)
+require(coda)
+require(mnormt)
+require(emdbook)
+library(odin)
+library(stringr)
+library(ggplot2)
+library(lattice)
+library(growthrates)
+library(FME)
+library(lubridate)
+library(VGAM)
+library(parallel)
 
 
 
@@ -45,7 +59,7 @@ llikePriorLocal <- function(fit.params=NULL, ## parameters to fit
     rm(nm)
   })
   print(fit.params)
-  pFilt(25,simx0,0,modStep2,dataLik2,garkiObs,pr=fit.params)+ lprior(parms)
+  odinPackage::pFilt(25,simx0,0,modStep2,dataLik2,garkiObs,pr=fit.params)+ lprior(parms)
 }
 
 
@@ -68,8 +82,8 @@ unlogParms <- function(fit.params) {
 # set bounds on initial parameter guesses
 initBounds <- data.frame(rbind( ## for initial conditions
   c(log(0.01),log(0.05)), ## uoE
-  c(log(0.001),log(0.01)), ## uoL
-  c(log(0.1),log(0.99)), ## uP
+  c(log(0.01),log(0.03)), ## uoL
+  c(log(0.3),log(0.5)), ## uP
   c(log(10),log(15)), ## Y
   c(log(20),log(20)),##n
   c(log(1),log(10)))) ## sf
@@ -196,11 +210,11 @@ mcmcSampler <- function(init.params, ## initial parameter guess
 
 
 set.seed(10)
-runX100 <- system.time(mcmcSampler(init.params = c(uoE=0.5,uoL=0.03,uP=0.5,Y=13,n=15,sf=19)
+runX200 <- mcmcSampler(init.params = c(uoE=0.5,uoL=0.03,uP=0.5,Y=13,n=15,sf=19)
                     , seed = 1
                     ,nburn=1000
                     , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.0,0.1))
                     , randInit = T
-                    , niter = 30000))
+                    , niter = 10000)
 
 
