@@ -22,15 +22,15 @@ iState <- function(N,t0)
 dataLik2 <- function(input)
 {
   dataInput<-read.table(text = input, sep = ",", colClasses = "numeric")
-  ll = dzipois(dataInput[2], dataInput[1], pstr0=0, log = T)
-  return (exp(ll))
+  ll = dzipois(dataInput[2], dataInput[1], pstr0=dataInput[3], log = T)
+  return (ll)
 }
 
 
 ###Particle Filter
 pFilt <- function (n, iState, t0, stepFun, dataLik, obsData,prms) 
 {
-  times = c(as.numeric(obsData$time))
+  times = c(obsData$time)
   particles = iState(n, t0) #initial state
   ll = 0
   for (i in 1:length(times[-length(times)])) {
@@ -39,18 +39,23 @@ pFilt <- function (n, iState, t0, stepFun, dataLik, obsData,prms)
     
     particlesTemp = parLapply(cl,wp,stepFun) #use NULL for dide cluster, cl for local
     particles<-data.frame(t(sapply(particlesTemp, `[`)))
+
     
-    likeDat<-paste(particles$M,obsData[i,2],sep=",")
+    likeDat<-paste(particles$M,obsData[i+1,2],prms[7],sep=",")
     weights = lapply(likeDat,dataLik)
     weights<-as.vector(unlist(weights))
     
-    swP=sum(weights)
-    weights=weights/swP
     
-    weights<-log(weights)-max(log(weights))
-    weights<-(exp(weights))
+  # swP=sum(weights)
+   
+    #weights=weights/swP
+
+   # weights<-(weights)-max((weights))
+
+    ll = ll + mean(weights)
     
-    ll = ll + log(mean(weights))
+    weights<-exp(weights)
+    
     weights[is.na(weights)] <- 1e-200##only keep in if needed
     rows = sample(1:n, n, replace = TRUE, prob = weights)
     particles = particles[rows, ]
@@ -59,6 +64,7 @@ pFilt <- function (n, iState, t0, stepFun, dataLik, obsData,prms)
   ll
   
 }
+
 
 
 

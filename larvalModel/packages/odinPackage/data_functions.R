@@ -35,3 +35,6 @@ garkiObs<-subset(garkiObs,M>=0)
 delta<-0.1#discrete time period
 rF<-as.data.frame(rainfall$rainfall)
 rFx<-rF[rep(seq_len(nrow(rF)), each=1/delta),] #split rainfall data into discreet time periods
+
+
+

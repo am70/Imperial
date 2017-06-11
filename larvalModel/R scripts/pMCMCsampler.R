@@ -16,14 +16,13 @@ library(parallel)
 
 
 
-
 ##model step function - runs model in steps taking the liklihood of the subsequent observed data point
-modStep2<-function(weightInput){
+modStep3<-function(weightInput){
   
   dataInput<-read.table(text = weightInput, sep = ",", colClasses = "numeric")
   initialState<-as.numeric(dataInput[,c(1:4)])
-  currentTime<-as.numeric(dataInput[,c(5)])
-  nextTime<-as.numeric(dataInput[,c(6)])
+  currentTime<-as.numeric(dataInput[,c(5)]*10)
+  nextTime<-as.numeric(dataInput[,c(6)]*10)
   pr<-as.numeric(dataInput[,c(7:12)])
   params<-mosParamsP(E0=initialState[1],L0=initialState[2],P0=initialState[3],M0=initialState[4],
                      uoE=pr[1],uoL=pr[2],uP=pr[3],Y=pr[4],n=pr[5],sf=pr[6])
@@ -34,21 +33,16 @@ modStep2<-function(weightInput){
 }
 
 
-
-
-####MCMC sampler
-
-
 ## Log-Prior 
-lprior <- function(parms) with(parms, {
-  uoEprior<-dnorm(parms$uoE,mean=0.035,sd=0.00485,log=T)
-  uoLprior<-dnorm(parms$uoL,mean=0.035,sd=0.00485,log=T)
-  uPprior<-dnorm(parms$uP,mean=0.25,sd=0.0357,log=T)
-  Yprior<-dnorm(parms$Y,mean=13.06,sd=3.53,log=T)
-  sfprior<-dunif(parms$sf,min=0,max=100,log=T)
-  priorSum<-(uoEprior+uoLprior+uPprior+Yprior+sfprior)
+lprior <- function(parms) {
+  uoEprior<-dnorm(parms[1],mean=0.035,sd=0.00485,log=T)
+  uoLprior<-dnorm(parms[2],mean=0.035,sd=0.00485,log=T)
+  uPprior<-dnorm(parms[3],mean=0.25,sd=0.0357,log=T)
+  Yprior<-dnorm(parms[4],mean=13.06,sd=3.53,log=T)
+  sfprior<-dunif(parms[6],min=0,max=100,log=T)
+  priorSum<-as.vector(uoEprior+uoLprior+uPprior+Yprior+sfprior)
   return(priorSum)
-})
+}
 
 ##function that sums log-likelihood & log-prior inside MCMC sampler - use for when submitting to cluster at each p filter step
 llikePriorLocal <- function(fit.params=NULL, ## parameters to fit
@@ -59,7 +53,8 @@ llikePriorLocal <- function(fit.params=NULL, ## parameters to fit
     rm(nm)
   })
   print(fit.params)
-  odinPackage::pFilt(25,simx0,0,modStep2,dataLik2,garkiObs,pr=fit.params)+ lprior(parms)
+pFilt(96,simx0,0,modStep3,dataLik2,garkiObs,pr=fit.params)+ lprior(fit.params)
+
 }
 
 
@@ -81,15 +76,16 @@ unlogParms <- function(fit.params) {
 
 # set bounds on initial parameter guesses
 initBounds <- data.frame(rbind( ## for initial conditions
-  c(log(0.01),log(0.05)), ## uoE
+  c(log(0.01),log(0.03)), ## uoE
   c(log(0.01),log(0.03)), ## uoL
-  c(log(0.3),log(0.5)), ## uP
+  c(log(0.2),log(0.3)), ## uP
   c(log(10),log(15)), ## Y
-  c(log(20),log(20)),##n
-  c(log(1),log(10)))) ## sf
+  c(log(10),log(10)),##n
+  c(log(1),log(10)),##sf
+  c(log(0.1),log(1)))) ## p0
 
 colnames(initBounds) <- c('lower','upper')
-rownames(initBounds) <- c('loguoE','loguoL','loguP','logY','logn','logsf')
+rownames(initBounds) <- c('loguoE','loguoL','loguP','logY','logn','logsf','logp0')
 class(initBounds[,2]) <- class(initBounds[,1]) <- 'numeric'
 initBounds
 
@@ -209,12 +205,32 @@ mcmcSampler <- function(init.params, ## initial parameter guess
 
 
 
-set.seed(10)
-runX200 <- mcmcSampler(init.params = c(uoE=0.5,uoL=0.03,uP=0.5,Y=13,n=15,sf=19)
+runX200 <- mcmcSampler(init.params = c(uoE=0.03,uoL=0.03,uP=0.25,Y=13,n=15,sf=19,p0=0.1)
                     , seed = 1
                     ,nburn=1000
-                    , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.0,0.1))
+                    , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.0,0.1,0.01))
                     , randInit = T
                     , niter = 10000)
 
 
+
+
+test.params = c(uoE=0.001729949,uoL=0.001400767,uP=0.23779609,Y=13.24491630,n=1,sf=1)
+set.seed(10)
+res3<-NULL
+for (i in 1:10){
+  ss<-pFilt(50,simx0,0,modStep3,dataLik2,garkiObs,pr=test.params)#+ lprior(test.params)
+  res3<-rbind(ss,res3)
+  print(ss)
+
+}
+
+
+res4<-NULL
+for (i in 1:100){
+  
+  ss<-pFilt(5,simx0,0,modStep2,dataLik2,garkiObs,pr=test.params)+ lprior(test.params)
+  res4<-rbind(ss,res4)
+  print(ss)
+  
+}

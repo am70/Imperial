@@ -203,4 +203,4 @@ resSimMean[1:20*100]
 
 simDat2$M<-resSimMean[1:20*100]
 
-
+simDat2<-rbind(data.frame(time = 0, M = 0), simDat2)

@@ -41,7 +41,7 @@ garkiObs<-garki72_101[,c(39,37)]
 colnames(garkiObs)<-c("time","M")
 garkiObs<-subset(garkiObs,M>=0)
 garkiObs<-round(aggregate(M~time, data=garkiObs, FUN=mean),0)
-
+garkiObs<-rbind(data.frame(time = 0, M = 0), garkiObs)
 
 delta<-0.1#discrete time period
 rF<-as.data.frame(rainfall$rainfall)
