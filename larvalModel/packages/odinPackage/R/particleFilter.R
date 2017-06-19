@@ -46,11 +46,11 @@ pFilt <- function (n, iState, t0, stepFun, dataLik, obsData,prms)
     weights<-as.vector(unlist(weights))
     
     
-  # swP=sum(weights)
+   swP=sum(weights)
    
-    #weights=weights/swP
+    weights=weights/swP
 
-   # weights<-(weights)-max((weights))
+    weights<-(weights)-max((weights))
 
     ll = ll + mean(weights)
     
