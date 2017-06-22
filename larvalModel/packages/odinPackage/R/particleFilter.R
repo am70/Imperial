@@ -1,16 +1,6 @@
 
-##Zero inflated poisson density function
-ziP<-function(x,lambda,p0,log=FALSE){
-  if(log==FALSE){
-    ifelse(x==0,p0+(1-p0)*dpois(x,lambda),(1-p0)*dpois(x,lambda))
-  }
-  else{
-    ifelse(x==0,log(p0+(1-p0)*dpois(x,lambda)),log((1-p0)*dpois(x,lambda)))
-  }
-}
 
-
-# define a sampler for the prior on the initial state
+# initial state sampler
 iState <- function(N,t0)
 {
   mat=cbind(rpois(N,177),rpois(N,8),rpois(N,1),rpois(N,7))
@@ -18,12 +8,25 @@ iState <- function(N,t0)
   mat
 }
 
-
-dataLik2 <- function(input)
+#likelihood function
+dataLikFunc <- function(input)
 {
   dataInput<-read.table(text = input, sep = ",", colClasses = "numeric")
-  ll = dzipois(dataInput[2], dataInput[1], pstr0=dataInput[3], log = T)
+  ll = dnbinom(as.numeric(dataInput[2]), as.numeric(dataInput[1]), prob=as.numeric(dataInput[3]), log = T)
   return (ll)
+}
+
+
+## Log-Prior 
+lprior <- function(parms) {
+  uoEprior<-dnorm(parms[1],mean=0.035,sd=0.00485,log=T)
+  uoLprior<-dnorm(parms[2],mean=0.035,sd=0.00485,log=T)
+  uPprior<-dnorm(parms[3],mean=0.25,sd=0.0357,log=T)
+  Yprior<-dnorm(parms[4],mean=13.06,sd=3.53,log=T)
+  sfprior<-dunif(parms[6],min=0,max=100,log=T)
+  p0prior<-dnorm(parms[7],mean=0.5,sd=0.03,log=T)
+  priorSum<-as.vector(uoEprior+uoLprior+uPprior+Yprior+sfprior+p0prior)
+  return(priorSum)
 }
 
 
@@ -39,24 +42,23 @@ pFilt <- function (n, iState, t0, stepFun, dataLik, obsData,prms)
     
     particlesTemp = parLapply(cl,wp,stepFun) #use NULL for dide cluster, cl for local
     particles<-data.frame(t(sapply(particlesTemp, `[`)))
-
     
     likeDat<-paste(particles$M,obsData[i+1,2],prms[7],sep=",")
     weights = lapply(likeDat,dataLik)
     weights<-as.vector(unlist(weights))
-    
-    
-   swP=sum(weights)
-   
-    weights=weights/swP
-
-    weights<-(weights)-max((weights))
 
     ll = ll + mean(weights)
+  
+    swP=sum(weights)
+    
+    weights=weights/swP
+    
+    weights<-(weights)-max((weights))
     
     weights<-exp(weights)
     
-    weights[is.na(weights)] <- 1e-200##only keep in if needed
+    weights[is.na(weights)] <- 1e-4##only keep in if needed
+    
     rows = sample(1:n, n, replace = TRUE, prob = weights)
     particles = particles[rows, ]
   }
@@ -66,31 +68,7 @@ pFilt <- function (n, iState, t0, stepFun, dataLik, obsData,prms)
 }
 
 
-
-
-theta <-
-  function(
-    uoE = 0.1736114,uoL = 0.4792658,uP = 0.2163627,y = 0.1301954,n =  2.932363,sf = 13.74987)
-    return(c(uoE=uoE,uoL=uoL,uP=uP,y=y,n=n,sf=sf))
-
-
-
 init.state <-
   c(E = 177,L = 8,P = 1,M = 7)
 
-###test parms
-#uoE        uoL        uP  Y  n       sf   
-# 0.05985359 0.01074641 0.3381503 13 20 4.207474 
 
-###
-
-## Log-Prior 
-lprior <- function(parms) with(parms, {
-  uoEprior<-dnorm(parms$uoE,mean=0.035,sd=0.00485,log=T)
-  uoLprior<-dnorm(parms$uoL,mean=0.035,sd=0.00485,log=T)
-  uPprior<-dnorm(parms$uP,mean=0.25,sd=0.0357,log=T)
-  Yprior<-dnorm(parms$Y,mean=13.06,sd=3.53,log=T)
-  sfprior<-dunif(parms$sf,min=0,max=100,log=T)
-  priorSum<-(uoEprior+uoLprior+uPprior+Yprior+sfprior)
-  return(priorSum)
-})
