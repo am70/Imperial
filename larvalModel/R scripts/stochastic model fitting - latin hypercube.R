@@ -87,8 +87,8 @@ larvalR <- odin::odin({
   uE<-uoE*dt*(1+((E+L)/(K)))
   uL<-uoL*dt*(1+(Y*(E+L)/(K)))
   
-  update(Be)<-rbinom(E,(dE+uE)*dt)
-  update(Bl)<-rbinom(L, (dL+uL)*dt)
+  update(Be)<-if((dE+uE)*dt<1) rbinom(E,(dE+uE)*dt) else rbinom(E,1)
+  update(Bl)<-if ((dL+uL)*dt<1) rbinom(L, (dL+uL)*dt) else rbinom(L,1)
   update(Bp)<-rbinom(P,(dP+uP)*dt)
   update(Bm)<-rbinom(M,uM*dt)
   update(nt)<-rbinom(M,(dt/S))
@@ -129,8 +129,7 @@ GOF<-function(pr){ #add parameters
                                     Y=parameters$V4,n=parameters$V5,sf=parameters$V6,
                                     E0=177,L0=9,P0=1,M0=7),obsDat = garkiObs)
   matchedTimes <- modSim$step %in% garkiObs$time
-  log_like <- (sum(dzipois(garkiObs$M,modSim$M[matchedTimes], log = TRUE)))+ lprior(parms=mosParamsP(uoE=parameters$V1,uoL=parameters$V2,uP=parameters$V3,
-                                                                                                    Y=parameters$V4,n=parameters$V5,sf=parameters$V6))
+  log_like <- (sum(dzipois(garkiObs$M,modSim$M[matchedTimes], log = TRUE)))+ lprior(as.numeric(parameters))
   print(log_like)
   if (!is.na(log_like)){
     res<-c(parameters$V1,parameters$V2,parameters$V3,parameters$V4,parameters$V5,parameters$V6,log_like)
@@ -147,15 +146,15 @@ HC$uoE <-(HCtemp[,1])
 HC$uoL <-(HCtemp[,2])
 HC$uP <- (HCtemp[,3])
 HC$Y <- 13#(10*HCtemp[,4])
-HC$n <- 20#(25*HCtemp[,5])
-HC$sf<-(25*HCtemp[,6])
+HC$n <- 40#(25*HCtemp[,5])
+HC$sf<-(15*HCtemp[,6])
 
 HC<-as.data.frame(HC)
 
 
 HC<- paste(HC$uoE,HC$uoL,HC$uP, HC$Y, HC$n, HC$sf, sep=",")#concatonate into single vector 
 
-clusterExport(cl, c("rFx","delta","garkiObs","modSim"), envir=environment())
+clusterExport(cl, c("rFx","delta","garkiObs","modSim","GOF"), envir=environment())
 
 
 system.time(lhcResults<-data.frame(t(sapply(parLapply(cl,HC,GOF), `[`))))#convert results to dataframe
@@ -186,8 +185,8 @@ ggplot(data=df, aes(time))+
 resSim<-c(0:2000)
 for (i in 1:1000){
   
-  mod <- odinPackage::larvalModP(user=mos_params(uoE=mins$uoE,uoL=mins$uoL,uP=mins$uP,
-                                                 Y=mins$Y,sf=mins$sf,n=mins$n, E0=177,L0=9,P0=1,M0=7)) #parameters estimated from LHC sampling
+  mod <- odinPackage::larvalModP(user=mos_params(uoE=0.03437649,uoL=0.03540515,uP=0.24770876,
+                                                 Y=7.43381088,sf=4,n=50.00000000, E0=177,L0=9,P0=1,M0=7)) #parameters estimated from LHC sampling
   sim <- as.data.frame(mod$run(0:2000))
   
   resSim<- cbind(resSim,sim$M)
@@ -204,3 +203,9 @@ resSimMean[1:20*100]
 simDat2$M<-resSimMean[1:20*100]
 
 simDat2<-rbind(data.frame(time = 0, M = 0), simDat2)
+
+#
+
+
+garkiObs<-rbind(garkiObs,data.frame(time = 202, M = 7))
+
