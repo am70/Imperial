@@ -15,13 +15,25 @@ iState <- function(N,t0)
   mat
 }
 
+##negative binomial - gamma poisson (mixture) distribution #!needs to be changed to lgamma
+nBgP2<-function(x,n,p,log=F){
+if (log=F)(gamma(x+n)/(gamma(n)*factorial(x)))*(p^n)*(1-p)^x
+  else log((gamma(x+n)/(gamma(n)*factorial(x)))*(p^n)*(1-p)^x)
+}
+
+
+
+
 #likelihood function
 dataLikFunc <- function(input)
 {
   dataInput<-read.table(text = input, sep = ",", colClasses = "numeric")
-  ll = dnbinom(as.numeric(dataInput[2]), as.numeric(dataInput[1]), prob=as.numeric(dataInput[3]), log = T)
+  #dataInput[1]=Simulated data point
+  #dataInput[2]=Observed data point
+  ll = dnbinom(as.numeric(round(dataInput[1],0)), as.numeric(dataInput[2]+1), prob=as.numeric(dataInput[3]), log = T)
   return (ll)
 }
+
 
 
 ##model step function - runs model in steps taking the likelihood of the subsequent observed data point
@@ -29,8 +41,8 @@ modStep3<-function(weightInput){
   #parse input data
   dataInput<-read.table(text = weightInput, sep = ",", colClasses = "numeric")
   initialState<-as.numeric(dataInput[,c(1:4)])
-  currentTime<-as.numeric(dataInput[,c(5)]*10)#*10 as model is running in discrete time steps
-  nextTime<-as.numeric(dataInput[,c(6)]*10)
+  currentTime<-as.numeric(dataInput[,c(5)])
+  nextTime<-as.numeric(dataInput[,c(6)])
   pr<-as.numeric(dataInput[,c(7:12)])
   #initialise model
   params<-mosParamsP(E0=initialState[1],L0=initialState[2],P0=initialState[3],M0=initialState[4],
@@ -53,20 +65,21 @@ modStep3<-function(weightInput){
 ##################################################################################################################################################
 
 
-pFilt <- function (n, iState, t0, stepFun, dataLik, obsData,prms) 
+
+pFilt <- function (n, iState, t0, stepFun, likeFunc, obsData,prms) 
 {
-  times = c(obsData$time)
+  times = c(obsData$time/delta) #/delta as model is running in discrete time steps
   particles = iState(n, t0) #initial state
   ll = 0
   for (i in 1:length(times[-length(times)])) {
     wp<-paste(particles[,1],particles[,2],particles[,3], particles[,4],times[i],
               times[i + 1],prms[1],prms[2],prms[3],prms[4],prms[5],prms[6],sep=",")
     
-    particlesTemp = parLapply(cl,wp,stepFun) #use NULL for dide cluster, cl for local
+    particlesTemp = parLapply(NULL,wp,stepFun) #use NULL for dide cluster, cl for local
     particles<-data.frame(t(sapply(particlesTemp, `[`)))
     
     likeDat<-paste(particles$M,obsData[i+1,2],prms[7],sep=",")
-    weights = lapply(likeDat,dataLik)
+    weights = parLapply(NULL,likeDat,likeFunc)
     weights<-as.vector(unlist(weights))
 
     ll = ll + mean(weights)
@@ -86,7 +99,5 @@ pFilt <- function (n, iState, t0, stepFun, dataLik, obsData,prms)
   ll
   
 }
-
-
 
 
