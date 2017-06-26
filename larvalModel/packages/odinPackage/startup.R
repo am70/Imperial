@@ -15,9 +15,9 @@ library(provisionr)
 #                                                     load in data                                                                      #
 #                                                                                                                                       #
 #########################################################################################################################################
-simDat<-read.csv("C:\\simDat.csv",sep=" ")
+simDat<-read.csv("Q:\\simDat.csv",sep=" ")
 ##load in Garki rainfall data NOT YET VILLAGE SPECIFIC
-rainfall<-read.csv("C:\\Imperial\\larvalModel\\Data\\garkiRainfall.csv",head=F)
+rainfall<-read.csv("Q:\\Imperial\\larvalModel\\Data\\garkiRainfall.csv",head=F)
 colnames(rainfall)<-c("date","rainfall")
 rainfall$date<-dmy(rainfall$date)
 #limit data to one year
@@ -25,8 +25,8 @@ rainfall<-subset(rainfall, date >= as.Date("1973-05-27") & date <= as.Date("1974
 rainfall$time<-(1:nrow(rainfall))
 
 #load in mosquito data
-garki<-read.table("C:\\Imperial\\larvalModel\\Data\\spraycollect.csv",sep=",",head=T)
-garki$ag_sum<-rowSums(garki[,c(8:16)])#create sum of A.gambiae spray samples
+garki<-read.table("Q:\\Imperial\\larvalModel\\Data\\spraycollect.csv",sep=",",head=T)
+garki$ag_sum<-rowSums(garki[,c(9:16)])#create sum of A.gambiae spray samples
 garki$Date<-as.Date(garki$Date)
 #garki$Date<-dmy(as.character(garki$Date))
 garki72<-subset(garki,Date >= as.Date("1973-05-27") & Date <= as.Date("1974-06-03"))
@@ -53,7 +53,7 @@ rFx<-rF[rep(seq_len(nrow(rF)), each=1/delta),] #split rainfall data into discree
 #                                                                                                                                       #
 #########################################################################################################################################
 
-odin_package("C:\\Imperial\\larvalModel\\packages\\odinPackage")
+odin_package("Q:\\Imperial\\larvalModel\\packages\\odinPackage")
 load_all()
 document()
 
@@ -65,6 +65,39 @@ clusterEvalQ(cl, library("lhs"))
 clusterEvalQ(cl, library("VGAM"))
 clusterEvalQ(cl, library("deSolve"))
 clusterExport(cl, c("rFx","delta","garkiObs"), envir=environment())
+
+
+##################################################################################################################################################
+#                                                                                                                                                #
+#                                                                                                                                                #
+#                                                            run pMCM local                                                                      #
+#                                                                                                                                                #
+#                                                                                                                                                #
+##################################################################################################################################################
+
+#set.seed(44)
+system.time(runX200z2 <- mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=25,sf=4,p0=0.5)
+                                     ,nburn=2
+                                     ,monitoring=2
+                                     , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.0,0.01,0.01))
+                                     , randInit = F
+                                     , niter = 100))
+
+
+
+write.table(runX200,"C:\\res.csv")
+
+
+
+#test just particle filter
+testParams = c(uoE=0.03156379,uoL=0.03581366,uP=0.26077825,Y=17.13787936,n=25.0000000020,sf=4.05889653,p0=0.58250050)
+set.seed(10)
+res3<-NULL
+for (i in 1:10){
+  ss<-pFilt(200,simx0,0,modStep3,dataLikFunc,garkiObs,pr=testParams)+ lprior(testParams)
+  res3<-rbind(ss,res3)
+  print(ss)
+}
 
 
 #########################################################################################################################################
@@ -84,58 +117,22 @@ ctx <- context::context_save(root,
                              package_source=provisionr::package_sources(
                              local="Q:\\Imperial\\larvalModel\\packages\\odinPackage"),
                              sources=sources,
-                             packages = c("lhs","VGAM","deSolve","lubridate","odinPackage","dde","buildr"))
+                             packages = c("lhs","VGAM","deSolve","lubridate","odinPackage","dde","buildr","coda"))
 
 obj <- didehpc::queue_didehpc(ctx,didehpc::didehpc_config(cluster="mrc",home="//fi--san02/homes/alm210",cores=16,parallel = T))
 
 
-#obj <- didehpc::queue_didehpc(ctx,didehpc::didehpc_config(cluster="dide",home="//fi--san02/homes/alm210",use_rrq =TRUE))
-#Submit workers
-#obj$submit_workers(80)
+#########################################################################################################################################
+#                                                                                                                                       #
+#                                                     run pMCMC on cluster                                                              #
+#                                                                                                                                       #
+#########################################################################################################################################
 
-
-
-p1<-obj$enqueue(parRunWorker(1:100,1,seq(1, 1.5, length.out = 100),"n"),name="particle filter X")
-
-
-
-##################particle filter MCMC tester#######################################
-simDat2<-read.table("Q:\\Imperial\\simDat.csv",sep=" ")
-
-
-runPf<-function(x,pNumber){
-  print(pNumber)
-  set.seed(10)
-s<-particleFilter(fitmodel=larvalModP, 
-                   theta=theta(),
-                   init.state = init.state,
-                   data = garkiObs,
-                   nParticles = pNumber)
-print(s)
-}
-
-res<-mapply(runPf,1:100,100)
-
-
-
-
-
-# convert the time series to a timed data matrix
-# create marginal log-likelihood functions, based on a particle filter
-system.time(odinPackage::pfMLLik(300,simx0,0,modStep2,dataLik2,garkiObs,pr=theta()))
-
-
-
-runPf<-function(x,pNumber){
-  print(pNumber)
-  s<-odinPackage::pfMLLik(pNumber,simx0,0,modStep2,dataLik2,garkiObs,pr=theta())
-  print(s)
-}
-
-res2<-mapply(runPf,1:100,100)
-
-
-
-
-
+runX1 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=10,sf=4,p0=0.5)
+                                 ,nburn=2000
+                                 ,monitoring=0
+                                 ,particles=128
+                                 , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.0,0.01,0.01))
+                                 , randInit = F
+                                 , niter = 100000),name="pMCMC")
 
