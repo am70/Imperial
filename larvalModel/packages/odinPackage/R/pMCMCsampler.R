@@ -8,14 +8,9 @@
 ##################################################################################################################################################
 
 
-##function that sums log-likelihood & log-prior inside MCMC sampler - use for when submitting to cluster at each p filter step
-llikePriorLocal <- function(fitParams=NULL, ## parameters to fit
-                            refParams = mosParams(), ## reference parameters
+##function that sums log-likelihood & log-prior inside MCMC sampler
+llfnc <- function(fitParams=NULL, ## parameters to fit
                             particles) { ## observed data
-  parms <- within(refParams, { ## switch out old parameters in mos_params for new ones, keeping fixed parameters in place
-    for(nm in names(fitParams)) assign(nm, as.numeric(fitParams[nm]))
-    rm(nm)
-  })
   print(fitParams)
   #run particle filter and return ll
 pFilt(particles,simx0,0,modStep3,dataLikFunc,garkiObs,pr=fitParams)+lprior(fitParams)
@@ -105,7 +100,6 @@ sequential.proposer <- function(sdProps) {
 
 mcmcSampler <- function(initParams, ## initial parameter guess
                         randInit = T, ## if T then randomly sample initial parameters instead of above value
-                        refParams=mosParamsP(), ## fixed parameters
                         obsDat = myDat, ## data
                         proposer = sequential.proposer(sdProps=sdProps), ## proposal distribution
                         niter = 100, ## MCMC iterations
@@ -120,7 +114,7 @@ mcmcSampler <- function(initParams, ## initial parameter guess
   iter <- 2 ## mcmc iteration (started at 1 so we're already on 2
   accept <- 0 ## initialize proportion of iterations accepted
   ## Calculate log(likelihood X prior) for first value
-  curVal <- llikePriorLocal(currentParams, refParams = refParams, particles=particles)
+  curVal <- llfnc(currentParams, particles=particles)
   print(curVal)
   ## Initialize matrix to store MCMC chain
   out <- matrix(NA, nr = niter, nc=length(currentParams)+1)
@@ -131,7 +125,7 @@ mcmcSampler <- function(initParams, ## initial parameter guess
     if ((monitoring > 1) || (monitoring && (iter%%tell == 0))) print(paste("on iteration",iter,"of", niter + 1))
     proposal <- proposer$fxn(logParms(currentParams))
     proposal <- unlogParms(proposal)
-    propVal <- llikePriorLocal(proposal, refParams = refParams,particles=particles)
+    propVal <- llfnc(proposal, particles=particles)
     lmh <- propVal - curVal ## likelihood ratio = log likelihood difference
     if (is.na(lmh)) { ## if NA, do not accept
     } else { ## if it's not NA then do acception/rejection algorithm
@@ -148,8 +142,7 @@ mcmcSampler <- function(initParams, ## initial parameter guess
   }
   colnames(out) <- c(names(currentParams), 'll')
   results <- as.mcmc(out[1:nrow(out)>(nburn+1),])
-  return(list(refParams=refParams
-              , initParams = initParams
+  return(list(initParams = initParams
               , aratio = aratio
               , results = results
   ))
