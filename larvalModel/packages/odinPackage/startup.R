@@ -76,11 +76,12 @@ clusterExport(cl, c("rFx","delta","garkiObs"), envir=environment())
 ##################################################################################################################################################
 
 #set.seed(44)
-system.time(runX200z2 <- mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=25,sf=4,p0=0.5)
+system.time(runX200z3 <- mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=25,sf=4,p0=0.5)
                                      ,nburn=2
                                      ,monitoring=2
                                      , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.0,0.01,0.01))
                                      , randInit = F
+                                     ,particles=98
                                      , niter = 100))
 
 
@@ -90,15 +91,13 @@ write.table(runX200,"C:\\res.csv")
 
 
 #test just particle filter
-testParams = c(uoE=0.03156379,uoL=0.03581366,uP=0.26077825,Y=17.13787936,n=25.0000000020,sf=4.05889653,p0=0.58250050)
-set.seed(10)
-res3<-NULL
-for (i in 1:10){
-  ss<-pFilt(200,simx0,0,modStep3,dataLikFunc,garkiObs,pr=testParams)+ lprior(testParams)
-  res3<-rbind(ss,res3)
+testParams = c(uoE=0.031,uoL=0.035,uP=0.26,Y=17.13,n=25,sf=4.05,p0=0.58)
+res4<-NULL
+for (i in 1:100){
+  ss<-pFilt(128,simx0,0,modStep3,dataLikFunc,garkiObs,pr=testParams)+ lprior(testParams)
+  res4<-rbind(ss,res4)
   print(ss)
 }
-
 
 #########################################################################################################################################
 #                                                                                                                                       #
@@ -128,11 +127,136 @@ obj <- didehpc::queue_didehpc(ctx,didehpc::didehpc_config(cluster="mrc",home="//
 #                                                                                                                                       #
 #########################################################################################################################################
 
-runX1 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=10,sf=4,p0=0.5)
-                                 ,nburn=2000
+runX1_1 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=100,sf=4,p0=0.5)
+                                 ,nburn=1000
                                  ,monitoring=0
                                  ,particles=128
                                  , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.0,0.01,0.01))
                                  , randInit = F
-                                 , niter = 100000),name="pMCMC")
+                                 , niter = 1000000),name="pMCMC n100")
 
+runX1_2 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=80,sf=4,p0=0.5)
+                                   ,nburn=1000
+                                   ,monitoring=0
+                                   ,particles=128
+                                   , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.0,0.01,0.01))
+                                   , randInit = F
+                                   , niter = 1000000),name="pMCMC n80")
+
+runX1_3 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=60,sf=4,p0=0.5)
+                                   ,nburn=1000
+                                   ,monitoring=0
+                                   ,particles=128
+                                   , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.0,0.01,0.01))
+                                   , randInit = F
+                                   , niter = 1000000),name="pMCMC n60")
+
+
+g<-runX1_7$result()
+png(filename="Q:\\Imperial\\larvalModel\\Outputs\\pMCMC\\Figures\\nx_1.png", width = 1200, height = 1186, units = "px")
+plot(g$result[,c(1:4)])
+dev.off()
+png(filename="Q:\\Imperial\\larvalModel\\Outputs\\pMCMC\\Figures\\nx_2.png", width = 1200, height = 1186, units = "px")
+plot(g$result[,c(5:8)])
+dev.off()
+
+
+
+runX1_4 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=40,sf=4,p0=0.5)
+                                   ,nburn=1000
+                                   ,monitoring=0
+                                   ,particles=128
+                                   , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.0,0.01,0.01))
+                                   , randInit = F
+                                   , niter = 1000000),name="pMCMC n40")
+
+runX1_5 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=20,sf=4,p0=0.5)
+                                   ,nburn=1000
+                                   ,monitoring=0
+                                   ,particles=128
+                                   , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.0,0.01,0.01))
+                                   , randInit = F
+                                   , niter = 1000000),name="pMCMC n20")
+
+runX1_6 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=10,sf=4,p0=0.5)
+                                   ,nburn=1000
+                                   ,monitoring=0
+                                   ,particles=128
+                                   , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.0,0.01,0.01))
+                                   , randInit = F
+                                   , niter = 1000000),name="pMCMC n10")
+
+
+
+runX1_7 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=10,sf=4,p0=0.5)
+                                   ,nburn=1000
+                                   ,monitoring=0
+                                   ,particles=128
+                                   , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.1,0.01,0.01))
+                                   , randInit = F
+                                   , niter = 1000000),name="pMCMC nx")
+
+
+
+
+#########################################################################################################################################
+#                                                                                                                                       #
+#                                                     visualise results and extract C.I.                                                #
+#                                                                                                                                       #
+#########################################################################################################################################
+library(miscTools)
+
+medFunc<-function(x){
+  res<-x$result()
+  colMedians(res$results)
+}
+
+cIfunc<-function(x){
+  quantRes<-as.data.frame(c(1:2))
+  res<-x$result()
+  for(i in 1:(ncol(res$results)-1)){
+    resD<-density(res$results[,i])
+    samp <- sample(resD$x, 1e6, replace = TRUE, prob = resD$y)
+    quants<-as.data.frame(quantile(samp, c(0.05, 0.95)))
+    colnames(quants)<-c(names(res$initParams[i]))
+    quantRes<-cbind(quantRes,quants)
+  }
+  quantRes[,-1]
+}
+
+
+plotMod<-function(mcmcRes){
+parms<-medFunc(mcmcRes)
+cI<-cIfunc(mcmcRes)
+
+resSimx<-as.vector(pFilt(200,simx0,0,modStep3,dataLikFunc,garkiObs,
+                  pr=c(uoE=parms[1],uoL=parms[2],uP=parms[3],Y=parms[4],n=parms[5],sf=parms[6],p0=0.6),resM=T))
+
+resSimxL<- as.vector(pFilt(200,simx0,0,modStep3,dataLikFunc,garkiObs,
+                  pr=c(uoE=cI[1,1],uoL=cI[1,2],uP=cI[1,3],Y=cI[1,4],n=cI[2,5],sf=cI[1,6],p0=0.6),resM=T))
+
+resSimxH<- as.vector(pFilt(200,simx0,0,modStep3,dataLikFunc,garkiObs,
+                 pr=c(uoE=cI[2,1],uoL=cI[2,2],uP=cI[2,3],Y=cI[2,4],n=cI[1,5],sf=cI[2,6],p0=0.6),resM=T))
+
+rMean<-as.data.frame(cbind(resSimx,resSimxL,resSimxH,garkiObs$time))
+colnames(rMean)<-c("M","uM","lM","time")
+
+ggplot(data = rMean,aes(rMean$M))+
+  geom_point(x=garkiObs$time,y=garkiObs$M,col="red")+
+  expand_limits(y=c(0,150))+
+  geom_ribbon(aes(x=rMean$time, ymax=rMean$lM, ymin=rMean$uM), fill="grey", alpha=.5) +
+  geom_line(aes(x=time,y = rMean$lM), colour = 'grey') +
+  geom_line(aes(x=time,y = rMean$uM), colour = 'grey')+
+  geom_line(aes(x=time,rMean$M))+
+  theme_bw()
+
+}
+
+
+plotMod(runX1_2)
+
+
+resSimMean<-rowMeans(resSimx[,-1])
+plot(resSimMean,col="white",ylim=c(0,150))
+points(garkiObs$time*10,garkiObs$M,col="red")
+lines(resSimMean,col="blue",ylim=c(0,150))
