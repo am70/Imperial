@@ -36,13 +36,13 @@ initial(M) <- M0
 
 initial(Reff)<-0
 
-K <-if (step<=trx) (1+(sf*((1/trx)))) else (1+(sf*((1/trx)*(sum(rF[(step-trx):step])))))
+K <-if (step<=trx) (1+(sf*((1/trx)))) else (1+(sf*((1/trx)*(sum(rF[(step-trx):step-1])))))
 
 uE<-uoE*dt*(1+((E+L)/(K)))
 uL<-uoL*dt*(1+(Y*(E+L)/(K)))
 
-update(Be)<-rbinom(E,(dE+uE)*dt)
-update(Bl)<-rbinom(L, (dL+uL)*dt)
+update(Be)<-if((dE+uE)*dt<1) rbinom(E,(dE+uE)*dt) else rbinom(E,1)
+update(Bl)<-if ((dL+uL)*dt<1) rbinom(L, (dL+uL)*dt) else rbinom(L,1)
 update(Bp)<-rbinom(P,(dP+uP)*dt)
 update(Bm)<-rbinom(M,uM*dt)
 update(nt)<-rbinom(M,(dt/S))
