@@ -94,10 +94,20 @@ write.table(runX200,"C:\\res.csv")
 testParams = c(uoE=0.031,uoL=0.035,uP=0.26,Y=17.13,n=25,sf=4.05,p0=0.58)
 res4<-NULL
 for (i in 1:100){
-  ss<-pFilt(128,simx0,0,modStep3,dataLikFunc,garkiObs,pr=testParams)+ lprior(testParams)
+  ss<-pFilt(5,simx0,0,modStep3,dataLikFunc,garkiObs,pr=testParams)+ lprior(testParams)
   res4<-rbind(ss,res4)
   print(ss)
 }
+
+#  testParams = c(uoE=0.031,uoL=0.035,uP=0.26,Y=17.13,n=25,sf=4.05,p0=0.58)
+
+sense<-function(x){
+  testParams = c(uoE=0.031,uoL=0.035,uP=x,Y=17.13,n=25,sf=4.05,p0=0.58)
+  print(x)
+  pFilt(120,simx0,0,modStep3,dataLikFunc,garkiObs,pr=testParams)#+ lprior(testParams)
+}
+
+resuP<-lapply(seq(0.01,0.6,by=0.001),sense)
 
 #########################################################################################################################################
 #                                                                                                                                       #
@@ -134,69 +144,6 @@ runX1_1 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=
                                  , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.0,0.01,0.01))
                                  , randInit = F
                                  , niter = 1000000),name="pMCMC n100")
-
-runX1_2 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=80,sf=4,p0=0.5)
-                                   ,nburn=1000
-                                   ,monitoring=0
-                                   ,particles=128
-                                   , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.0,0.01,0.01))
-                                   , randInit = F
-                                   , niter = 1000000),name="pMCMC n80")
-
-runX1_3 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=60,sf=4,p0=0.5)
-                                   ,nburn=1000
-                                   ,monitoring=0
-                                   ,particles=128
-                                   , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.0,0.01,0.01))
-                                   , randInit = F
-                                   , niter = 1000000),name="pMCMC n60")
-
-
-g<-runX1_7$result()
-png(filename="Q:\\Imperial\\larvalModel\\Outputs\\pMCMC\\Figures\\nx_1.png", width = 1200, height = 1186, units = "px")
-plot(g$result[,c(1:4)])
-dev.off()
-png(filename="Q:\\Imperial\\larvalModel\\Outputs\\pMCMC\\Figures\\nx_2.png", width = 1200, height = 1186, units = "px")
-plot(g$result[,c(5:8)])
-dev.off()
-
-
-
-runX1_4 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=40,sf=4,p0=0.5)
-                                   ,nburn=1000
-                                   ,monitoring=0
-                                   ,particles=128
-                                   , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.0,0.01,0.01))
-                                   , randInit = F
-                                   , niter = 1000000),name="pMCMC n40")
-
-runX1_5 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=20,sf=4,p0=0.5)
-                                   ,nburn=1000
-                                   ,monitoring=0
-                                   ,particles=128
-                                   , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.0,0.01,0.01))
-                                   , randInit = F
-                                   , niter = 1000000),name="pMCMC n20")
-
-runX1_6 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=10,sf=4,p0=0.5)
-                                   ,nburn=1000
-                                   ,monitoring=0
-                                   ,particles=128
-                                   , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.0,0.01,0.01))
-                                   , randInit = F
-                                   , niter = 1000000),name="pMCMC n10")
-
-
-
-runX1_7 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=10,sf=4,p0=0.5)
-                                   ,nburn=1000
-                                   ,monitoring=0
-                                   ,particles=128
-                                   , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.1,0.01,0.01))
-                                   , randInit = F
-                                   , niter = 1000000),name="pMCMC nx")
-
-
 
 
 #########################################################################################################################################
@@ -253,7 +200,7 @@ ggplot(data = rMean,aes(rMean$M))+
 }
 
 
-plotMod(runX1_2)
+plotMod(runX1_7)
 
 
 resSimMean<-rowMeans(resSimx[,-1])
