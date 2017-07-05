@@ -64,7 +64,7 @@ clusterEvalQ(cl, library("odinPackage"))
 clusterEvalQ(cl, library("lhs"))
 clusterEvalQ(cl, library("VGAM"))
 clusterEvalQ(cl, library("deSolve"))
-clusterExport(cl, c("rFx","delta","garkiObs"), envir=environment())
+clusterExport(cl, c("rFx","delta","garkiObs","nBgP"), envir=environment())
 
 
 ##################################################################################################################################################
@@ -76,13 +76,13 @@ clusterExport(cl, c("rFx","delta","garkiObs"), envir=environment())
 ##################################################################################################################################################
 
 #set.seed(44)
-system.time(runX200z3 <- mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=25,sf=4,p0=0.5)
-                                     ,nburn=2
+system.time(runX200z4 <- mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=25,sf=4,p0=0.5)
+                                     ,nburn=1000
                                      ,monitoring=2
                                      , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.0,0.01,0.01))
                                      , randInit = F
                                      ,particles=98
-                                     , niter = 100))
+                                     , niter = 5000))
 
 
 
@@ -93,11 +93,11 @@ write.table(runX200,"C:\\res.csv")
 #test just particle filter
 testParams = c(uoE=0.031,uoL=0.035,uP=0.26,Y=17.13,n=25,sf=4.05,p0=0.58)
 res4<-NULL
-for (i in 1:100){
-  ss<-pFilt(5,simx0,0,modStep3,dataLikFunc,garkiObs,pr=testParams)+ lprior(testParams)
+system.time(for (i in 1:50){
+  ss<-pFilt(50,simx0,0,modStep3,dataLikFunc,garkiObs,pr=testParams)+ lprior(testParams)
   res4<-rbind(ss,res4)
   print(ss)
-}
+})
 
 #  testParams = c(uoE=0.031,uoL=0.035,uP=0.26,Y=17.13,n=25,sf=4.05,p0=0.58)
 
@@ -107,7 +107,7 @@ sense<-function(x){
   pFilt(120,simx0,0,modStep3,dataLikFunc,garkiObs,pr=testParams)#+ lprior(testParams)
 }
 
-resuP<-lapply(seq(0.01,0.6,by=0.001),sense)
+resuP<-lapply(seq(0.001,0.6,by=0.001),sense)
 
 #########################################################################################################################################
 #                                                                                                                                       #
@@ -153,54 +153,70 @@ runX1_1 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=
 #########################################################################################################################################
 library(miscTools)
 
+n100<-runX1_1$result()
+n100<-as.data.frame(n100$results)
+
 medFunc<-function(x){
-  res<-x$result()
-  colMedians(res$results)
+  colMedians(x)
 }
 
 cIfunc<-function(x){
   quantRes<-as.data.frame(c(1:2))
-  res<-x$result()
-  for(i in 1:(ncol(res$results)-1)){
-    resD<-density(res$results[,i])
+  res<-x
+  for(i in 1:(ncol(res)-1)){
+    resD<-density(res[,i])
     samp <- sample(resD$x, 1e6, replace = TRUE, prob = resD$y)
     quants<-as.data.frame(quantile(samp, c(0.05, 0.95)))
-    colnames(quants)<-c(names(res$initParams[i]))
+    colnames(quants)<-c(names(res[i]))
     quantRes<-cbind(quantRes,quants)
   }
   quantRes[,-1]
 }
 
-
 plotMod<-function(mcmcRes){
-parms<-medFunc(mcmcRes)
-cI<-cIfunc(mcmcRes)
-
-resSimx<-as.vector(pFilt(200,simx0,0,modStep3,dataLikFunc,garkiObs,
-                  pr=c(uoE=parms[1],uoL=parms[2],uP=parms[3],Y=parms[4],n=parms[5],sf=parms[6],p0=0.6),resM=T))
-
-resSimxL<- as.vector(pFilt(200,simx0,0,modStep3,dataLikFunc,garkiObs,
-                  pr=c(uoE=cI[1,1],uoL=cI[1,2],uP=cI[1,3],Y=cI[1,4],n=cI[2,5],sf=cI[1,6],p0=0.6),resM=T))
-
-resSimxH<- as.vector(pFilt(200,simx0,0,modStep3,dataLikFunc,garkiObs,
-                 pr=c(uoE=cI[2,1],uoL=cI[2,2],uP=cI[2,3],Y=cI[2,4],n=cI[1,5],sf=cI[2,6],p0=0.6),resM=T))
-
-rMean<-as.data.frame(cbind(resSimx,resSimxL,resSimxH,garkiObs$time))
-colnames(rMean)<-c("M","uM","lM","time")
-
-ggplot(data = rMean,aes(rMean$M))+
-  geom_point(x=garkiObs$time,y=garkiObs$M,col="red")+
-  expand_limits(y=c(0,150))+
-  geom_ribbon(aes(x=rMean$time, ymax=rMean$lM, ymin=rMean$uM), fill="grey", alpha=.5) +
-  geom_line(aes(x=time,y = rMean$lM), colour = 'grey') +
-  geom_line(aes(x=time,y = rMean$uM), colour = 'grey')+
-  geom_line(aes(x=time,rMean$M))+
-  theme_bw()
-
+  parms<-medFunc(mcmcRes)
+  cI<-cIfunc(mcmcRes)
+  resSimx<-c(0:2000)
+  resSimxL<-c(0:2000)
+  resSimxH<-c(0:2000)
+  
+  for (i in 1:150){
+    mod <- odinPackage::larvalModP(user=mosParamsP(uoE=parms[1],uoL=parms[2],uP=parms[3],
+                                                   Y=parms[4],n=parms[5],sf=parms[6])) 
+    sim <- as.data.frame(mod$run(0:2000))
+    resSimx<- cbind(resSimx,sim$M)
+    
+    mod <- odinPackage::larvalModP(user=mosParamsP(uoE=cI[1,1],uoL=cI[1,2],uP=cI[1,3],
+                                                   Y=cI[1,4],n=cI[1,5],sf=parms[6])) 
+    sim <- as.data.frame(mod$run(0:2000))
+    resSimxL<- cbind(resSimxL,sim$M)
+    
+    mod <- odinPackage::larvalModP(user=mosParamsP(uoE=cI[2,1],uoL=cI[2,2],uP=cI[2,3],
+                                                   Y=cI[2,4],n=cI[2,5],sf=parms[6])) 
+    sim <- as.data.frame(mod$run(0:2000))
+    resSimxH<- cbind(resSimxH,sim$M)
+  }
+  resSimMean<-rowMeans(resSimx[,-1])
+  resSimLMean<-rowMeans(resSimxL[,-1])
+  resSimHMean<-rowMeans(resSimxH[,-1])
+  
+  time<-c(1:length(resSimMean))
+  garkiObs$timeX<-garkiObs$time*10
+  rMean<-as.data.frame(cbind(resSimMean,resSimLMean,resSimHMean,time))
+  rMean2<-merge(garkiObs,rMean,by.x="timeX",by.y="time", all=T)[-1,]
+  
+  ggplot(data = rMean,aes(rMean$resSimMean))+
+    geom_point(x=rMean2$timeX,y=rMean2$M,col="red")+
+    expand_limits(y=c(0,150))+
+    geom_ribbon(aes(x=time, ymax=rMean$resSimLMean, ymin=rMean$resSimHMean), fill="grey", alpha=.5) +
+    geom_line(aes(x=time,y = rMean$resSimLMean), colour = 'grey') +
+    geom_line(aes(x=time,y = rMean$resSimHMean), colour = 'grey')+
+    geom_line(aes(x=time,rMean$resSimMean))+
+    theme_bw()
+  
 }
 
-
-plotMod(runX1_7)
+plotMod(n100)
 
 
 resSimMean<-rowMeans(resSimx[,-1])
