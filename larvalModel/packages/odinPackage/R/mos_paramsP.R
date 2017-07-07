@@ -14,7 +14,7 @@ function(
   Y = 13.25, #effect of density dependence on late instars relative to early instars
   S = 3, #duration of gonotrophic cycle - KEEP
   Emax = 93.6, #max number of eggs per oviposition per mosquito - KEEP
-  tr = 4, #days of rainfall contributing to carrying capacity
+  tr = 14, #days of rainfall contributing to carrying capacity
   sf = 10, #scaling factor
   dt=delta,
   O=1,
