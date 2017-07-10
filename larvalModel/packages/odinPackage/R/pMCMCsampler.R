@@ -7,13 +7,24 @@
 #                                                                                                                                                #
 ##################################################################################################################################################
 
-
+strt<-0
 ##function that sums log-likelihood & log-prior inside MCMC sampler
 llfnc <- function(fitParams=NULL, ## parameters to fit
                             particles) { ## observed data
-  print(fitParams)
-  #run particle filter and return ll
-pFilt(particles,simx0,0,modStep3,dataLikFunc,garkiObs,pr=fitParams)+lprior(fitParams)
+  #run particle filter and return ll for global and local parameters
+  
+  ##put each village data into a column, then loop through each column doing the below
+  globalParms<-fitParams[c(1:5)]
+  p1Parms<-globalParms[6]<-fitParams[c(6)]
+  p2Parms<-globalParms[6]<-fitParams[c(7)]
+  p3Parms<-globalParms[6]<-fitParams[c(8)]
+  p4Parms<-globalParms[6]<-fitParams[c(9)]
+  
+p1<-pFilt(particles,simx0,0,modStep3,dataLikFunc,garkiObs,pr=p1Parms)+lprior(fitParams)
+p2<-pFilt(particles,simx0,0,modStep3,dataLikFunc,garkiObs,pr=p2Parms)+lprior(fitParams)
+p3<-pFilt(particles,simx0,0,modStep3,dataLikFunc,garkiObs,pr=p3Parms)+lprior(fitParams)
+p4<-pFilt(particles,simx0,0,modStep3,dataLikFunc,garkiObs,pr=p4Parms)+lprior(fitParams)
+return(mean(p1,p2,p3,p4))
 }
 
 
@@ -29,19 +40,6 @@ lprior <- function(parms) {
   return(priorSum)
 }
 
-## functions for logging and unlogging
-logParms <- function(fitParams) {
-  fitParams <- log(fitParams)
-  names(fitParams) <- paste0('log',names(fitParams))
-  return(fitParams)
-}
-
-unlogParms <- function(fitParams) {
-  fitParams <- exp(fitParams)
-  names(fitParams) <- sub('log','', names(fitParams))
-  return(round(fitParams,8))
-}
-
 
 # set bounds on initial parameter guesses
 initBounds <- data.frame(rbind( ## for initial conditions
@@ -54,7 +52,7 @@ initBounds <- data.frame(rbind( ## for initial conditions
   c(log(0.4),log(0.6)))) ## p0
 
 colnames(initBounds) <- c('lower','upper')
-rownames(initBounds) <- c('loguoE','loguoL','loguP','logY','logn','logsf','logp0')
+rownames(initBounds) <- c('uoE','uoL','uP','Y','n','sf','p0')
 class(initBounds[,2]) <- class(initBounds[,1]) <- 'numeric'
 initBounds
 
@@ -78,7 +76,7 @@ sequential.proposer <- function(sdProps) {
               fxn = function(current) {
                 proposal <- current
                 if(sdProps[on+1]!=0){##adds clause that if sd is 0 then skip the paramter
-                proposal[on + 1] <- proposal[on + 1] + rnorm(1, mean = 0, sd = sdProps[on + 1])
+                proposal[on + 1] <- proposal[on + 1] +rnorm(1, mean = 0, sd = sdProps[on + 1])
                 on <<- (on+1) %% nfitted
                 return(proposal)}
                 else  proposal[on + 2] <- proposal[on + 2] + rnorm(1, mean = 0, sd = sdProps[on + 2])
@@ -123,8 +121,8 @@ mcmcSampler <- function(initParams, ## initial parameter guess
   ## Store original covariance matrix
   while(iter <= niter) {
     if ((monitoring > 1) || (monitoring && (iter%%tell == 0))) print(paste("on iteration",iter,"of", niter + 1))
-    proposal <- proposer$fxn(logParms(currentParams))
-    proposal <- unlogParms(proposal)
+    proposal <- proposer$fxn(currentParams)
+    print(proposal)
     propVal <- llfnc(proposal, particles=particles)
     lmh <- propVal - curVal ## likelihood ratio = log likelihood difference
     if (is.na(lmh)) { ## if NA, do not accept
