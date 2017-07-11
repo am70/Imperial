@@ -31,7 +31,7 @@ dataLikFunc <- function(input)
   dataInput<-read.table(text = input, sep = ",", colClasses = "numeric")
   #dataInput[1]=Simulated data point
   #dataInput[2]=Observed data point
-  ll = nBgP((round(dataInput[1],0)), (dataInput[2]+1), p=(dataInput[3]), log = T)
+  ll = dnbinom(as.numeric(round(dataInput[1],0)), as.numeric(dataInput[2]+1), p=as.numeric(dataInput[3]), log = T)
   return (ll)
 }
 
@@ -74,11 +74,12 @@ pFilt <- function (n, iState, t0, stepFun, likeFunc, obsData,prms,resM=F)
   ll = 0
   for (i in 1:length(times[-length(times)])) {
     wp<-paste(particles[,1],particles[,2],particles[,3], particles[,4],times[i],
-              times[i + 1],prms[1],prms[2],prms[3],prms[4],prms[5],prms[6],sep=",")
-    particlesTemp = parLapply(cl,wp,stepFun) #use NULL for dide cluster, cl for local
+              times[i + 1],prms[1],prms[2],prms[3],prms[4],prms[5],prms[7],sep=",")
+    particlesTemp = parLapply(NULL,wp,stepFun) #use NULL for dide cluster, cl for local
     particles<-data.frame(t(sapply(particlesTemp, `[`)))
-    likeDat<-paste(particles$M,obsData[i+1,2],prms[7],sep=",")
-    weights = parLapply(cl,likeDat,likeFunc)
+    likeDat<-paste(particles$M,obsData[i+1,2],prms[6],sep=",")
+    weights = parLapply(NULL,likeDat,likeFunc)
+    
     weights<-as.vector(unlist(weights))
     if(resM==T)ll=rbind(ll,mean(as.numeric(particles$M)))
     else ll = ll + mean(weights)

@@ -7,24 +7,23 @@
 #                                                                                                                                                #
 ##################################################################################################################################################
 
-strt<-0
 ##function that sums log-likelihood & log-prior inside MCMC sampler
 llfnc <- function(fitParams=NULL, ## parameters to fit
                             particles) { ## observed data
   #run particle filter and return ll for global and local parameters
-  
   ##put each village data into a column, then loop through each column doing the below
-  globalParms<-fitParams[c(1:5)]
-  p1Parms<-globalParms[6]<-fitParams[c(6)]
-  p2Parms<-globalParms[6]<-fitParams[c(7)]
-  p3Parms<-globalParms[6]<-fitParams[c(8)]
-  p4Parms<-globalParms[6]<-fitParams[c(9)]
-  
-p1<-pFilt(particles,simx0,0,modStep3,dataLikFunc,garkiObs,pr=p1Parms)+lprior(fitParams)
-p2<-pFilt(particles,simx0,0,modStep3,dataLikFunc,garkiObs,pr=p2Parms)+lprior(fitParams)
-p3<-pFilt(particles,simx0,0,modStep3,dataLikFunc,garkiObs,pr=p3Parms)+lprior(fitParams)
-p4<-pFilt(particles,simx0,0,modStep3,dataLikFunc,garkiObs,pr=p4Parms)+lprior(fitParams)
-return(mean(p1,p2,p3,p4))
+  pX<-NULL
+  for (i in 1:4){
+  globalParms<-fitParams[c(1:7)]
+  globalParms[7]<-fitParams[c(i+6)]#i+6 to fit the scaling factor specific for each village
+  p1Parms<-globalParms
+garkDat<-garkiObsX[,c(1,i+1)]#i+1 as first column is "time"
+
+p1<-pFilt(particles,simx0,0,modStep3,dataLikFunc,garkDat,pr=p1Parms)+lprior(p1Parms)
+
+pX<-rbind(pX,p1)
+}
+return(mean(pX))
 }
 
 
@@ -43,16 +42,20 @@ lprior <- function(parms) {
 
 # set bounds on initial parameter guesses
 initBounds <- data.frame(rbind( ## for initial conditions
-  c(log(0.03),log(0.04)), ## uoE
-  c(log(0.03),log(0.04)), ## uoL
-  c(log(0.2),log(0.3)), ## uP
-  c(log(8),log(15)), ## Y
-  c(log(25),log(25)),##n
-  c(log(2),log(6)),##sf
-  c(log(0.4),log(0.6)))) ## p0
+  c(0.03,0.04), ## uoE
+  c(0.03,0.04), ## uoL
+  c(0.2,0.3), ## uP
+  c(8,15), ## Y
+  c(25,25),##n
+  c(0.4,0.6), ## p0
+  c(2,6),
+  c(2,6),
+  c(2,6),
+  c(2,6)))##sf
+
 
 colnames(initBounds) <- c('lower','upper')
-rownames(initBounds) <- c('uoE','uoL','uP','Y','n','sf','p0')
+rownames(initBounds) <- c('uoE','uoL','uP','Y','n','p0','sf1','sf2','sf3','sf4')
 class(initBounds[,2]) <- class(initBounds[,1]) <- 'numeric'
 initBounds
 
