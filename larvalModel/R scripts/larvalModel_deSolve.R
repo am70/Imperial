@@ -48,7 +48,7 @@ plot(out$M~out$time)
 
 ##Parameters from White et al (2011)
 mos_params2 <- function(rF=rainfall$rainfall,
-                       e = 6.64, #development time of early larval instars
+                       e = 2, #development time of early larval instars
                        l = 3.72, #development time of late larval instars
                        p = 0.64, #development time of pupae
                        uoE = 0.034, #per capita daily mortality rate of early instars (low density)
@@ -61,7 +61,7 @@ mos_params2 <- function(rF=rainfall$rainfall,
                        Emax = 93.6, #max number of eggs per oviposition per mosquito
                        tr = 4, #days of rainfall contributing to carrying capacity 
                        Si= 15 #number of sites
-                       ,sf = 61.143070 #scaling factor
+                       ,sf = 24 #scaling factor
 )
 return(as.list(environment()))
 
