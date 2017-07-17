@@ -15,32 +15,26 @@ library(provisionr)
 #                                                     load in data                                                                      #
 #                                                                                                                                       #
 #########################################################################################################################################
-simDat<-read.csv("C:\\simDat.csv",sep=" ")
+#simDat<-read.csv("Q:\\simDat.csv",sep=" ")
 ##load in Garki rainfall data NOT YET VILLAGE SPECIFIC
-rainfall<-read.csv("C:\\Imperial\\larvalModel\\Data\\garkiRainfall.csv",head=F)
-colnames(rainfall)<-c("date","rainfall")
+rainfall<-read.csv("Q:\\Imperial\\larvalModel\\Data\\meteoFUP1.csv",head=F)
+colnames(rainfall)<-c("rainfall","date")
 rainfall$date<-dmy(rainfall$date)
 #limit data to one year
-rainfall<-subset(rainfall, date >= as.Date("1970-05-27") & date <= as.Date("1975-01-01"))
+rainfall<-subset(rainfall, date >= as.Date("1971-04-27") & date <= as.Date("1973-01-01"))
 rainfall$time<-(1:nrow(rainfall))
 
 #load in mosquito data
-garki<-read.table("C:\\Imperial\\larvalModel\\Data\\spraycollect.csv",sep=",",head=T)
+garki<-read.table("Q:\\Imperial\\larvalModel\\Data\\spraycollect.csv",sep=",",head=T)
 garki$ag_sum<-rowSums(garki[,c(9:16)])#create sum of A.gambiae spray samples
 garki$Date<-as.Date(garki$Date)
 #garki$Date<-dmy(as.character(garki$Date))
-garki72<-subset(garki,Date >= as.Date("1970-05-27") & Date <= as.Date("1975-01-01"))
-
-#101,114,120,119,118,117,203
-garkiObsX<-c(1:12)
-x<-subset(garki72,E_Station>100)
-##Add VILLAGE SPECIFIC RAINFALL
-for (i in unique(x)){
-garkiSubs<-c(i)
-garki72_101<-subset(garki72,E_Station%in%garkiSubs) ##subset by village - needs checking with michael specific villagse
+garki72<-subset(garki,Date >= as.Date("1971-04-27") & Date <= as.Date("1973-01-01"))
+#101,104,113,117,201,203
+for (i in c( 101  ,   104   ,  111  ,   113)){
+  print(i)
+garki72_101<-subset(garki72,E_Station%in%i) ##subset by village
 garki72_101<-merge(garki72_101,rainfall,by.x="Date",by.y="date",all=T) #merge rainfall and mosquito data
-#garki72_101$ag_sum[is.na(garki72_101$ag_sum)]<-0
-
 
 garkiObs<-garki72_101[,c(39,37)]
 colnames(garkiObs)<-c("time","M")
@@ -48,13 +42,15 @@ garkiObs<-subset(garkiObs,M>=0)
 garkiObs<-round(aggregate(M~time, data=garkiObs, FUN=mean),0)
 garkiObs<-rbind(data.frame(time = 0, M = 0), garkiObs)
 plot(garkiObs$time,garkiObs$M,main=i)
-#garkiObsX<-cbind(garkiObs,garkiObsX)
+colnames(garkiObs)<-c("time",i)
+assign(paste0("garkiObs", i),garkiObs)
 }
-
+garkiObsX<-Reduce(function(...) merge(..., all=TRUE), list(garkiObs101, garkiObs104,garkiObs111,garkiObs113))
 
 delta<-0.1#discrete time period
-rF<-as.data.frame(rainfall$rainfall)
-rFx<-rF[rep(seq_len(nrow(rF)), each=1/delta),] #split rainfall data into discreet time periods
+
+rFx<-rainfall[rep(seq_len(nrow(rainfall)), each=1/delta),]
+rFx<-rFx[,1]
 
 #########################################################################################################################################
 #                                                                                                                                       #
@@ -62,7 +58,7 @@ rFx<-rF[rep(seq_len(nrow(rF)), each=1/delta),] #split rainfall data into discree
 #                                                                                                                                       #
 #########################################################################################################################################
 
-odin_package("C:\\Imperial\\larvalModel\\packages\\odinPackage")
+odin_package("Q:\\Imperial\\larvalModel\\packages\\odinPackage")
 load_all()
 document()
 
@@ -85,25 +81,59 @@ clusterExport(cl, c("rFx","delta","garkiObs","nBgP"), envir=environment())
 ##################################################################################################################################################
 
 #set.seed(44)
-system.time(runX200z4 <- mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=25,sf=4,p0=0.5)
+system.time(runX200z4 <- mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=10,p0=0.5,sf1=4,sf2=4.1,sf3=4.2,sf4=4.3)
                                      ,nburn=1000
                                      ,monitoring=2
-                                     , proposer = sequential.proposer(sdProps=c(0.001,0.001,0.01,0.1,0.0,0.1,0.01))
+                                     , proposer = sequential.proposer(sdProps=c(0.001,0.001,0.01,0.1,0.1,0.01,0.1,0.1,0.1,0.1))
                                      , randInit = F
-                                     ,particles=128
-                                     , niter = 5000))
+                                     ,particles=35
+                                     , niter = 25000))
 
 
 
-write.table(runX200,"C:\\res.csv")
+write.table(runX200z4$results,"Q:\\res.csv")
 
+meds<-function(x){cbind(median(x[,1]),median(x[,2]),median(x[,3]),median(x[,4]),median(x[,5]),median(x[,6]),median(x[,7]),median(x[,8]),median(x[,9]))}
+
+################################################################Initial Conditions###################################
+
+trx<-14
+step<-1
+rF<-rFx
+
+K<- 10000000000#<-if (step<=trx) (1+(sf*((1/trx)*(sum(rF[0:(step-1)]))))) else (1+(sf*((1/trx)*(sum(rF[(step-trx):step-1])))))
+
+
+B<-12
+t<-0
+Ue<-0.035*(1+((E+L)/K))
+De<-1/6.67
+C1<-0
+
+Ul<-0.035*(1+12*((E+L)/K))
+Dl<-1/4.17
+C2<-1
+
+Dp<-1.0
+Up<-0.25
+
+Um<-0.091
+
+
+#E=(1/(De+Ue))*(B*M+exp((C1-t)*De+Ue))
+L=(1/(Dl+Ul))*(De*E+exp((C1-t)*(Dl+Ul)))
+P=(1/(Dp+Up))*(Dl*L+exp((C1-t)*(Dp+Up)))
+M=(1/(2*Um))*(Dp*P+exp(Um*(C1-t)))
+
+
+######################################################################################################################
 
 
 #test just particle filter
-testParams = c(uoE=0.031,uoL=0.035,uP=0.26,Y=17.13,n=25,sf=4.05,p0=0.58)
+testParams = c(uoE=0.031,uoL=0.035,uP=0.26,Y=17.13,n=25,p0=0.58,sf=4.05)
 res4<-NULL
 system.time(for (i in 1:50){
-  ss<-pFilt(128,simx0,0,modStep3,dataLikFunc,garkiObs,pr=testParams)+ lprior(testParams)
+  ss<-pFilt(5,simx0,0,modStep3,dataLikFunc,garkiObs101,pr=testParams)+ lprior(testParams)
   res4<-rbind(ss,res4)
   print(ss)
 })
@@ -129,13 +159,13 @@ context::context_log_start()
 root <- "contexts"
 obj$cluster_load(TRUE)
 
-sources<-c("C:\\Imperial\\larvalModel\\packages\\odinPackage\\data_functions.R")
+sources<-c("Q:\\Imperial\\larvalModel\\packages\\odinPackage\\data_functions.R")
 
 ctx <- context::context_save(root,
                              package_source=provisionr::package_sources(
-                             local="C:\\Imperial\\larvalModel\\packages\\odinPackage"),
+                             local="Q:\\Imperial\\larvalModel\\packages\\odinPackage"),
                              sources=sources,
-                             packages = c("lhs","VGAM","deSolve","lubridate","odinPackage","dde","buildr","coda"))
+                             packages = c("lhs","VGAM","deSolve","lubridate","odinPackage","dde","buildr","coda","parallel","snow"))
 
 obj <- didehpc::queue_didehpc(ctx,didehpc::didehpc_config(cluster="mrc",home="//fi--san02/homes/alm210",cores=16,parallel = T))
 
@@ -147,9 +177,9 @@ obj <- didehpc::queue_didehpc(ctx,didehpc::didehpc_config(cluster="mrc",home="//
 #########################################################################################################################################
 
 runX1_1 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=100,sf=4,p0=0.5)
-                                 ,nburn=1000
+                                 ,nburn=5
                                  ,monitoring=0
-                                 ,particles=128
+                                 ,particles=64
                                  , proposer = sequential.proposer(sdProps=c(0.01,0.01,0.01,0.1,0.0,0.01,0.01))
                                  , randInit = F
-                                 , niter = 1000000),name="pMCMC n100")
+                                 , niter = 50),name="pMCMC n100")
