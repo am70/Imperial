@@ -33,9 +33,9 @@ lprior <- function(parms) {
   uoLprior<-dnorm(parms[2],mean=0.035,sd=0.00485,log=T)
   uPprior<-dnorm(parms[3],mean=0.25,sd=0.0357,log=T)
   Yprior<-dnorm(parms[4],mean=13.06,sd=3.53,log=T)
-  sfprior<-dunif(parms[6],min=0,max=100,log=T)
-  p0prior<-dnorm(parms[7],mean=0.5,sd=0.03,log=T)
-  priorSum<-as.vector(uoEprior+uoLprior+uPprior+Yprior+sfprior+p0prior)
+  #sfprior<-dunif(parms[6],min=0,max=100,log=T)
+  p0prior<-dnorm(parms[6],mean=0.5,sd=0.015,log=T)
+  priorSum<-as.vector(uoEprior+uoLprior+uPprior+Yprior+p0prior)
   return(priorSum)
 }
 
@@ -79,7 +79,8 @@ sequential.proposer <- function(sdProps) {
               fxn = function(current) {
                 proposal <- current
                 if(sdProps[on+1]!=0){##adds clause that if sd is 0 then skip the paramter
-                proposal[on + 1] <- proposal[on + 1] +rnorm(1, mean = 0, sd = sdProps[on + 1])
+                  propVal<-proposal[on + 1] +rnorm(1, mean = 0, sd = sdProps[on + 1])
+                proposal[on + 1] <- if(propVal<0) 0 else propVal
                 on <<- (on+1) %% nfitted
                 return(proposal)}
                 else  proposal[on + 2] <- proposal[on + 2] + rnorm(1, mean = 0, sd = sdProps[on + 2])
