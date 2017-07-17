@@ -82,15 +82,16 @@ larvalR <- odin::odin({
   
   initial(Reff)<-0
   
-  K <-if (step<=trx) (1+(sf*((1/trx)))) else (1+(sf*((1/trx)*(sum(rF[(step-trx):step])))))
+ # K<-if (step<=trx) (1+(sf*((1/trx)*(sum(rF[0:(step-1)]))))) else sf*((1/(trx*(1-exp(-step/trx))))*(sum(rF[0:step])*exp(-(step-step))/trx))
+  K <-if (step<=trx) (1+(sf*((1/trx)*(sum(rF[0:(step-1)]))))) else (1+(sf*((1/trx)*(sum(rF[(step-trx):step-1])))))
   
   uE<-uoE*dt*(1+((E+L)/(K)))
   uL<-uoL*dt*(1+(Y*(E+L)/(K)))
   
   update(Be)<-if((dE+uE)*dt<1) rbinom(E,(dE+uE)*dt) else rbinom(E,1)
   update(Bl)<-if ((dL+uL)*dt<1) rbinom(L, (dL+uL)*dt) else rbinom(L,1)
-  update(Bp)<-rbinom(P,(dP+uP)*dt)
-  update(Bm)<-rbinom(M,uM*dt)
+  update(Bp)<-if((dP+uP)*dt<1) rbinom(P,(dP+uP)*dt) else rbinom(P,1)
+  update(Bm)<-if (uM*dt<1) rbinom(M,uM*dt) else rbinom(M,1)
   update(nt)<-rbinom(M,(dt/S))
   
   update(Reff)<-0.5*(Emax/(exp(uM*S)-1))*(1/(1+uE/dE))*(1/(1+uL/dL))*(1/(1+(uP*dt)/dP))
@@ -182,13 +183,16 @@ ggplot(data=df, aes(time))+
 
 
 ###make simulated data
-resSim<-c(0:2000)
+resSim<-c(0:3000)
 for (i in 1:1000){
   
-  mod <- odinPackage::larvalModP(user=mos_params(uoE=0.03437649,uoL=0.03540515,uP=0.24770876,
-                                                 Y=7.43381088,sf=4,n=50.00000000, E0=177,L0=9,P0=1,M0=7)) #parameters estimated from LHC sampling
-  sim <- as.data.frame(mod$run(0:2000))
-  
+  mod <- larvalR(user=mos_params(uoE=0.03437649,uoL=0.03540515,uP=0.24770876,
+                                                 Y=7.43381088,n=2,sf=2, E0=177,L0=9,P0=1,M0=7)) #parameters estimated from LHC sampling
+  sim <- as.data.frame(mod$run(0:1650))
+  plot(sim$M,col="white")
+  lines(sim$M)
+  points(garkiObs101$time*10,garkiObs101$`101`,col="red")
+  lines(rFx)
   resSim<- cbind(resSim,sim$M)
   
 }
