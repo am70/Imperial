@@ -107,7 +107,7 @@ K<-if (step<=trx) (1+(sf*((1/trx)*(sum(rF[0:(step-1)]))))) else (1+(sf*((1/trx)*
 UoL<-0.035
 UoE<-0.035
 
-B<-12
+B<-n/S#?check this for deterministics, based on clumpy egg laying in stoch model
 t<-0
 Ue<-UoL*(1+((E+L)/K))
 De<-1/6.67
