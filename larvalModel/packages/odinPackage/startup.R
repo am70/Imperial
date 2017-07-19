@@ -101,29 +101,36 @@ trx<-14
 step<-1
 rF<-rFx
 
-K<- 10000000000#<-if (step<=trx) (1+(sf*((1/trx)*(sum(rF[0:(step-1)]))))) else (1+(sf*((1/trx)*(sum(rF[(step-trx):step-1])))))
+K<-if (step<=trx) (1+(sf*((1/trx)*(sum(rF[0:(step-1)]))))) else (1+(sf*((1/trx)*(sum(rF[(step-trx):step-1])))))
 
+
+UoL<-0.035
+UoE<-0.035
 
 B<-12
 t<-0
-Ue<-0.035*(1+((E+L)/K))
+Ue<-UoL*(1+((E+L)/K))
 De<-1/6.67
-C1<-0
 
-Ul<-0.035*(1+12*((E+L)/K))
+Ul<-UoE*(1+12*((E+L)/K))
 Dl<-1/4.17
-C2<-1
 
-Dp<-1.0
+Dp<-1
 Up<-0.25
 
 Um<-0.091
 
 
-#E=(1/(De+Ue))*(B*M+exp((C1-t)*De+Ue))
-L=(1/(Dl+Ul))*(De*E+exp((C1-t)*(Dl+Ul)))
-P=(1/(Dp+Up))*(Dl*L+exp((C1-t)*(Dp+Up)))
-M=(1/(2*Um))*(Dp*P+exp(Um*(C1-t)))
+a=(B*De*Dl)/(2*Um)*(Up*Dp)
+b=UoE/(y*UoL)*(Dl+UoL)-De-UoE
+c=-(UoE*De)/(UoL*y)
+x=(-b+sqrt(b^2*-4*a*c))/(2*a)
+
+
+((De*x-Dl-UoL)/(UoL*y))*(1/o)*(K/(x+1))#L
+L/x#E
+
+
 
 
 ######################################################################################################################
