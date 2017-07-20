@@ -15,9 +15,9 @@ library(provisionr)
 #                                                     load in data                                                                      #
 #                                                                                                                                       #
 #########################################################################################################################################
-#simDat<-read.csv("Q:\\simDat.csv",sep=" ")
+#simDat<-read.csv("C:\\simDat.csv",sep=" ")
 ##load in Garki rainfall data NOT YET VILLAGE SPECIFIC
-rainfall<-read.csv("Q:\\Imperial\\larvalModel\\Data\\meteoFUP1.csv",head=F)
+rainfall<-read.csv("C:\\Imperial\\larvalModel\\Data\\meteoFUP1.csv",head=F)
 colnames(rainfall)<-c("rainfall","date")
 rainfall$date<-dmy(rainfall$date)
 #limit data to one year
@@ -25,7 +25,7 @@ rainfall<-subset(rainfall, date >= as.Date("1971-04-27") & date <= as.Date("1973
 rainfall$time<-(1:nrow(rainfall))
 
 #load in mosquito data
-garki<-read.table("Q:\\Imperial\\larvalModel\\Data\\spraycollect.csv",sep=",",head=T)
+garki<-read.table("C:\\Imperial\\larvalModel\\Data\\spraycollect.csv",sep=",",head=T)
 garki$ag_sum<-rowSums(garki[,c(9:16)])#create sum of A.gambiae spray samples
 garki$Date<-as.Date(garki$Date)
 #garki$Date<-dmy(as.character(garki$Date))
@@ -58,7 +58,7 @@ rFx<-rFx[,1]
 #                                                                                                                                       #
 #########################################################################################################################################
 
-odin_package("Q:\\Imperial\\larvalModel\\packages\\odinPackage")
+odin_package("C:\\Imperial\\larvalModel\\packages\\odinPackage")
 load_all()
 document()
 
@@ -91,7 +91,7 @@ system.time(runX200z4 <- mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,
 
 
 
-write.table(runX200z4$results,"Q:\\res.csv")
+write.table(runX200z4$results,"C:\\res.csv")
 
 meds<-function(x){cbind(median(x[,1]),median(x[,2]),median(x[,3]),median(x[,4]),median(x[,5]),median(x[,6]),median(x[,7]),median(x[,8]),median(x[,9]))}
 
@@ -101,18 +101,17 @@ trx<-14
 step<-1
 rF<-rFx
 
-K<-if (step<=trx) (1+(sf*((1/trx)*(sum(rF[0:(step-1)]))))) else (1+(sf*((1/trx)*(sum(rF[(step-trx):step-1])))))
 
 
 UoL<-0.035
 UoE<-0.035
 
-B<-n/S#?check this for deterministics, based on clumpy egg laying in stoch model
+B<-21.19#n/S#?check this for deterministics, based on clumpy egg laying in stoch model
 t<-0
-Ue<-UoL*(1+((E+L)/K))
+Ue<-UoL*(1+((E+L)/K))^o
 De<-1/6.67
 
-Ul<-UoE*(1+12*((E+L)/K))
+Ul<-UoE*(1+12*((E+L)/K))^o
 Dl<-1/4.17
 
 Dp<-1
@@ -121,18 +120,46 @@ Up<-0.25
 Um<-0.091
 
 
-a=(B*De*Dl)/(2*Um)*(Up*Dp)
-b=UoE/(y*UoL)*(Dl+UoL)-De-UoE
-c=-(UoE*De)/(UoL*y)
+initCond<-function(oi,){
+  parms<-mosParamsP()
+  
+step<-1
+dE<-parms$dE
+dL<-parms$dL
+dP<-parms$dP
+y<-parms$Y
+S<-parms$S
+sf<-parms$sf
+n<-parms$n
+UoE<-parms$uoE
+UoL<-parms$uoL
+
+K<-if (step<=parms$tr) (1+(sf*((1/parms$tr)*(sum(rF[0:(step-1)]))))) else (1+(sf*((1/parms$tr)*(sum(rF[(step-parms$tr):step-1])))))
+o<-oi
+
+
+a=((n/S)*dP*dL)/((2*Um)*(Up*dP))
+b=(UoE/(y*UoL))*(dL+UoL)-dE-UoE
+c=-(UoE*dE)/(UoL*y)
 x=(-b+sqrt(b^2*-4*a*c))/(2*a)
 
 
-((De*x-Dl-UoL)/(UoL*y))*(1/o)*(K/(x+1))#L
-L/x#E
+L<-((dE*x-dL-UoL)/(UoL*y))*(1/o)*(K/(x+1))#L
+E<-L/x#E
+P<-(dL*L)/(Up+dP)#P
+M<-(dP*P)/(2*Um)#M
+conds<-cbind(E,L,P,M)
+return(-conds)
+}
 
 
-
-
+f<-NULL
+for(i in seq(1,100,by=0.1)){
+  K<-i
+  print(g)
+  g<-UoL*(1+((E+L)/K))^o
+  f<-rbind(f,g)
+}
 ######################################################################################################################
 
 
@@ -166,11 +193,11 @@ context::context_log_start()
 root <- "contexts"
 obj$cluster_load(TRUE)
 
-sources<-c("Q:\\Imperial\\larvalModel\\packages\\odinPackage\\data_functions.R")
+sources<-c("C:\\Imperial\\larvalModel\\packages\\odinPackage\\data_functions.R")
 
 ctx <- context::context_save(root,
                              package_source=provisionr::package_sources(
-                             local="Q:\\Imperial\\larvalModel\\packages\\odinPackage"),
+                             local="C:\\Imperial\\larvalModel\\packages\\odinPackage"),
                              sources=sources,
                              packages = c("lhs","VGAM","deSolve","lubridate","odinPackage","dde","buildr","coda","parallel","snow"))
 
