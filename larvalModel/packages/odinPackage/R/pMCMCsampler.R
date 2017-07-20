@@ -14,12 +14,12 @@ llfnc <- function(fitParams=NULL, ## parameters to fit
   ##put each village data into a column, then loop through each column doing the below
   pX<-NULL
   for (i in 1:4){
-  globalParms<-fitParams[c(1:7)]
-  globalParms[7]<-fitParams[c(i+6)]#i+6 to fit the scaling factor specific for each village
+  globalParms<-fitParams[c(1:8)]
+  globalParms[8]<-fitParams[c(i+7)]#i+6 to fit the scaling factor specific for each village
   p1Parms<-globalParms
 garkDat<-garkiObsX[,c(1,i+1)]#i+1 as first column is "time"
 
-p1<-pFilt(particles,simx0,0,modStep3,dataLikFunc,garkDat,pr=p1Parms)+lprior(p1Parms)
+p1<-pFilt(particles,simx0,modStep3,dataLikFunc,garkDat,pr=p1Parms)+lprior(p1Parms)
 
 pX<-rbind(pX,p1)
 }
@@ -47,7 +47,8 @@ initBounds <- data.frame(rbind( ## for initial conditions
   c(0.2,0.3), ## uP
   c(8,15), ## Y
   c(25,25),##n
-  c(0.4,0.6), ## p0
+  c(0.4,0.6),## p0
+  c(0.01,0.9),##o
   c(2,6),
   c(2,6),
   c(2,6),
@@ -55,7 +56,7 @@ initBounds <- data.frame(rbind( ## for initial conditions
 
 
 colnames(initBounds) <- c('lower','upper')
-rownames(initBounds) <- c('uoE','uoL','uP','Y','n','p0','sf1','sf2','sf3','sf4')
+rownames(initBounds) <- c('uoE','uoL','uP','Y','n','p0','logo','sf1','sf2','sf3','sf4')
 class(initBounds[,2]) <- class(initBounds[,1]) <- 'numeric'
 initBounds
 

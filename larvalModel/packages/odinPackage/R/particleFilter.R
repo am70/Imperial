@@ -8,11 +8,43 @@
 ##################################################################################################################################################
 
 # initial state sampler, samples random initial states # need to fit initial E and use this to inform L, P & M, should fitted value be random?
-iState <- function(N,t0)
-{
-  mat=cbind(rpois(N,177),rpois(N,8),rpois(N,1),rpois(N,7))
-  colnames(mat)=c("E","L","P","M")
-  mat
+
+#iState <- function(N,t0)
+#{
+  #mat=cbind(rpois(N,177),rpois(N,8),rpois(N,1),rpois(N,7))
+ # colnames(mat)=c("E","L","P","M")
+ # mat
+#}
+
+
+iState<-function(N,o,prms){
+  parms<-mosParamsP(uoE=prms[1],uoL = prms[2],uP=prms[3],Y=prms[4],n=prms[5],sf=prms[7])
+  o<-o
+  step<-1
+  dE<-parms$dE
+  dL<-parms$dL
+  dP<-parms$dP
+  y<-parms$Y
+  S<-parms$S
+  sf<-parms$sf
+  n<-parms$n
+  UoE<-parms$uoE
+  UoL<-parms$uoL
+  
+  K<-if (step<=parms$tr) (1+(sf*((1/parms$tr)*(sum(rF[0:(step-1)]))))) else (1+(sf*((1/parms$tr)*(sum(rF[(step-parms$tr):step-1])))))
+  
+  a=((n/S)*dP*dL)/((2*Um)*(Up*dP))
+  b=(UoE/(y*UoL))*(dL+UoL)-dE-UoE
+  c=-(UoE*dE)/(UoL*y)
+  x=(-b+sqrt(b^2*-4*a*c))/(2*a)
+  
+  L<-((dE*x-dL-UoL)/(UoL*y))*(1/o)*(K/(x+1))#L
+  E<-L/x#E
+  P<-(dL*L)/(Up+dP)#P
+  M<-(dP*P)/(2*Um)#M
+  conds<-cbind(E,L,P,M)
+  conds<-conds[rep(seq_len(nrow(conds)), each=N),]
+  return(-conds)
 }
 
 ##negative binomial - gamma poisson (mixture) distribution
@@ -67,14 +99,14 @@ modStep3<-function(weightInput){
 
 
 
-pFilt <- function (n, iState, t0, stepFun, likeFunc, obsData,prms,resM=F) 
+pFilt <- function (n, iState, stepFun, likeFunc, obsData,prms,resM=F) 
 {
   times = c(obsData$time/delta) #/delta as model is running in discrete time steps
-  particles = iState(n, t0) #initial state
+  particles = iState(n, prms[7]) #initial state
   ll = 0
   for (i in 1:length(times[-length(times)])) {
     wp<-paste(particles[,1],particles[,2],particles[,3], particles[,4],times[i],
-              times[i + 1],prms[1],prms[2],prms[3],prms[4],prms[5],prms[7],sep=",")
+              times[i + 1],prms[1],prms[2],prms[3],prms[4],prms[5],prms[8],sep=",")
     particlesTemp = parLapply(cl,wp,stepFun) #use NULL for dide cluster, cl for local
     particles<-data.frame(t(sapply(particlesTemp, `[`)))
     likeDat<-paste(particles$M,obsData[i+1,2],prms[6],sep=",")
