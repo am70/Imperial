@@ -21,7 +21,7 @@ rainfall<-read.csv("C:\\Imperial\\larvalModel\\Data\\meteoFUP1.csv",head=F)
 colnames(rainfall)<-c("rainfall","date")
 rainfall$date<-dmy(rainfall$date)
 #limit data to one year
-rainfall<-subset(rainfall, date >= as.Date("1971-04-27") & date <= as.Date("1973-01-01"))
+rainfall<-subset(rainfall, date >= as.Date("1971-04-27") & date <= as.Date("1972-01-01"))
 rainfall$time<-(1:nrow(rainfall))
 
 #load in mosquito data
@@ -29,7 +29,7 @@ garki<-read.table("C:\\Imperial\\larvalModel\\Data\\spraycollect.csv",sep=",",he
 garki$ag_sum<-rowSums(garki[,c(9:16)])#create sum of A.gambiae spray samples
 garki$Date<-as.Date(garki$Date)
 #garki$Date<-dmy(as.character(garki$Date))
-garki72<-subset(garki,Date >= as.Date("1971-04-27") & Date <= as.Date("1973-01-01"))
+garki72<-subset(garki,Date >= as.Date("1971-04-27") & Date <= as.Date("1972-01-01"))
 #101,104,113,117,201,203
 for (i in c( 101  ,   104   ,  111  ,   113)){
   print(i)
@@ -81,10 +81,10 @@ clusterExport(cl, c("rFx","delta","garkiObs","nBgP"), envir=environment())
 ##################################################################################################################################################
 
 #set.seed(44)
-system.time(runX200z4 <- mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=10,p0=0.5,sf1=4,sf2=4.1,sf3=4.2,sf4=4.3)
+system.time(runX200z4 <- mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,Y=13,n=10,p0=0.5,o=0.5,sf1=4,sf2=4.1,sf3=4.2,sf4=4.3)
                                      ,nburn=1000
                                      ,monitoring=2
-                                     , proposer = sequential.proposer(sdProps=c(0.001,0.001,0.01,0.1,0.1,0.01,0.1,0.1,0.1,0.1))
+                                     , proposer = sequential.proposer(sdProps=c(0.001,0.001,0.01,0.1,0.1,0.01,0.01,0.1,0.1,0.1,0.1))
                                      , randInit = F
                                      ,particles=35
                                      , niter = 25000))
@@ -99,10 +99,10 @@ meds<-function(x){cbind(median(x[,1]),median(x[,2]),median(x[,3]),median(x[,4]),
 
 
 #test just particle filter
-testParams = c(uoE=0.031,uoL=0.035,uP=0.26,Y=17.13,n=25,p0=0.58,sf=4.05)
+testParams = c(uoE=0.031,uoL=0.035,uP=0.26,Y=17.13,n=25,p0=0.58,o=0.03,sf=4.05)
 res4<-NULL
 system.time(for (i in 1:50){
-  ss<-pFilt(5,simx0,0,modStep3,dataLikFunc,garkiObs101,pr=testParams)+ lprior(testParams)
+  ss<-pFilt(5,iState,modStep3,dataLikFunc,garkiObs101,pr=testParams)+ lprior(testParams)
   res4<-rbind(ss,res4)
   print(ss)
 })

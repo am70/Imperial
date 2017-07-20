@@ -30,6 +30,9 @@ iState<-function(N,o,prms){
   n<-parms$n
   UoE<-parms$uoE
   UoL<-parms$uoL
+  rF<-parms$rF
+  Um<-parms$uM
+  Up<-parms$uP
   
   K<-if (step<=parms$tr) (1+(sf*((1/parms$tr)*(sum(rF[0:(step-1)]))))) else (1+(sf*((1/parms$tr)*(sum(rF[(step-parms$tr):step-1])))))
   
@@ -102,7 +105,7 @@ modStep3<-function(weightInput){
 pFilt <- function (n, iState, stepFun, likeFunc, obsData,prms,resM=F) 
 {
   times = c(obsData$time/delta) #/delta as model is running in discrete time steps
-  particles = iState(n, prms[7]) #initial state
+  particles = iState(n, o = prms[7],prms = prms) #initial state
   ll = 0
   for (i in 1:length(times[-length(times)])) {
     wp<-paste(particles[,1],particles[,2],particles[,3], particles[,4],times[i],

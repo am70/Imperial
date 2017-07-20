@@ -19,7 +19,7 @@ llfnc <- function(fitParams=NULL, ## parameters to fit
   p1Parms<-globalParms
 garkDat<-garkiObsX[,c(1,i+1)]#i+1 as first column is "time"
 
-p1<-pFilt(particles,simx0,modStep3,dataLikFunc,garkDat,pr=p1Parms)+lprior(p1Parms)
+p1<-pFilt(particles,iState,modStep3,dataLikFunc,garkDat,pr=p1Parms)+lprior(p1Parms)
 
 pX<-rbind(pX,p1)
 }
