@@ -18,7 +18,7 @@
 
 
 iState<-function(N,o,prms){
-  parms<-mosParamsP(uoE=prms[1],uoL = prms[2],uP=prms[3],Y=prms[4],n=prms[5],sf=prms[7])
+  parms<-mosParamsP(uoE=prms[1],uoL = prms[2],uP=prms[3],Y=prms[4],n=prms[5],sf=prms[9])
   o<-o
   step<-1
   dE<-parms$dE
@@ -66,11 +66,12 @@ dataLikFunc <- function(input)
   dataInput<-read.table(text = input, sep = ",", colClasses = "numeric")
   #dataInput[1]=Simulated data point
   #dataInput[2]=Observed data point
-  ll = nBgP(as.numeric(round(dataInput[1],0)), as.numeric(dataInput[2]+1), p=as.numeric(dataInput[3]), log = T)
+  fracPop<-dataInput[2]/dataInput[4]
+  ll = nBgP(as.numeric(round(dataInput[1],0)), as.numeric(1+fracPop), p=as.numeric(dataInput[3]), log = T)
   return (ll)
 }
 
-
+#sf*rainfall/Fp??
 
 ##model step function - runs model in steps using Odin, returning the model state at a subsequent time point
 modStep3<-function(weightInput){
@@ -109,10 +110,10 @@ pFilt <- function (n, iState, stepFun, likeFunc, obsData,prms,resM=F)
   ll = 0
   for (i in 1:length(times[-length(times)])) {
     wp<-paste(particles[,1],particles[,2],particles[,3], particles[,4],times[i],
-              times[i + 1],prms[1],prms[2],prms[3],prms[4],prms[5],prms[8],sep=",")
+              times[i + 1],prms[1],prms[2],prms[3],prms[4],prms[5],prms[9],sep=",")
     particlesTemp = parLapply(cl,wp,stepFun) #use NULL for dide cluster, cl for local
     particles<-data.frame(t(sapply(particlesTemp, `[`)))
-    likeDat<-paste(particles$M,obsData[i+1,2],prms[6],sep=",")
+    likeDat<-paste(particles$M,obsData[i+1,2],prms[6],prms[8],sep=",")
     weights = parLapply(cl,likeDat,likeFunc)
     
     weights<-as.vector(unlist(weights))

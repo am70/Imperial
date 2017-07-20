@@ -14,8 +14,8 @@ llfnc <- function(fitParams=NULL, ## parameters to fit
   ##put each village data into a column, then loop through each column doing the below
   pX<-NULL
   for (i in 1:4){
-  globalParms<-fitParams[c(1:8)]
-  globalParms[8]<-fitParams[c(i+7)]#i+6 to fit the scaling factor specific for each village
+  globalParms<-fitParams[c(1:9)]
+  globalParms[9]<-fitParams[c(i+8)]#i+6 to fit the scaling factor specific for each village
   p1Parms<-globalParms
 garkDat<-garkiObsX[,c(1,i+1)]#i+1 as first column is "time"
 
@@ -35,7 +35,8 @@ lprior <- function(parms) {
   Yprior<-dnorm(parms[4],mean=13.06,sd=3.53,log=T)
   #sfprior<-dunif(parms[6],min=0,max=100,log=T)
   p0prior<-dnorm(parms[6],mean=0.5,sd=0.015,log=T)
-  priorSum<-as.vector(uoEprior+uoLprior+uPprior+Yprior+p0prior)
+  FpPrior<-dunif(parms[8],min=0,max=1,log=T)
+  priorSum<-as.vector(uoEprior+uoLprior+uPprior+Yprior+p0prior+FpPrior)
   return(priorSum)
 }
 
@@ -49,6 +50,7 @@ initBounds <- data.frame(rbind( ## for initial conditions
   c(25,25),##n
   c(0.4,0.6),## p0
   c(0.01,0.9),##o
+  c(1,5),#fracPop
   c(2,6),
   c(2,6),
   c(2,6),
@@ -56,7 +58,7 @@ initBounds <- data.frame(rbind( ## for initial conditions
 
 
 colnames(initBounds) <- c('lower','upper')
-rownames(initBounds) <- c('uoE','uoL','uP','Y','n','p0','logo','sf1','sf2','sf3','sf4')
+rownames(initBounds) <- c('uoE','uoL','uP','Y','n','p0','logo','logFp','sf1','sf2','sf3','sf4')
 class(initBounds[,2]) <- class(initBounds[,1]) <- 'numeric'
 initBounds
 
@@ -70,6 +72,7 @@ initRand <- function(fitParams) {
   return(unlogParms(fitParams))
 }
 
+library(truncnorm)
 
 
 ## Sequential proposal function: Propose one parameter at a time
@@ -79,15 +82,22 @@ sequential.proposer <- function(sdProps) {
   return(list(sdProps = sdProps, type = 'sequential',
               fxn = function(current) {
                 proposal <- current
-                if(sdProps[on+1]!=0){##adds clause that if sd is 0 then skip the paramter
+                if(sdProps[on+1]!=1){##adds clause that if sd is 0 then skip the paramter
                   propVal<-proposal[on + 1] +rnorm(1, mean = 0, sd = sdProps[on + 1])
                 proposal[on + 1] <- if(propVal<0) 0 else propVal
                 on <<- (on+1) %% nfitted
                 return(proposal)}
-                else  proposal[on + 2] <- proposal[on + 2] + rnorm(1, mean = 0, sd = sdProps[on + 2])
-                on <<- (on+2) %% nfitted
-                return(proposal)
-              }))
+                 else##adds clause that if sd is 0 then skip the paramter
+                  propVal<-proposal[on + 1] + rtruncnorm(n=1, a=0.01, b=1, mean=0, sd=0.01)
+                  print(propVal)#rnorm(1, mean = 0, sd = sdProps[on + 1])
+                  proposal[on + 1] <- if(propVal<0) 0 else propVal
+                  on <<- (on+1) %% nfitted
+                  return(proposal)
+                 # if(sdProps[on+1]==0) {proposal[on + 2] <- proposal[on + 2] + rnorm(1, mean = 0, sd = sdProps[on + 2])
+              #  on <<- (on+2) %% nfitted}
+              #  return(proposal)
+              }
+              ))
 }
 
 
