@@ -110,7 +110,7 @@ sequential.proposer <- function(sdProps) {
 #                                                                                                                                                #
 #                                                                                                                                                #
 ##################################################################################################################################################
-
+library(coda)
 mcmcSampler <- function(initParams, ## initial parameter guess
                         randInit = T, ## if T then randomly sample initial parameters instead of above value
                         obsDat = myDat, ## data

@@ -91,7 +91,7 @@ system.time(runX200z4 <- mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.25,
 
 
 
-write.table(runX200z4$results,"C:\\res.csv")
+write.table(runX200z4$results,"C:\\Imperial\\res2.csv")
 
 meds<-function(x){cbind(median(x[,1]),median(x[,2]),median(x[,3]),median(x[,4]),median(x[,5]),median(x[,6]),median(x[,7]),median(x[,8]),median(x[,9]))}
 
