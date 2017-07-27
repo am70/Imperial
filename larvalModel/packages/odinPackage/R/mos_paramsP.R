@@ -17,11 +17,12 @@ function(
   tr = 14, #days of rainfall contributing to carrying capacity
   sf = 10, #scaling factor
   dt=delta,
-  O=1,
+  o=1,
   n=10,
   E0=177,
   L0=8,
   P0=1,
-  M0=7
+  M0=7,
+  time1=333
 )
- list(E0=E0,L0=L0,P0=P0,M0=M0,rF = rF, dE = dE, dL = dL, dP = dP, uoE = uoE, uoL = uoL, uP = uP, uM = uM, B = B, Y = Y, S = S, Emax = Emax, tr = tr, sf = sf, dt = dt, O = O, n = n)
+ list(time1=time1,E0=E0,L0=L0,P0=P0,M0=M0,rF = rF, dE = dE, dL = dL, dP = dP, uoE = uoE, uoL = uoL, uP = uP, uM = uM, B = B, Y = Y, S = S, Emax = Emax, tr = tr, sf = sf, dt = dt, o = o, n = n)
