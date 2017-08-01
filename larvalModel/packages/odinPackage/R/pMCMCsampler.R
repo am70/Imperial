@@ -17,14 +17,16 @@ llfnc <- function(fitParams=NULL, ## parameters to fit
   globalParms<-fitParams[c(1:10)]
   globalParms[10]<-fitParams[c(i+9)]#i+6 to fit the scaling factor specific for each village
 garkDat<-garkiObsX[,c(1,i+1)]#i+1 as first column is "time"
-
+rFc<-as.numeric(substring(names(garkDat)[2],1,1))#which rainfall cluster to use
 #run particle filter for village
-p1<-pFilt(particles,iState,modStep3,dataLikFunc,garkDat,pr=globalParms)+lprior(globalParms)
+p1<-pFilt(particles,iState,modStep3,dataLikFunc,garkDat,pr=globalParms,rFclust=rFc)+lprior(globalParms)
 
 pX<-rbind(pX,p1)
 }
-return(mean(pX))
+return(sum(pX))
 }
+
+
 
 
 ## Log-Prior function
@@ -85,7 +87,8 @@ sequential.proposer <- function(sdProps) {
                   proposal[on + 1] <- if(propVal<0) 0 else propVal
                   on <<- (on+1) %% nfitted
                   return(proposal)}
-                else  proposal[on + 2] <- proposal[on + 2] + rnorm(1, mean = 0, sd = sdProps[on + 2])
+                else  propVal <- proposal[on + 2] + rnorm(1, mean = 0, sd = sdProps[on + 2])
+                proposal[on + 2]<- if(propVal<0) 0 else propVal
                 on <<- (on+2) %% nfitted
                 return(proposal)
               }))

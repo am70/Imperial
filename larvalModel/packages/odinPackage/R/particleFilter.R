@@ -67,11 +67,11 @@ dataLikFunc <- function(input)
   #dataInput[5]=time in model for rainfall calc
   #rain<-if (dataInput[5]<140) sum(rFx[1:(as.numeric(dataInput[5])-1)]) else sum(rFx[(as.numeric(dataInput[5])-140):(as.numeric(dataInput[5])-1)])
   fracPop<-dataInput[2]/(dataInput[4]+1e-5)#*(rain/(dataInput[2]+1))
-  ll = nBgP(as.numeric(round(dataInput[1],0)), as.numeric(1+fracPop), p=as.numeric(dataInput[3]), log = T)
+  ll = nBgP(as.numeric(round(dataInput[1],0)), as.numeric(1+fracPop), p=as.numeric(dataInput[3])+1e-10, log = T)##+1e-10 to stop INF if MH proposes a 0
   return (ll)
 }
 
-#sf*rainfall/Fp??
+
 
 ##model step function - runs model in steps using Odin, returning the model state at a subsequent time point
 modStep3<-function(weightInput){
@@ -82,8 +82,9 @@ modStep3<-function(weightInput){
   nextTime<-as.numeric(dataInput[,c(6)])#time in model to run to
   pr<-as.numeric(dataInput[,c(7:13)])#parameters
   #initialise model
+  if(dataInput[14]==1) rFc<-rFx  else rFc<-rFx2
   params<-mosParamsP(E0=initialState[1],L0=initialState[2],P0=initialState[3],M0=initialState[4],
-                     uoE=pr[1],uoL=pr[2],uP=pr[3],Y=pr[4],n=pr[5],o=pr[6],sf=pr[7],time1=currentTime)
+                     uoE=pr[1],uoL=pr[2],uP=pr[3],Y=pr[4],n=pr[5],o=pr[6],sf=pr[7],rF=rFc,time1=currentTime)
   #run model between two discrete time periods and return results
   modR <- larvalModP(user=params)#run model
   simDat <- as.data.frame(modR$run(seq(currentTime, nextTime, length.out=nextTime-currentTime)))
@@ -103,7 +104,7 @@ modStep3<-function(weightInput){
 
 
 
-pFilt <- function (n, iState, stepFun, likeFunc, obsData,prms,resM=F) 
+pFilt <- function (n, iState, stepFun, likeFunc, obsData,prms,resM=F,rFclust) 
 {
   times = c(obsData$time/delta) #/delta as model is running in discrete time steps
 
@@ -111,7 +112,7 @@ pFilt <- function (n, iState, stepFun, likeFunc, obsData,prms,resM=F)
   ll = 0
   for (i in 1:length(times[-length(times)])) {
     wp<-paste(particles[,1],particles[,2],particles[,3], particles[,4],times[i],
-              times[i + 1],prms[1],prms[2],prms[3],prms[4],prms[5],prms[9],prms[10],sep=",")
+              times[i + 1],prms[1],prms[2],prms[3],prms[4],prms[5],prms[9],prms[10],rFclust,sep=",")
 
     particlesTemp = parLapply(cl,wp,stepFun) #use NULL for dide cluster, cl for local
 
@@ -128,6 +129,8 @@ pFilt <- function (n, iState, stepFun, likeFunc, obsData,prms,resM=F)
     weights=weights/swP
     weights<-(weights)-max(weights)
     weights<-(exp(weights)*0.9)
+    weights[is.na(weights)]<-1e-50
+    
     rows = sample(1:n, n, replace = TRUE, prob = weights)
     particles = particles[rows, ]
   }
