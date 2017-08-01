@@ -66,7 +66,7 @@ larvalR <- odin::odin({
   L0<-user()
   P0<-user()
   M0<-user()
-  
+  time1<-user()
   
   #initial values
   initial(Be)<-0
@@ -80,7 +80,7 @@ larvalR <- odin::odin({
   initial(P) <- P0
   initial(M) <- M0
   
-  initial(Reff)<-0
+  initial(Reff)<-time1
   
  # K<-if (step<=trx) (1+(sf*((1/trx)*(sum(rF[0:(step-1)]))))) else sf*((1/(trx*(1-exp(-step/trx))))*(sum(rF[0:step])*exp(-(step-step))/trx))
   K <-if (step<=trx) (1+(sf*((1/trx)*(sum(rF[0:(step-1)]))))) else (1+(sf*((1/trx)*(sum(rF[(step-trx):step-1])))))
@@ -94,7 +94,7 @@ larvalR <- odin::odin({
   update(Bm)<-if (uM*dt<1) rbinom(M,uM*dt) else rbinom(M,1)
   update(nt)<-rbinom(M,(dt/S))
   
-  update(Reff)<-0.5*(Emax/(exp(uM*S)-1))*(1/(1+uE/dE))*(1/(1+uL/dL))*(1/(1+(uP*dt)/dP))
+  update(Reff)<-Reff+1#0.5*(Emax/(exp(uM*S)-1))*(1/(1+uE/dE))*(1/(1+uL/dL))*(1/(1+(uP*dt)/dP))
   
   update(E)<-if(E-Be>0)E-Be+rpois(nt*n) else rpois(nt*n)
   update(L)<-if(L-Bl>0)L-Bl+rbinom(Be,(dE/(uE+dE))) else rbinom(Be,(dE/(uE+dE)))

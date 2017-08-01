@@ -39,74 +39,77 @@ cIfunc<-function(x){
 plotMod<-function(mcmcRes){
   parms<-medFunc(mcmcRes)
   cI<-cIfunc(mcmcRes)
-  resSimx<-c(0:2500)
-  resSimxL<-c(0:2500)
-  resSimxH<-c(0:2500)
+  resSimx<-c(3110:5519)
+  resSimxL<-c(3110:5519)
+  resSimxH<-c(3110:5519)
   
   for (i in 1:150){
     mod <- odinPackage::larvalModP(user=mosParamsP(uoE=parms[1],uoL=parms[2],uP=parms[3],
-                                                   Y=parms[4],n=parms[5],sf=parms[7],tr=14)) 
-    sim <- as.data.frame(mod$run(0:5000))
-    plot(rainfall$time*10,rainfall$rainfall,col="white")
-    lines(rainfall$time*10,rainfall$rainfall,col="blue")
+                                                   Y=parms[4],n=parms[5],sf=parms[10],o=parms[9],tr=14,time1=3110,E0=f[1],L0=f[2],P0=f[3],M0=f[4])) 
+    sim <- as.data.frame(mod$run(3110:5519))
+   # plot(sim$M)
+    #plot(rainfall$time*10,rainfall$rainfall,col="white")
+   # lines(rainfall$time*10,rainfall$rainfall,col="blue")
     
     #lines(sim$M,ylim=c(0,50),col="white")
-    lines(sim$M)
-    points(garkiObs104$time*10,garkiObs104$`104`,col="red")
+   # plot(garkiObs104$time[-1]*10,garkiObs104$`104`[-1],col="red",ylim=c(0,30))
+   # lines(sim$M~sim$timeX)
     resSimx<- cbind(resSimx,sim$M)
     
     mod <- odinPackage::larvalModP(user=mosParamsP(uoE=cI[1,1],uoL=cI[1,2],uP=cI[1,3],
-                                                   Y=cI[1,4],n=cI[1,5],sf=3)) 
-    sim <- as.data.frame(mod$run(0:2500))
+                                                   Y=cI[1,4],n=cI[1,5],sf=parms[10],tr=14,o=parms[9],E0=f[1],L0=f[2],P0=f[3],M0=f[4],time1=3110)) 
+    sim <- as.data.frame(mod$run(3110:5519))
     resSimxL<- cbind(resSimxL,sim$M)
     
     mod <- odinPackage::larvalModP(user=mosParamsP(uoE=cI[2,1],uoL=cI[2,2],uP=cI[2,3],
-                                                   Y=cI[2,4],n=cI[2,5],sf=3)) 
-    sim <- as.data.frame(mod$run(0:2500))
+                                                   Y=cI[2,4],n=cI[2,5],sf=parms[10],tr=14,o=parms[9],E0=f[1],L0=f[2],P0=f[3],M0=f[4],time1=3110)) 
+    sim <- as.data.frame(mod$run(3110:5519))
     resSimxH<- cbind(resSimxH,sim$M)
   }
   resSimMean<-rowMeans(resSimx[,-1])
   resSimLMean<-rowMeans(resSimxL[,-1])
   resSimHMean<-rowMeans(resSimxH[,-1])
   
-  time<-c(1:length(resSimMean))
-  garkiObs104$timeX<-garkiObs104$time*10
+  time<-c(3110:5519)
+  garkiObs101$timeX<-garkiObs101$time*10
   rMean<-as.data.frame(cbind(resSimMean,resSimLMean,resSimHMean,time))
-  rMean2<-merge(garkiObs104,rMean,by.x="timeX",by.y="time", all=T)[-1,]
+  rMean2<-merge(garkiObs101,rMean,by.x="timeX",by.y="time", all=T)[-1,]
   
   ggplot(data = rMean,aes(rMean$resSimMean))+
-   geom_point(x=rMean2$timeX,y=rMean2$`104`,col="red")+
-    expand_limits(y=c(0,150))+
+   geom_point(x=rMean2$timeX,y=rMean2$`101`,col="red")+
+    expand_limits(y=c(0,30))+
     geom_ribbon(aes(x=time, ymax=rMean$resSimLMean, ymin=rMean$resSimHMean), fill="grey", alpha=.5)+
     geom_line(aes(x=time,y = rMean$resSimLMean), colour = 'grey') +
     geom_line(aes(x=time,y = rMean$resSimHMean), colour = 'grey')+
     geom_line(aes(x=time,rMean$resSimMean))+
+    xlab("time")+
+    ylab("M")+
     theme_bw()
   
 }
 
-plotMod(nf)
-
+hh1<-plotMod(res)
+grid.arrange(hh1,hh2,hh3,hh4)
 
 resSimMean<-rowMeans(resSimx[,-1])
 plot(resSimMean,col="white",ylim=c(0,150))
 points(garkiObs$time*10,garkiObs$M,col="red")
 lines(resSimMean,col="blue",ylim=c(0,150))
 
-simX<-c(0:5000)
-for (i in 1:150){
+simX<-c(1:2440)
+for (i in 1:100){
   
   mod <- odinPackage::larvalModP(user=mosParamsP(uoE=parms[1],uoL=parms[2],uP=parms[3],
-                                                 Y=parms[4],n=parms[5],sf=parms[8],tr=14)) 
-  sim <- as.data.frame(mod$run(0:5000))
+                                                 Y=parms[4],n=parms[5],sf=parms[10],o=parms[9],tr=14,time1=3110,E0=f[1],L0=f[2],P0=f[3],M0=f[4]))
+  sim <- as.data.frame(mod$run(1:2440))
   simX<-cbind(simX,sim$M)
 
 }
 # 101  ,   104   ,  108  ,   113
 simMean<-rowMeans(simX[,-1])
-plot(simMean,ylim=c(0,80),col="white")
-lines(simMean)
-points(garkiObs113$time*10,garkiObs113$`113`,col="red")
+plot(simMean~sim$timeX,ylim=c(0,30),col="white")
+lines(simMean~sim$timeX)
+points(garkiObs101$time*10,(garkiObs101$`101`/parms[8]),col="red")
 #########################################################################################################################################
 #                                                                                                                                       #
 #                                                     density plots                                                                     #
@@ -159,7 +162,55 @@ plotDens(n10)
 
 
 
-#autocorr.plot(as.mcmc(nx))
+#########################################################################################################################################
+#                                                                                                                                       #
+#                                                     likelihood test                                                                   #
+#                                                                                                                                       #
+#########################################################################################################################################
+
+parms<-c(0.03929046 , 0.04366398  ,0.33992035 ,18.40634427 ,10.00000000 , 0.51194118 , 6.67020976 , 0.67765564 , 1.17470130 , 5.36936347  ,2.80765721,  4.05669931 ,0)
 
 
 
+lk<-function(fitParams,f){
+  ll<-0
+  pX<-NULL
+  for (i in 1:4){
+    globalParms<-fitParams[c(1:10)]
+    globalParms[10]<-fitParams[c(i+9)]#i+6 to fit the scaling factor specific for each village
+    garkDat<-garkiObsX[,c(1,i+1)]#i+1 as first column is "time"
+    
+    simX<-c(1:2440)
+    for (j in 1:100){
+      
+      mod <- odinPackage::larvalModP(user=mosParamsP(uoE=globalParms[1],uoL=globalParms[2],uP=globalParms[3],
+                                                     Y=globalParms[4],n=globalParms[5],sf=globalParms[10],o=globalParms[9],tr=14,time1=3110,E0=f[1],L0=f[2],P0=f[3],M0=f[4]))
+      sim <- as.data.frame(mod$run(1:2440))
+      simX<-cbind(simX,sim$M)
+      
+    }
+    # 101  ,   104   ,  108  ,   113
+    simMean<-rowMeans(simX[,-1])
+    simMean
+    simMeanT<-cbind(simMean,sim$timeX/10)
+    colnames(simMeanT)<-c("M","time")
+    
+    lDat<-merge(garkiObsX,simMeanT,by.x="time",by.y="time")
+    print(lDat[i+1])
+    
+    ll<-ll+sum(dnbinom(as.numeric(unlist(lDat[i+1])),lDat$M,p=globalParms[6],log=T))+lprior(globalParms)
+    
+  }
+  
+  ll
+  
+}
+
+ps<-parms
+parms[10]<-parms[12]
+p1<-pFilt(particles,iState,modStep3,dataLikFunc,garkiObs101,pr=parms, resM=T)
+
+dat<-cbind(p1[-1],garkiObsX[-18,])
+plot(dat$`p1[-1]`~dat$time,col="white",ylim=c(0,40))
+lines(dat$`p1[-1]`~dat$time)
+points(dat$`111`/parms[8]~dat$time,col="red")
