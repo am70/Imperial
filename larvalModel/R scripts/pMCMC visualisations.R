@@ -19,76 +19,95 @@ nx<-read.csv("Q:\\Imperial\\larvalModel\\Outputs\\pMCMC\\nx.csv",sep=" ")
 
 
 
-medFunc<-function(x){
-  colMedians(x)
-}
-
 cIfunc<-function(x){
   quantRes<-as.data.frame(c(1:2))
-  res<-x
-  for(i in 1:(ncol(res)-1)){
-    resD<-density(res[,i])
+  for(i in 1:(ncol(x)-1)){
+    resD<-density(x[,i],adjust=1)
     samp <- sample(resD$x, 1e6, replace = TRUE, prob = resD$y)
     quants<-as.data.frame(quantile(samp, c(0.05, 0.95)))
-    colnames(quants)<-c(names(res[i]))
+    colnames(quants)<-c(names(x[i]))
     quantRes<-cbind(quantRes,quants)
   }
   quantRes[,-1]
 }
 
-plotMod<-function(mcmcRes){
-  parms<-medFunc(mcmcRes)
-  cI<-cIfunc(mcmcRes)
-  resSimx<-c(3110:5519)
-  resSimxL<-c(3110:5519)
-  resSimxH<-c(3110:5519)
+iqrFunc<-function(x){
+  iqrRes<-as.data.frame(c(1:2))
   
-  for (i in 1:150){
-    mod <- odinPackage::larvalModP(user=mosParamsP(uoE=parms[1],uoL=parms[2],uP=parms[3],
-                                                   Y=parms[4],n=parms[5],sf=parms[10],o=parms[9],tr=14,time1=3110,E0=f[1],L0=f[2],P0=f[3],M0=f[4])) 
-    sim <- as.data.frame(mod$run(3110:5519))
-   # plot(sim$M)
-    #plot(rainfall$time*10,rainfall$rainfall,col="white")
-   # lines(rainfall$time*10,rainfall$rainfall,col="blue")
-    
-    #lines(sim$M,ylim=c(0,50),col="white")
-   # plot(garkiObs104$time[-1]*10,garkiObs104$`104`[-1],col="red",ylim=c(0,30))
-   # lines(sim$M~sim$timeX)
-    resSimx<- cbind(resSimx,sim$M)
-    
-    mod <- odinPackage::larvalModP(user=mosParamsP(uoE=cI[1,1],uoL=cI[1,2],uP=cI[1,3],
-                                                   Y=cI[1,4],n=cI[1,5],sf=parms[10],tr=14,o=parms[9],E0=f[1],L0=f[2],P0=f[3],M0=f[4],time1=3110)) 
-    sim <- as.data.frame(mod$run(3110:5519))
-    resSimxL<- cbind(resSimxL,sim$M)
-    
-    mod <- odinPackage::larvalModP(user=mosParamsP(uoE=cI[2,1],uoL=cI[2,2],uP=cI[2,3],
-                                                   Y=cI[2,4],n=cI[2,5],sf=parms[10],tr=14,o=parms[9],E0=f[1],L0=f[2],P0=f[3],M0=f[4],time1=3110)) 
-    sim <- as.data.frame(mod$run(3110:5519))
-    resSimxH<- cbind(resSimxH,sim$M)
+  for(i in 1:(ncol(x)-1)){
+    resD<-density(x[,i])
+    resD<-IQR(x[,i])
+    l<-median(x[,i])-resD
+    h<-median(x[,i])+resD
+    h<-rbind(l,h)
+    iqrRes<-cbind(iqrRes,h)
   }
-  resSimMean<-rowMeans(resSimx[,-1])
-  resSimLMean<-rowMeans(resSimxL[,-1])
-  resSimHMean<-rowMeans(resSimxH[,-1])
+  iqrRes[,-1]
+}
+
+plotMod<-function(n,mcmcRes,obsDat,rf,sf){
+  parms<-colMedians(mcmcRes)
+  cI<-cIfunc(mcmcRes)
+  iqr<-iqrFunc(mcmcRes)
+  startTime<-min(obsDat$time)/delta
+  endTime<-max(obsDat$time)/delta
+
+####95% CI####
   
-  time<-c(3110:5519)
-  garkiObs101$timeX<-garkiObs101$time*10
-  rMean<-as.data.frame(cbind(resSimMean,resSimLMean,resSimHMean,time))
-  rMean2<-merge(garkiObs101,rMean,by.x="timeX",by.y="time", all=T)[-1,]
+ mid<- pFilt(n,iState,modStep3,dataLikFunc,garkiObs101,pr=c(parms[1],parms[2],parms[3],
+                                                                  parms[4],60,parms[6],parms[7],parms[8],parms[9],parms[13]),rFclust=rf,resM=T)
+ colnames(mid)<-c("M")
+ plot(mid$M[-1]~timeX,ylim=c(0,50))
+ points(garkiObs101$`101`~f,col="red")
+ low<- pFilt(n,iState,modStep3,dataLikFunc,garkiObs101,pr=c(cI[1,1],cI[1,2],cI[1,3],
+                                                               cI[1,4],cI[2,5],cI[2,6],cI[2,7],cI[2,8],cI[1,9],cI[2,sf]),rFclust=rf,resM=T)
+ colnames(low)<-c("M")
+ 
+ high<- pFilt(n,iState,modStep3,dataLikFunc,garkiObs101,pr=c(cI[2,1],cI[2,2],cI[2,3],
+                                                              cI[2,4],cI[1,5],cI[1,6],cI[1,7],cI[1,8],cI[2,9],cI[1,sf]),rFclust=rf,resM=T)
+ colnames(high)<-c("M")
+ 
+ ####IQR####
+ 
+ lowIqr<- pFilt(n,iState,modStep3,dataLikFunc,garkiObs101,pr=c(iqr[1,1],iqr[1,2],iqr[1,3],
+                                                               iqr[1,4],iqr[2,5],iqr[2,6],iqr[2,7],iqr[2,8],iqr[1,9],iqr[2,sf]),rFclust=rf,resM=T)
+ colnames(lowIqr)<-c("M")
+ 
+ highIqr<- pFilt(n,iState,modStep3,dataLikFunc,garkiObs101,pr=c(iqr[2,1],iqr[2,2],iqr[2,3],
+                                                                iqr[2,4],iqr[1,5],iqr[1,6],iqr[1,7],iqr[1,8],iqr[2,9],iqr[1,sf]),rFclust=rf,resM=T)
+ colnames(highIqr)<-c("M")
+ 
+mid$time<-1:nrow(mid)*0.25
+
+timeX<-as.data.frame(1:nrow(mid))*0.25
+colnames(timeX)<-c("time")
+obsDat$time<-obsDat$time-min(obsDat$time)
+timeX<-merge(obsDat,timeX,all=T)
+colnames(timeX)<-c("time","M")
+timeX<-timeX[-1,]
+#timeX[is.na(timeX)]<-0
   
-  ggplot(data = rMean,aes(rMean$resSimMean))+
-   geom_point(x=rMean2$timeX,y=rMean2$`101`,col="red")+
-    expand_limits(y=c(0,30))+
-    geom_ribbon(aes(x=time, ymax=rMean$resSimLMean, ymin=rMean$resSimHMean), fill="grey", alpha=.5)+
-    geom_line(aes(x=time,y = rMean$resSimLMean), colour = 'grey') +
-    geom_line(aes(x=time,y = rMean$resSimHMean), colour = 'grey')+
-    geom_line(aes(x=time,rMean$resSimMean))+
+  ggplot(data = mid,aes(x=mid$time,y=mid$M))+
+    expand_limits(y=c(0,50))+
+    geom_ribbon(aes(x=mid$time, ymax=highIqr$M, ymin=lowIqr$M), fill="dark grey", alpha=.5)+
+    geom_ribbon(aes(x=mid$time, ymax=high$M, ymin=low$M), fill="grey", alpha=.5)+
+    geom_line(aes(x=mid$time,y = low$M), colour = 'dark grey')+
+    geom_line(aes(x=mid$time,y = high$M), colour = 'dark grey')+
+    geom_line(aes(x=mid$time,y = lowIqr$M), colour = 'dark grey')+
+    geom_line(aes(x=mid$time,y = highIqr$M), colour = 'dark grey')+
+    geom_point(x=timeX$time,y=timeX$M,col="red")+
+    geom_line(aes(x=mid$time,mid$M))+
     xlab("time")+
     ylab("M")+
     theme_bw()
   
 }
 
-hh1<-plotMod(res)
+hh1<-plotMod(120,g1$results,garkiObs101,1,10)
+hh2<-plotMod(120,g1$results,garkiObs104,1,11)
+hh3<-plotMod(120,g1$results,garkiObs219,2,12)
+hh4<-plotMod(120,g1$results,garkiObs220,2,13)
+
 grid.arrange(hh1,hh2,hh3,hh4)
 
 resSimMean<-rowMeans(resSimx[,-1])
@@ -96,61 +115,66 @@ plot(resSimMean,col="white",ylim=c(0,150))
 points(garkiObs$time*10,garkiObs$M,col="red")
 lines(resSimMean,col="blue",ylim=c(0,150))
 
-simX<-c(1:2440)
+simX<-c(1:964)
 for (i in 1:100){
   
   mod <- odinPackage::larvalModP(user=mosParamsP(uoE=parms[1],uoL=parms[2],uP=parms[3],
-                                                 Y=parms[4],n=parms[5],sf=parms[10],o=parms[9],tr=14,time1=3110,E0=f[1],L0=f[2],P0=f[3],M0=f[4]))
-  sim <- as.data.frame(mod$run(1:2440))
+                                                 Y=parms[4],n=10,sf=parms[13],o=parms[9],tr=14,time1=1244,E0=f[1],L0=f[2],P0=f[3],M0=f[4]))
+  sim <- as.data.frame(mod$run(1:964))
   simX<-cbind(simX,sim$M)
 
 }
 # 101  ,   104   ,  108  ,   113
 simMean<-rowMeans(simX[,-1])
-plot(simMean~sim$timeX,ylim=c(0,30),col="white")
+plot(simMean~sim$timeX,ylim=c(0,50),col="white")
 lines(simMean~sim$timeX)
-points(garkiObs101$time*10,(garkiObs101$`101`/parms[8]),col="red")
+points(garkiObs220$time/delta,(garkiObs220$`220`/parms[8]),col="red")
 #########################################################################################################################################
 #                                                                                                                                       #
 #                                                     density plots                                                                     #
 #                                                                                                                                       #
 #########################################################################################################################################
 
-
-
 library("gridExtra")
 
 plotDens<-function(mcmc){
-  uoEprior<-rnorm(998999,mean=0.035,sd=0.00485)
-  uoLprior<-rnorm(998999,mean=0.035,sd=0.00485)
-  uPprior<-rnorm(998999,mean=0.25,sd=0.0357)
-  Yprior<-rnorm(998999,mean=13.06,sd=3.53)
+  uoEprior<-rnorm(94999,mean=0.035,sd=0.00485)
+  uoLprior<-rnorm(94999,mean=0.035,sd=0.00485)
+  uPprior<-rnorm(94999,mean=0.25,sd=0.0357)
+  Yprior<-rnorm(94999,mean=13.06,sd=3.53)
+  p0prior<-rnorm(94999,mean=0.5,sd=0.015)
+  
   
   p1<-ggplot(data = mcmc,aes(uoE))+
-    geom_density(kernel = "gaussian", adjust = 7, aes(colour="Posterior"),fill="red", size=1,alpha=0.1)+
-    geom_density(kernel = "gaussian", adjust = 5, aes(uoEprior,colour="Prior"), size=1,fill="blue",alpha=0.1)+
+    geom_density(kernel = "gaussian", adjust = 1.5, aes(colour="Posterior"),fill="red", size=1,alpha=0.1)+
+    geom_density(kernel = "gaussian", adjust = 1, aes(uoEprior,colour="Prior"), size=1,fill="blue",alpha=0.1)+
     scale_colour_manual(values=c("Posterior"="red", "Prior"="blue"), name="Densities")+
     theme_bw()
   p2<-ggplot(data = mcmc,aes(uoL))+
-    geom_density(kernel = "gaussian", adjust = 11, aes(colour="Posterior"),fill="red", size=1,alpha=0.1)+
-    geom_density(kernel = "gaussian", adjust = 5, aes(uoLprior,colour="Prior"), size=1,fill="blue",alpha=0.1)+
+    geom_density(kernel = "gaussian", adjust = 2, aes(colour="Posterior"),fill="red", size=1,alpha=0.1)+
+    geom_density(kernel = "gaussian", adjust = 1, aes(uoLprior,colour="Prior"), size=1,fill="blue",alpha=0.1)+
     scale_colour_manual(values=c("Posterior"="red", "Prior"="blue"), name="Densities")+
     theme_bw()
   p3<-ggplot(data = mcmc,aes(uP))+
-    geom_density(kernel = "gaussian", adjust = 5, aes(colour="Posterior"),fill="red", size=1,alpha=0.1)+
-    geom_density(kernel = "gaussian", adjust = 5, aes(uPprior,colour="Prior"), size=1,fill="blue",alpha=0.1)+
+    geom_density(kernel = "gaussian", adjust = 2, aes(colour="Posterior"),fill="red", size=1,alpha=0.1)+
+    geom_density(kernel = "gaussian", adjust = 1, aes(uPprior,colour="Prior"), size=1,fill="blue",alpha=0.1)+
     scale_colour_manual(values=c("Posterior"="red", "Prior"="blue"), name="Densities")+
     theme_bw()
   p4<-ggplot(data = mcmc,aes(Y))+
-    geom_density(kernel = "gaussian", adjust = 13, aes(colour="Posterior"),fill="red", size=1,alpha=0.1)+
-    geom_density(kernel = "gaussian", adjust = 5, aes(Yprior,colour="Prior"), size=1,fill="blue",alpha=0.1)+
+    geom_density(kernel = "gaussian", adjust = 7, aes(colour="Posterior"),fill="red", size=1,alpha=0.1)+
+    geom_density(kernel = "gaussian", adjust = 1, aes(Yprior,colour="Prior"), size=1,fill="blue",alpha=0.1)+
+    scale_colour_manual(values=c("Posterior"="red", "Prior"="blue"), name="Densities")+
+    theme_bw()
+  p5<-ggplot(data = mcmc,aes(p0))+
+    geom_density(kernel = "gaussian", adjust = 7, aes(colour="Posterior"),fill="red", size=1,alpha=0.1)+
+    geom_density(kernel = "gaussian", adjust = 1, aes(p0prior,colour="Prior"), size=1,fill="blue",alpha=0.1)+
     scale_colour_manual(values=c("Posterior"="red", "Prior"="blue"), name="Densities")+
     theme_bw()
 
-  grid.arrange(p1, p2, p3, p4)
+  grid.arrange(p1, p2, p3, p4,p5)
 }
 
-plotDens(nx)
+plotDens(as.data.frame(g1$results))
 plotDens(n100)
 plotDens(n80)
 plotDens(n60)
