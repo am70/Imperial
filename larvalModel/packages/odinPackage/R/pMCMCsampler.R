@@ -17,6 +17,7 @@ llfnc <- function(fitParams=NULL, ## parameters to fit
   globalParms<-fitParams[c(1:10)]
   globalParms[10]<-fitParams[c(i+9)]#i+6 to fit the scaling factor specific for each village
 garkDat<-garkiObsX[,c(1,i+1)]#i+1 as first column is "time"
+garkDat<-na.omit(garkDat)
 rFc<-as.numeric(substring(names(garkDat)[2],1,1))#which rainfall cluster to use
 #run particle filter for village
 p1<-pFilt(particles,iState,modStep3,dataLikFunc,garkDat,pr=globalParms,rFclust=rFc)+lprior(globalParms)
@@ -31,12 +32,11 @@ return(sum(pX))
 
 ## Log-Prior function
 lprior <- function(parms) {
-  uoEprior<-dnorm(parms[1],mean=0.035,sd=0.00485,log=T)
-  uoLprior<-dnorm(parms[2],mean=0.035,sd=0.00485,log=T)
-  uPprior<-dnorm(parms[3],mean=0.25,sd=0.0357,log=T)
-  Yprior<-dnorm(parms[4],mean=13.06,sd=3.53,log=T)
-  #sfprior<-dunif(parms[6],min=0,max=100,log=T)
-  p0prior<-dnorm(parms[6],mean=0.5,sd=0.015,log=T)
+  uoEprior<-dnorm(parms[1],mean=0.035,sd=0.01,log=T)
+  uoLprior<-dnorm(parms[2],mean=0.035,sd=0.01,log=T)
+  uPprior<-dnorm(parms[3],mean=0.25,sd=0.0557,log=T)
+  Yprior<-dnorm(parms[4],mean=13.06,sd=4.53,log=T)
+  p0prior<-dunif(parms[6],min=0,max=1,log=T)
   FpPrior<-dunif(parms[8],min=0,max=1,log=T)
   priorSum<-as.vector(uoEprior+uoLprior+uPprior+Yprior+p0prior+FpPrior)
   return(priorSum)
@@ -94,9 +94,32 @@ sequential.proposer <- function(sdProps) {
               }))
 }
 
+tuner <- function(curSd, acptR,curAcptR){
+  print(curAcptR)
+  
+  if(curAcptR ==1) curAcptR <- 0.99
+  if(curAcptR == 0) curAcptR <- 0.01
+  curSd = (curSd*qnorm(acptR/2))/qnorm(curAcptR/2)
+  curSd[curSd > 1] <- 1
+  return(curSd)
+}
 
 
+## Propose parameters within blocks
+multiv.proposer <- function(covar,blockLS = list(rownames(covar))) {
+  nblocks <- length(blockLS)
+  on <- 0
 
+
+  return(list(type = 'block',
+              fxn = function(current, sdTune) {
+                proposal <- current + (rmnorm(1, mean = 0, varcov = covar)*sdTune)
+                propsosal <- as.vector(proposal)
+                proposal<-proposal
+                names(proposal) <- names(current)
+                proposal
+              }))
+}
 
 ##################################################################################################################################################
 #                                                                                                                                                #
@@ -109,18 +132,28 @@ library(coda)
 mcmcSampler <- function(initParams, ## initial parameter guess
                         randInit = T, ## if T then randomly sample initial parameters instead of above value
                         obsDat = myDat, ## data
-                        proposer = sequential.proposer(sdProps=sdProps), ## proposal distribution
+                        proposer = multiv.proposer(covar),## proposal distribution
+                        sdProps=c(0.001,0.001,0.01,0.1,0.1,0.01,0.01,0.01,0.01,0.1,0.1,0.1,0.1),##starting proposal dists
                         niter = 100, ## MCMC iterations
                         particles =100,##number of particles for particle filter
                         nburn = 0, ## iterations to automatically burn
                         monitoring=0, ## if >2 browses, if >1 prints progress
+                        adaptiveMCMC = F, ## adapt proposal distribution?
+                        startAdapt = 150, ## start adapting at what iteration?
+                        adptBurn = 200, ## ignore first so many iterations for adapting posterior
+                        acceptanceRate=0.9,##acceptance rate for adaptive mcmc
                         tell = 100) { ## how often to print progress
+  
+  aratio<-0#starting acceptance ratio
+  sdp<-sdProps
+  
   if(monitoring>2) browser()
   if(randInit) initParams <- initRand(initParams)
   currentParams <- initParams
   nfitted <- length(currentParams) ## number fitted parameters
   iter <- 2 ## mcmc iteration (started at 1 so we're already on 2
   accept <- 0 ## initialize proportion of iterations accepted
+  acceptR<- 0 #number of accepts for aratio
   ## Calculate log(likelihood X prior) for first value
   curVal <- llfnc(currentParams, particles=particles)
   print(curVal)
@@ -129,9 +162,21 @@ mcmcSampler <- function(initParams, ## initial parameter guess
   out[1,] <- c(currentParams, ll = -curVal) ## add first value
   colnames(out) <- c(names(currentParams), 'll') ## name columns
   ## Store original covariance matrix
+  if(proposer$type=='block') originalCovar <- get('covar', envir = environment(proposer$fxn)) 
   while(iter <= niter) {
     if ((monitoring > 1) || (monitoring && (iter%%tell == 0))) print(paste("on iteration",iter,"of", niter + 1))
-    proposal <- proposer$fxn(currentParams)
+    
+    if(adaptiveMCMC & proposer$type=='block' & iter > startAdapt & iter %% 50 == 0) {
+      adptBurn <- min((startAdapt-50), adptBurn)
+      write.table(out,"Q:\\Imperial\\out.csv")
+      adaptedCovar <- 2.38^2 / nfitted * cov.wt(log(na.omit(out)[adptBurn:(iter-1),1:nfitted]))$cov
+      adaptedCovar <- adaptedCovar*.95 + originalCovar*.05 ## 95% adapted & 5% original
+      rownames(adaptedCovar) <- colnames(adaptedCovar) <- names(currentParams)
+      assign('covar', adaptedCovar, envir = environment(proposer$fxn))
+    }
+    sdp<-tuner(sdp,acceptanceRate,aratio)#0.9 = desired acceptance rate
+    print(sdp)
+    proposal <- proposer$fxn(currentParams,sdTune=sdp)
     print(proposal)
     propVal <- llfnc(proposal, particles=particles)
     lmh <- propVal - curVal ## likelihood ratio = log likelihood difference
@@ -140,13 +185,16 @@ mcmcSampler <- function(initParams, ## initial parameter guess
       if (monitoring > 1) print( c(lmh=lmh, propVal=propVal, curVal=curVal))
       if ( (lmh >= 0) | (runif(1,0,1) <= exp(lmh)) ) {
         currentParams <- proposal
+        acceptR<-acceptR + 1
         if (iter>nburn) accept <- accept + 1 ## only track acceptance after burn-in
         curVal <- propVal
+        
       }
     }
+  
     out[iter, ] <- c(currentParams, ll=curVal)
     iter <- iter+1
-    aratio <- accept/((iter-nburn))
+    aratio <- acceptR/(iter)
   }
   colnames(out) <- c(names(currentParams), 'll')
   results <- as.mcmc(out[1:nrow(out)>(nburn+1),])
@@ -156,5 +204,5 @@ mcmcSampler <- function(initParams, ## initial parameter guess
   ))
 }
 
-
-
+#Error in out[adptBurn:(iter - 1), 1:nfitted] : 
+# only 0's may be mixed with negative subscripts 
