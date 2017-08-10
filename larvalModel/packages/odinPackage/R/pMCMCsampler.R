@@ -95,12 +95,14 @@ sequential.proposer <- function(sdProps) {
 }
 
 tuner <- function(curSd, acptR,curAcptR){
-  print(curAcptR)
+  print(paste0("aratio = ",curAcptR))
   
   if(curAcptR ==1) curAcptR <- 0.99
   if(curAcptR == 0) curAcptR <- 0.01
   curSd = (curSd*qnorm(acptR/2))/qnorm(curAcptR/2)
   curSd[curSd > 1] <- 1
+  curSd[curSd <0.0001] <- 0.0001
+  
   return(curSd)
 }
 
@@ -115,7 +117,7 @@ multiv.proposer <- function(covar,blockLS = list(rownames(covar))) {
               fxn = function(current, sdTune) {
                 proposal <- current + (rmnorm(1, mean = 0, varcov = covar)*sdTune)
                 propsosal <- as.vector(proposal)
-                proposal<-proposal
+                proposal[proposal<0]<-0
                 names(proposal) <- names(current)
                 proposal
               }))
