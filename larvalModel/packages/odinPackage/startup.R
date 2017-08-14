@@ -121,17 +121,17 @@ covar=matrix(c(.001,0,0,0,0,0,0,0,0,0,0,0,0,
 
 
 #set.seed(44)
-system.time(runX200z5 <- mcmcSampler(initParams = c(uoE=0.02812054,uoL=0.04538763,uP=0.25795512,Y=17.06376689,n=60,p0=0.50268640,o=0.10174022,Fp=0.96593926,
-                                                    o2=0.94743205,sf1=0.63013930,sf2=0.09290510,sf3=0.88486054,sf4=1.17534926)
+system.time(runX200z6x <- mcmcSampler(initParams = c(uoE=0.01882522,uoL=0.05095041,uP=0.24359410,Y=17.29277120,n=60,p0=0.42569643,o=0.16859148,Fp=0.96104710,
+                                                    o2=1.04163691,sf1=8.27124828,sf2=3.43264994,sf3=5.88083617,sf4=3.32105154)
                                      ,nburn=100
                                      ,monitoring=2
-                                     , proposer = multiv.proposer(covar)
-                                     ,sdProps=c(0.1,0.1,0.1,1,0,0.1,0.1,0.1,0.1,1,1,1,1)
+                                     , proposer = sequential.proposer(sdProps=c(0.001,0.001,0.01,0.1,0,0.1,0.1,0.01,0.01,0.5,0.5,0.5,0.5))
+                                     ,sdProps=c(0.1,0.1,0.1,1,0,0.1,0.1,0.1,0.1,2,2,2,2)
                                      , randInit = F
                                      ,adaptiveMCMC = T
                                      , startAdapt = 150
                                      , particles=126
-                                     ,acceptanceRate = 0.3
+                                     ,acceptanceRate = 0.18
                                      , niter = 10000))
 
 
