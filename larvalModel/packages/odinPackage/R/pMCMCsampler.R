@@ -32,9 +32,9 @@ return(sum(pX))
 
 ## Log-Prior function
 lprior <- function(parms) {
-  uoEprior<-dnorm(parms[1],mean=0.035,sd=0.01,log=T)
-  uoLprior<-dnorm(parms[2],mean=0.035,sd=0.01,log=T)
-  uPprior<-dnorm(parms[3],mean=0.25,sd=0.0557,log=T)
+  uoEprior<-dnorm(parms[1],mean=0.035,sd=0.007,log=T)
+  uoLprior<-dnorm(parms[2],mean=0.035,sd=0.007,log=T)
+  uPprior<-dnorm(parms[3],mean=0.25,sd=0.0457,log=T)
   Yprior<-dnorm(parms[4],mean=13.06,sd=4.53,log=T)
   p0prior<-dunif(parms[6],min=0,max=1,log=T)
   FpPrior<-dunif(parms[8],min=0,max=1,log=T)
@@ -94,30 +94,29 @@ sequential.proposer <- function(sdProps) {
               }))
 }
 
+##proposal sd tuning function
 tuner <- function(curSd, acptR,curAcptR){
   print(paste0("aratio = ",curAcptR))
   
   if(curAcptR ==1) curAcptR <- 0.99
   if(curAcptR == 0) curAcptR <- 0.01
   curSd = (curSd*qnorm(acptR/2))/qnorm(curAcptR/2)
-  curSd[curSd > 1] <- 1
-  curSd[curSd <0.0001] <- 0.0001
+  #curSd[curSd > 1] <- 1
+  curSd[curSd <0.01 && curSd !=0] <- 0.01
   
   return(curSd)
 }
 
 
-## Propose parameters within blocks
+## function for adaptive blocked proposals based on var-covar matrix
 multiv.proposer <- function(covar,blockLS = list(rownames(covar))) {
   nblocks <- length(blockLS)
   on <- 0
-
-
   return(list(type = 'block',
               fxn = function(current, sdTune) {
                 proposal <- current + (rmnorm(1, mean = 0, varcov = covar)*sdTune)
                 propsosal <- as.vector(proposal)
-                proposal[proposal<0]<-0
+                proposal[proposal<0.001]<-0.001
                 names(proposal) <- names(current)
                 proposal
               }))
@@ -135,14 +134,14 @@ mcmcSampler <- function(initParams, ## initial parameter guess
                         randInit = T, ## if T then randomly sample initial parameters instead of above value
                         obsDat = myDat, ## data
                         proposer = multiv.proposer(covar),## proposal distribution
-                        sdProps=c(0.001,0.001,0.01,0.1,0.1,0.01,0.01,0.01,0.01,0.1,0.1,0.1,0.1),##starting proposal dists
+                        sdProps=c(0.1,0.1,0.1,1,0,0.1,0.1,0.1,0.1,2,2,2,2),##starting proposal dists
                         niter = 100, ## MCMC iterations
                         particles =100,##number of particles for particle filter
                         nburn = 0, ## iterations to automatically burn
                         monitoring=0, ## if >2 browses, if >1 prints progress
                         adaptiveMCMC = F, ## adapt proposal distribution?
                         startAdapt = 150, ## start adapting at what iteration?
-                        adptBurn = 200, ## ignore first so many iterations for adapting posterior
+                        adptBurn = 200, ## ignore first x number of iterations for adapting posterior
                         acceptanceRate=0.9,##acceptance rate for adaptive mcmc
                         tell = 100) { ## how often to print progress
   
@@ -168,17 +167,19 @@ mcmcSampler <- function(initParams, ## initial parameter guess
   while(iter <= niter) {
     if ((monitoring > 1) || (monitoring && (iter%%tell == 0))) print(paste("on iteration",iter,"of", niter + 1))
     
-    if(adaptiveMCMC & proposer$type=='block' & iter > startAdapt & iter %% 50 == 0) {
+    ##var covar matrix update - currently every 50 iterations
+    if(adaptiveMCMC & proposer$type=='block' & iter > startAdapt & iter %% 50 == 0) { ##modulur division of 50, update covar every 50 iterations
       adptBurn <- min((startAdapt-50), adptBurn)
-      write.table(out,"Q:\\Imperial\\out.csv")
-      adaptedCovar <- 2.38^2 / nfitted * cov.wt(log(na.omit(out)[adptBurn:(iter-1),1:nfitted]))$cov
+      adaptedCovar <- 2.38^2 / nfitted * cov(log(out[adptBurn:(iter-1),1:nfitted]))
       adaptedCovar <- adaptedCovar*.95 + originalCovar*.05 ## 95% adapted & 5% original
       rownames(adaptedCovar) <- colnames(adaptedCovar) <- names(currentParams)
       assign('covar', adaptedCovar, envir = environment(proposer$fxn))
     }
-    sdp<-tuner(sdp,acceptanceRate,aratio)#0.9 = desired acceptance rate
+    
+    if(proposer$type=='block'){sdp<-tuner(sdp,acceptanceRate,aratio)#0.9 = desired acceptance rate
     print(sdp)
-    proposal <- proposer$fxn(currentParams,sdTune=sdp)
+    proposal <- proposer$fxn(currentParams,sdTune=sdp)}
+    else proposal <- proposer$fxn(currentParams)
     print(proposal)
     propVal <- llfnc(proposal, particles=particles)
     lmh <- propVal - curVal ## likelihood ratio = log likelihood difference

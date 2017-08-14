@@ -134,10 +134,6 @@ pFilt <- function (n, iState, stepFun, likeFunc, obsData,prms,resM=F,rFclust)
     wp<-paste(particles[,1],particles[,2],particles[,3], particles[,4],times[i],
               times[i + 1],prms[1],prms[2],prms[3],prms[4],prms[5],prms[9],prms[10],rFclust,sep=",")
     
-    
-  #  particlesTemp<-clusterMap(cl,stepFun,E=particles[,1],L=particles[,2],P=particles[,3],M=particles[,4],
-                 #  cT=times[i],nT=times[i+1],uoE=prms[1],uoL=prms[2],uP=prms[3],Y=prms[4],n=prms[5],o=prms[9],sf=prms[10],rFc=rFclust)
-    
     #if statement for if outputting model results for plotting rather than LL
 
     particlesTemp = parLapply(cl,wp,stepFun)  #use NULL for dide cluster, cl for local
@@ -155,6 +151,7 @@ pFilt <- function (n, iState, stepFun, likeFunc, obsData,prms,resM=F,rFclust)
     weights<-(exp(weights)*0.9)
     weights[is.na(weights)]<-1e-50
     
+    #used for outputting full runs from pF for model visualisations. 
     if(resM==T){
       particlesTemp1 = parLapply(cl,wp,modStep4)
       pt<-NULL
