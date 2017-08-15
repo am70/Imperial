@@ -20,7 +20,7 @@ delta<-0.25#discrete time period
 
 #simDat<-read.csv("C:\\simDat.csv",sep=" ")
 ##load in Garki rainfall data NOT YET VILLAGE SPECIFIC
-rainfall<-read.csv("Q:\\Imperial\\larvalModel\\Data\\meteoFUP1.csv",head=F)
+rainfall<-read.csv("C:\\Imperial\\larvalModel\\Data\\meteoFUP1.csv",head=F)
 colnames(rainfall)<-c("rainfall","date")
 rainfall$date<-dmy(rainfall$date)
 #limit data to one year
@@ -29,17 +29,17 @@ rainfall$time<-(1:nrow(rainfall))
 rFx<-rainfall[rep(seq_len(nrow(rainfall)), each=1/delta),]
 rFx<-rFx[,1]
 
-rainfall2<-read.csv("Q:\\Imperial\\larvalModel\\Data\\meteoFUP2.csv",head=F)
+rainfall2<-read.csv("C:\\Imperial\\larvalModel\\Data\\meteoFUP2.csv",head=F)
 colnames(rainfall2)<-c("rainfall","date")
 rainfall2$date<-dmy(rainfall2$date)
 #limit data to one year
 rainfall2<-subset(rainfall2, date >= as.Date("1971-01-01") & date <= as.Date("1973-04-27"))
 rainfall2$time<-(1:nrow(rainfall2))
-rFx2<-rainfall[rep(seq_len(nrow(rainfall)), each=1/delta),]
+rFx2<-rainfall2[rep(seq_len(nrow(rainfall2)), each=1/delta),]
 rFx2<-rFx2[,1]
 
 #load in mosquito data
-garki<-read.table("Q:\\Imperial\\larvalModel\\Data\\spraycollect.csv",sep=",",head=T)
+garki<-read.table("C:\\Imperial\\larvalModel\\Data\\spraycollect.csv",sep=",",head=T)
 garki$ag_sum<-rowSums(garki[,c(9:16)])#create sum of A.gambiae spray samples
 garki$Date<-as.Date(garki$Date)
 #garki$Date<-dmy(as.character(garki$Date))
@@ -70,7 +70,7 @@ garkiObsX<-Reduce(function(...) merge(..., all=TRUE), list(garkiObs101, garkiObs
 #                                                                                                                                       #
 #########################################################################################################################################
 
-odin_package("Q:\\Imperial\\larvalModel\\packages\\odinPackage")
+odin_package("C:\\Imperial\\larvalModel\\packages\\odinPackage")
 load_all()
 document()
 
@@ -103,19 +103,19 @@ system.time(runX200z5 <- mcmcSampler(initParams = c(uoE=0.03526661,uoL=0.0377664
                                      , niter = 10000))
 
 
-covar=matrix(c(.001,0,0,0,0,0,0,0,0,0,0,0,0,
-               0,.001,0,0,0,0,0,0,0,0,0,0,0,
-               0,0,.001,0,0,0,0,0,0,0,0,0,0,
-               0,0,0,.001,0,0,0,0,0,0,0,0,0,
-               0,0,0,0,.001,0,0,0,0,0,0,0,0,
-               0,0,0,0,0,.001,0,0,0,0,0,0,0,
-               0,0,0,0,0,0,.001,0,0,0,0,0,0,
-               0,0,0,0,0,0,0,.001,0,0,0,0,0,
-               0,0,0,0,0,0,0,0,.001,0,0,0,0,
-               0,0,0,0,0,0,0,0,0,.001,0,0,0,
-               0,0,0,0,0,0,0,0,0,0,.001,0,0,
-               0,0,0,0,0,0,0,0,0,0,0,.001,0,
-               0,0,0,0,0,0,0,0,0,0,0,0,.001),13,13)
+covar=matrix(c(1,0,0,0,0,0,0,0,0,0,0,0,0,
+               0,1,0,0,0,0,0,0,0,0,0,0,0,
+               0,0,1,0,0,0,0,0,0,0,0,0,0,
+               0,0,0,1,0,0,0,0,0,0,0,0,0,
+               0,0,0,0,1,0,0,0,0,0,0,0,0,
+               0,0,0,0,0,1,0,0,0,0,0,0,0,
+               0,0,0,0,0,0,1,0,0,0,0,0,0,
+               0,0,0,0,0,0,0,1,0,0,0,0,0,
+               0,0,0,0,0,0,0,0,1,0,0,0,0,
+               0,0,0,0,0,0,0,0,0,1,0,0,0,
+               0,0,0,0,0,0,0,0,0,0,1,0,0,
+               0,0,0,0,0,0,0,0,0,0,0,1,0,
+               0,0,0,0,0,0,0,0,0,0,0,0,1),13,13)
 
 
 
@@ -125,19 +125,19 @@ system.time(runX200z6x <- mcmcSampler(initParams = c(uoE=0.01882522,uoL=0.050950
                                                     o2=1.04163691,sf1=8.27124828,sf2=3.43264994,sf3=5.88083617,sf4=3.32105154)
                                      ,nburn=100
                                      ,monitoring=2
-                                     , proposer = sequential.proposer(sdProps=c(0.001,0.001,0.01,0.1,0,0.1,0.1,0.01,0.01,0.5,0.5,0.5,0.5))
+                                     , proposer = multiv.proposer(covar = covar)
                                      ,sdProps=c(0.1,0.1,0.1,1,0,0.1,0.1,0.1,0.1,2,2,2,2)
                                      , randInit = F
                                      ,adaptiveMCMC = T
                                      , startAdapt = 150
                                      , particles=126
-                                     ,acceptanceRate = 0.18
+                                     ,acceptanceRate = 0.19
                                      , niter = 10000))
 
 
 
 
-write.table(runX200z4$results,"Q:\\Imperial\\res2.csv")
+write.table(runX200z4$results,"C:\\Imperial\\res2.csv")
 
 meds<-function(x){cbind(median(x[,1]),median(x[,2]),median(x[,3]),median(x[,4]),median(x[,5]),median(x[,6]),median(x[,7]),median(x[,8]),median(x[,9]))}
 
@@ -174,11 +174,11 @@ context::context_log_start()
 root <- "contexts"
 obj$cluster_load(TRUE)
 
-sources<-c("Q:\\Imperial\\larvalModel\\packages\\odinPackage\\data_functions.R")
+sources<-c("C:\\Imperial\\larvalModel\\packages\\odinPackage\\data_functions.R")
 
 ctx <- context::context_save(root,
                              package_source=provisionr::package_sources(
-                             local="Q:\\Imperial\\larvalModel\\packages\\odinPackage"),
+                             local="C:\\Imperial\\larvalModel\\packages\\odinPackage"),
                              sources=sources,
                              packages = c("lhs","deSolve","lubridate","odinPackage","dde","buildr","coda","parallel","snow"))
 
