@@ -95,14 +95,15 @@ sequential.proposer <- function(sdProps) {
 }
 
 ##proposal sd tuning function
-tuner <- function(curSd, acptR,curAcptR){
+tuner <- function(curSd, acptR,curAcptR,minSddProps){
   print(paste0("aratio = ",curAcptR))
   
   if(curAcptR ==1) curAcptR <- 0.99
   if(curAcptR == 0) curAcptR <- 0.01
   curSd = (curSd*qnorm(acptR/2))/qnorm(curAcptR/2)
   #curSd[curSd > 1] <- 1
-  curSd[curSd <0.01 && curSd !=0] <- 0.01
+  #curSd[curSd < sdProps] <- 0.01
+  curSd[c(which(curSd<minSddProps))]<-minSddProps[c(which(curSd<minSddProps))]
   
   return(curSd)
 }
@@ -110,13 +111,11 @@ tuner <- function(curSd, acptR,curAcptR){
 
 ## function for adaptive blocked proposals based on var-covar matrix
 multiv.proposer <- function(covar,blockLS = list(rownames(covar))) {
-  nblocks <- length(blockLS)
-  on <- 0
   return(list(type = 'block',
               fxn = function(current, sdTune) {
                 proposal <- current + (rmnorm(1, mean = 0, varcov = covar)*sdTune)
                 propsosal <- as.vector(proposal)
-                proposal[proposal<0.001]<-0.001
+                proposal[proposal<=0]<-1e-10
                 names(proposal) <- names(current)
                 proposal
               }))
@@ -135,6 +134,7 @@ mcmcSampler <- function(initParams, ## initial parameter guess
                         obsDat = myDat, ## data
                         proposer = multiv.proposer(covar),## proposal distribution
                         sdProps=c(0.1,0.1,0.1,1,0,0.1,0.1,0.1,0.1,2,2,2,2),##starting proposal dists
+                        minSddProps=c(0.01,0.01,0.01,0.1,0,0.01,0.01,0.01,0.01,0.3,0.3,0.3,0.3),#min values for tuner for each param
                         niter = 100, ## MCMC iterations
                         particles =100,##number of particles for particle filter
                         nburn = 0, ## iterations to automatically burn
@@ -176,7 +176,7 @@ mcmcSampler <- function(initParams, ## initial parameter guess
       assign('covar', adaptedCovar, envir = environment(proposer$fxn))
     }
     
-    if(proposer$type=='block'){sdp<-tuner(sdp,acceptanceRate,aratio)#0.9 = desired acceptance rate
+    if(proposer$type=='block'){sdp<-tuner(sdp,acceptanceRate,aratio,minSddProps)
     print(sdp)
     proposal <- proposer$fxn(currentParams,sdTune=sdp)}
     else proposal <- proposer$fxn(currentParams)
