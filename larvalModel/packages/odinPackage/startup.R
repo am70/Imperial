@@ -18,9 +18,9 @@ library(coda)
 #########################################################################################################################################
 delta<-0.25#discrete time period
 
-#simDat<-read.csv("C:\\simDat.csv",sep=" ")
+#simDat<-read.csv("Q:\\simDat.csv",sep=" ")
 ##load in Garki rainfall data NOT YET VILLAGE SPECIFIC
-rainfall<-read.csv("C:\\Imperial\\larvalModel\\Data\\meteoFUP1.csv",head=F)
+rainfall<-read.csv("Q:\\Imperial\\larvalModel\\Data\\meteoFUP1.csv",head=F)
 colnames(rainfall)<-c("rainfall","date")
 rainfall$date<-dmy(rainfall$date)
 #limit data to one year
@@ -29,7 +29,7 @@ rainfall$time<-(1:nrow(rainfall))
 rFx<-rainfall[rep(seq_len(nrow(rainfall)), each=1/delta),]
 rFx<-rFx[,1]
 
-rainfall2<-read.csv("C:\\Imperial\\larvalModel\\Data\\meteoFUP2.csv",head=F)
+rainfall2<-read.csv("Q:\\Imperial\\larvalModel\\Data\\meteoFUP2.csv",head=F)
 colnames(rainfall2)<-c("rainfall","date")
 rainfall2$date<-dmy(rainfall2$date)
 #limit data to one year
@@ -39,7 +39,7 @@ rFx2<-rainfall2[rep(seq_len(nrow(rainfall2)), each=1/delta),]
 rFx2<-rFx2[,1]
 
 #load in mosquito data
-garki<-read.table("C:\\Imperial\\larvalModel\\Data\\spraycollect.csv",sep=",",head=T)
+garki<-read.table("Q:\\Imperial\\larvalModel\\Data\\spraycollect.csv",sep=",",head=T)
 garki$ag_sum<-rowSums(garki[,c(9:16)])#create sum of A.gambiae spray samples
 garki$Date<-as.Date(garki$Date)
 #garki$Date<-dmy(as.character(garki$Date))
@@ -70,7 +70,7 @@ garkiObsX<-Reduce(function(...) merge(..., all=TRUE), list(garkiObs101, garkiObs
 #                                                                                                                                       #
 #########################################################################################################################################
 
-odin_package("C:\\Imperial\\larvalModel\\packages\\odinPackage")
+odin_package("Q:\\Imperial\\larvalModel\\packages\\odinPackage")
 load_all()
 document()
 
@@ -130,7 +130,7 @@ system.time(runX200z6x2 <- mcmcSampler(initParams = c(uoE=0.01882522,uoL=0.05095
                                      , minSddProps=c(0.01,0.01,0.05,0.3,0,0.1,0.05,0.05,0.05,0.5,0.3,0.5,0.5)
                                      , randInit = F
                                      ,adaptiveMCMC = T
-                                     , startAdapt = 150
+                                     , startAdapt = 192
                                      , particles=140
                                      ,acceptanceRate = 0.19
                                      , niter = 10000))
@@ -138,7 +138,7 @@ system.time(runX200z6x2 <- mcmcSampler(initParams = c(uoE=0.01882522,uoL=0.05095
 
 
 
-write.table(runX200z4$results,"C:\\Imperial\\res2.csv")
+write.table(runX200z4$results,"Q:\\Imperial\\res2.csv")
 
 meds<-function(x){cbind(median(x[,1]),median(x[,2]),median(x[,3]),median(x[,4]),median(x[,5]),median(x[,6]),median(x[,7]),median(x[,8]),median(x[,9]))}
 
@@ -175,13 +175,13 @@ context::context_log_start()
 root <- "contexts"
 obj$cluster_load(TRUE)
 
-sources<-c("C:\\Imperial\\larvalModel\\packages\\odinPackage\\data_functions.R")
+sources<-c("Q:\\Imperial\\larvalModel\\packages\\odinPackage\\data_functions.R")
 
 ctx <- context::context_save(root,
                              package_source=provisionr::package_sources(
-                             local="C:\\Imperial\\larvalModel\\packages\\odinPackage"),
+                             local="Q:\\Imperial\\larvalModel\\packages\\odinPackage"),
                              sources=sources,
-                             packages = c("lhs","deSolve","lubridate","odinPackage","dde","buildr","coda","parallel","snow"))
+                             packages = c("lhs","deSolve","lubridate","odinPackage","dde","buildr","coda","parallel","snow","mnormt"))
 
 obj <- didehpc::queue_didehpc(ctx,didehpc::didehpc_config(cluster="mrc",home="//fi--san02/homes/alm210",cores=16,parallel = T))
 
@@ -192,67 +192,99 @@ obj <- didehpc::queue_didehpc(ctx,didehpc::didehpc_config(cluster="mrc",home="//
 #                                                                                                                                       #
 #########################################################################################################################################
 
-runX1_1x1L <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.03386983,uoL=0.03652054,uP=0.25801683,Y=14.61421801,n=10,p0=0.51241423,o=0.45443296,Fp=0.99098142,
-                                                  o2=1.36693761,sf1=6.09204989,sf2=2.49848543,sf3=9.00862475,sf4=11.17703509)
-                                   ,nburn=5000
-                                   ,monitoring=2
-                                   , proposer = sequential.proposer(sdProps=c(0.001,0.001,0.01,0.1,0.1,0.1,0.1,0.01,0.01,0.5,0.5,0.5,0.5))
-                                   ,particles = 112
-                                 , randInit = F
-                                 , niter = 1000000),name="pMMH nx1M")
+minSpd=c(0.01,0.01,0.03,0.1,0,0.01,0.01,0.01,0.001,0.3,0.3,0.3,0.3)
 
-runX1_1xx1 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.03386983,uoL=0.03652054,uP=0.25801683,Y=14.61421801,n=10,p0=0.51241423,o=0.45443296,Fp=0.99098142,
-                                                     o2=1.36693761,sf1=6.09204989,sf2=2.49848543,sf3=9.00862475,sf4=11.17703509)
-                                    ,nburn=1000
-                                    ,monitoring=2
-                                    , proposer = sequential.proposer(sdProps=c(0.001,0.001,0.01,0.1,0,0.1,0.1,0.01,0.01,0.5,0.5,0.5,0.5))
-                                    ,particles = 96
-                                    , randInit = F
-                                    , niter = 1000000),name="pMMH n10_1M")
+runX1_1x1L2 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.01882522,uoL=0.05095041,uP=0.24359410,Y=17.29277120,n=60,p0=0.42569643,o=0.16859148,Fp=0.96104710,
+                                                        o2=1.04163691,sf1=8.27124828,sf2=3.43264994,sf3=5.88083617,sf4=3.32105154)
+                                         ,nburn=100
+                                         ,monitoring=2
+                                         , proposer = multiv.proposer(covar = covar)
+                                         ,sdProps=c(0.1,0.1,0.1,1,0,0.1,0.1,0.1,0.1,2,2,2,2)
+                                      , minSddProps=minSpd
+                                      , randInit = F
+                                         ,adaptiveMCMC = T
+                                         , startAdapt = 192
+                                         , particles=208
+                                         ,acceptanceRate = 0.19
+                                         , niter = 10000),name="pMMH n60p2")
+
+runX1_1xx12 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.01882522,uoL=0.05095041,uP=0.24359410,Y=17.29277120,n=50,p0=0.42569643,o=0.16859148,Fp=0.96104710,
+                                                     o2=1.04163691,sf1=8.27124828,sf2=3.43264994,sf3=5.88083617,sf4=3.32105154)
+                                      ,nburn=100
+                                      ,monitoring=2
+                                      , proposer = multiv.proposer(covar = covar)
+                                      ,sdProps=c(0.1,0.1,0.1,1,0,0.1,0.1,0.1,0.1,2,2,2,2)
+                                      , minSddProps=minSpd
+                                      , randInit = F
+                                      ,adaptiveMCMC = T
+                                      , startAdapt = 208
+                                      , particles=140
+                                      ,acceptanceRate = 0.19
+                                      , niter = 10000),name="pMMH n50p208")
 
 
 
-runX1_1y1 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.03311636,uoL=0.035,uP=0.25,Y=15.30829479,n=10,p0=0.49791206,o=5,Fp=0.5,
-                                                    o2=1,sf1=10,sf2=10,sf3=10,sf4=10)
-                                     ,nburn=5000
+runX1_1y12 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.01882522,uoL=0.05095041,uP=0.24359410,Y=17.29277120,n=40,p0=0.42569643,o=0.16859148,Fp=0.96104710,
+                                                    o2=1.04163691,sf1=8.27124828,sf2=3.43264994,sf3=5.88083617,sf4=3.32105154)
+                                     ,nburn=100
                                      ,monitoring=2
-                                     , proposer = sequential.proposer(sdProps=c(0.001,0.001,0.01,0.1,0,0.1,1,0.01,0.01,0.5,0.5,0.5,0.5))
-                                     ,particles = 112
+                                     , proposer = multiv.proposer(covar = covar)
+                                     ,sdProps=c(0.1,0.1,0.1,1,0,0.1,0.1,0.1,0.1,2,2,2,2)
+                                     , minSddProps=minSpd
                                      , randInit = F
-                                     , niter = 200000),name="pMMH nx")
+                                     ,adaptiveMCMC = T
+                                     , startAdapt = 208
+                                     , particles=140
+                                     ,acceptanceRate = 0.19
+                                     , niter = 10000),name="pMMH n40p208")
 
-runX1_2 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.03311636,uoL=0.035,uP=0.25,Y=15.30829479,n=10,p0=0.49791206,o=5,Fp=0.5,
-                                                  o2=1,sf1=10,sf2=10,sf3=10,sf4=10)
-                                   ,nburn=5000
+runX1_22 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.01882522,uoL=0.05095041,uP=0.24359410,Y=17.29277120,n=30,p0=0.42569643,o=0.16859148,Fp=0.96104710,
+                                                  o2=1.04163691,sf1=8.27124828,sf2=3.43264994,sf3=5.88083617,sf4=3.32105154)
+                                   ,nburn=100
                                    ,monitoring=2
-                                   , proposer = sequential.proposer(sdProps=c(0.001,0.001,0.01,0.1,0,0.1,1,0.01,0.01,0.5,0.5,0.5,0.5))
-                                   ,particles = 112
+                                   , proposer = multiv.proposer(covar = covar)
+                                   ,sdProps=c(0.1,0.1,0.1,1,0,0.1,0.1,0.1,0.1,2,2,2,2)
+                                   , minSddProps=minSpd
                                    , randInit = F
-                                   , niter = 100000),name="pMMH n10")
+                                   ,adaptiveMCMC = T
+                                   , startAdapt = 208
+                                   , particles=140
+                                   ,acceptanceRate = 0.19
+                                   , niter = 10000),name="pMMH n30p208")
 
 
-runX1_3 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.03311636,uoL=0.035,uP=0.25,Y=15.30829479,n=20,p0=0.49791206,o=5,Fp=0.5,
-                                                  o2=1,sf1=10,sf2=10,sf3=10,sf4=10)
-                                   ,nburn=5000
+runX1_32 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.01882522,uoL=0.05095041,uP=0.24359410,Y=17.29277120,n=20,p0=0.42569643,o=0.16859148,Fp=0.96104710,
+                                                  o2=1.04163691,sf1=8.27124828,sf2=3.43264994,sf3=5.88083617,sf4=3.32105154)
+                                   ,nburn=100
                                    ,monitoring=2
-                                   , proposer = sequential.proposer(sdProps=c(0.001,0.001,0.01,0.1,0,0.1,1,0.01,0.01,0.5,0.5,0.5,0.5))
-                                   ,particles = 112
+                                   , proposer = multiv.proposer(covar = covar)
+                                   ,sdProps=c(0.1,0.1,0.1,1,0,0.1,0.1,0.1,0.1,2,2,2,2)
+                                   , minSddProps=minSpd
                                    , randInit = F
-                                   , niter = 100000),name="pMMH n20")
+                                   ,adaptiveMCMC = T
+                                   , startAdapt = 208
+                                   , particles=140
+                                   ,acceptanceRate = 0.19
+                                   , niter = 10000),name="pMMH n20p208")
 
 
-runX1_4 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.03311636,uoL=0.035,uP=0.25,Y=15.30829479,n=40,p0=0.49791206,o=5,Fp=0.5,
-                                                  o2=1,sf1=10,sf2=10,sf3=10,sf4=10)
-                                   ,nburn=5000
+runX1_42 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.01882522,uoL=0.05095041,uP=0.24359410,Y=17.29277120,n=10,p0=0.42569643,o=0.16859148,Fp=0.96104710,
+                                                  o2=1.04163691,sf1=8.27124828,sf2=3.43264994,sf3=5.88083617,sf4=3.32105154)
+                                   ,nburn=100
                                    ,monitoring=2
-                                   , proposer = sequential.proposer(sdProps=c(0.001,0.001,0.01,0.1,0,0.1,1,0.01,0.01,0.5,0.5,0.5,0.5))
-                                   ,particles = 112
+                                   , proposer = multiv.proposer(covar = covar)
+                                   ,sdProps=c(0.01,0.01,0.02,0.2,0.1,0.1,0.01,0.01,0.02,0.2,0.2,0.2,0.2)
+                                   , minSddProps=c(0.01,0.01,0.03,0.1,0.1,0.01,0.01,0.01,0.001,0.4,0.3,0.4,0.4)
                                    , randInit = F
-                                   , niter = 100000),name="pMMH n40")
+                                   ,adaptiveMCMC = T
+                                   , startAdapt = 192
+                                   , particles=140
+                                   ,acceptanceRate = 0.19
+                                   , niter = 10000),name="pMMH nx2p")
 
 
 
-runX1_5 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.03311636,uoL=0.035,uP=0.25,Y=15.30829479,n=60,p0=0.49791206,o=5,Fp=0.5,
+runX1_52 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.03311636,uoL=0.035,uP=0.25,Y=15.30829479,n=60,p0=0.49791206,o=5,Fp=0.5,
                                                   o2=1,sf1=10,sf2=10,sf3=10,sf4=10)
                                    ,nburn=5000
                                    ,monitoring=2
