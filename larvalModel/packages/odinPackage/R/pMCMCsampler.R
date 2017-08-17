@@ -38,7 +38,8 @@ lprior <- function(parms) {
   Yprior<-dnorm(parms[4],mean=13.06,sd=4.53,log=T)
   p0prior<-dunif(parms[6],min=0,max=1,log=T)
   FpPrior<-dunif(parms[8],min=0,max=1,log=T)
-  priorSum<-as.vector(uoEprior+uoLprior+uPprior+Yprior+p0prior+FpPrior)
+  oprior<-dunif(parms[7],min=0.1,max=1000)
+  priorSum<-as.vector(uoEprior+uoLprior+uPprior+Yprior+p0prior+FpPrior+oprior)
   return(priorSum)
 }
 
@@ -115,7 +116,7 @@ multiv.proposer <- function(covar,blockLS = list(rownames(covar))) {
               fxn = function(current, sdTune) {
                 proposal <- current + (rmnorm(1, mean = 0, varcov = covar)*sdTune)
                 propsosal <- as.vector(proposal)
-                proposal[proposal<=0]<-1e-10
+                proposal[proposal<=0]<-1e-3
                 names(proposal) <- names(current)
                 proposal
               }))
@@ -170,7 +171,7 @@ mcmcSampler <- function(initParams, ## initial parameter guess
     ##var covar matrix update - currently every 50 iterations
     if(adaptiveMCMC & proposer$type=='block' & iter > startAdapt & iter %% 50 == 0) { ##modulur division of 50, update covar every 50 iterations
       adptBurn <- min((startAdapt-50), adptBurn)
-      adaptedCovar <- 2.38^2 / nfitted * cov(log(out[adptBurn:(iter-1),1:nfitted]))
+      adaptedCovar <- 2.38^2 / nfitted-1 * cov(log(out[adptBurn:(iter-1),c(1:4,6:13)]))
       adaptedCovar <- adaptedCovar*.95 + originalCovar*.05 ## 95% adapted & 5% original
       rownames(adaptedCovar) <- colnames(adaptedCovar) <- names(currentParams)
       assign('covar', adaptedCovar, envir = environment(proposer$fxn))

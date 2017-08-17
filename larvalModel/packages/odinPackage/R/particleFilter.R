@@ -136,11 +136,11 @@ pFilt <- function (n, iState, stepFun, likeFunc, obsData,prms,resM=F,rFclust)
     
     #if statement for if outputting model results for plotting rather than LL
 
-    particlesTemp = parLapply(cl,wp,stepFun)  #use NULL for dide cluster, cl for local
+    particlesTemp = parLapply(NULL,wp,stepFun)  #use NULL for dide cluster, cl for local
     particles<-data.frame(t(sapply(particlesTemp, `[`)))
     
     likeDat<-paste(particles$M,obsData[i+1,2],prms[6],prms[8],times[i],sep=",")
-    weights = parLapply(cl,likeDat,likeFunc)
+    weights = parLapply(NULL,likeDat,likeFunc)
     
     weights<-as.vector(unlist(weights))
      ll = ll + mean(weights)
