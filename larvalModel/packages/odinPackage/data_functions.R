@@ -9,15 +9,16 @@ library(mnormt)
 #                                                     load in data                                                                      #
 #                                                                                                                                       #
 #########################################################################################################################################
+#################################################################################################################################
 delta<-0.25#discrete time period
 
-#simDat<-read.csv("C:\\simDat.csv",sep=" ")
+#simDat<-read.csv("Q:\\simDat.csv",sep=" ")
 ##load in Garki rainfall data NOT YET VILLAGE SPECIFIC
 rainfall<-read.csv("Q:\\Imperial\\larvalModel\\Data\\meteoFUP1.csv",head=F)
 colnames(rainfall)<-c("rainfall","date")
 rainfall$date<-dmy(rainfall$date)
 #limit data to one year
-rainfall<-subset(rainfall, date >= as.Date("1971-04-27") & date <= as.Date("1973-01-01"))
+rainfall<-subset(rainfall, date >= as.Date("1971-01-01") & date <= as.Date("1973-04-27"))
 rainfall$time<-(1:nrow(rainfall))
 rFx<-rainfall[rep(seq_len(nrow(rainfall)), each=1/delta),]
 rFx<-rFx[,1]
@@ -26,7 +27,7 @@ rainfall2<-read.csv("Q:\\Imperial\\larvalModel\\Data\\meteoFUP2.csv",head=F)
 colnames(rainfall2)<-c("rainfall","date")
 rainfall2$date<-dmy(rainfall2$date)
 #limit data to one year
-rainfall2<-subset(rainfall2, date >= as.Date("1971-04-27") & date <= as.Date("1973-01-01"))
+rainfall2<-subset(rainfall2, date >= as.Date("1971-01-01") & date <= as.Date("1973-04-27"))
 rainfall2$time<-(1:nrow(rainfall2))
 rFx2<-rainfall2[rep(seq_len(nrow(rainfall2)), each=1/delta),]
 rFx2<-rFx2[,1]
@@ -55,3 +56,16 @@ for (i in c( 101  ,   104   ,  219,  220 )){
 }
 garkiObsX<-Reduce(function(...) merge(..., all=TRUE), list(garkiObs101, garkiObs104,garkiObs219,garkiObs220))
 
+
+covar=matrix(c(0.1,0,0,0,0,0,0,0,0,0,0,0,0,
+               0,0.1,0,0,0,0,0,0,0,0,0,0,0,
+               0,0,0.1,0,0,0,0,0,0,0,0,0,0,
+               0,0,0,0.1,0,0,0,0,0,0,0,0,0,
+               0,0,0,0,0.1,0,0,0,0,0,0,0,0,
+               0,0,0,0,0,0.1,0,0,0,0,0,0,0,
+               0,0,0,0,0,0,0.1,0,0,0,0,0,0,
+               0,0,0,0,0,0,0,0.1,0,0,0,0,0,
+               0,0,0,0,0,0,0,0,0.1,0,0,0,0,
+               0,0,0,0,0,0,0,0,0,0.1,0,0,0,
+               0,0,0,0,0,0,0,0,0,0,0.1,0,0,
+               0,0,0,0,0,0,0,0,0,0,0,0.1,0),12,12)
