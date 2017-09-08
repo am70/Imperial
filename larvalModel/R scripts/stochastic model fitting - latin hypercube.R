@@ -138,31 +138,61 @@ GOF<-function(pr){ #add parameters
   return(res)
 }
 
+pGOF<-function(pr){
+  pr<-read.table(text = pr, sep = ",", colClasses = "numeric")
+  res1<-pFilt(96,iState,modStep3,dataLikFunc,garkiObs101,pr=pr,rFclust=1,fxdParams=50)+lprior(as.numeric(pr))
+  pr[9]<-pr[10]
+  res2<-pFilt(96,iState,modStep3,dataLikFunc,garkiObs104,pr=pr,rFclust=1,fxdParams=50)+lprior(as.numeric(pr))
+  pr[9]<-pr[11]
+  res3<-pFilt(96,iState,modStep3,dataLikFunc,garkiObs219,pr=pr,rFclust=2,fxdParams=50)+lprior(as.numeric(pr))
+  pr[9]<-pr[12]
+  res4<-pFilt(96,iState,modStep3,dataLikFunc,garkiObs220,pr=pr,rFclust=2,fxdParams=50)+lprior(as.numeric(pr))
+ # print(paste0("iteration ",pr[13]))
+  print(sum(res1,res2,res3,res4))
+  return(sum(res1,res2,res3,res4))
+}
 
+for(i in 1:500){
+  pGOF(paste(parms[1],parms[2],parms[3],parms[4],parms[5],parms[6],parms[7],parms[8],parms[9],parms[10],parms[11],parms[12] ,sep=","))
+}
 
 HC<-NULL
 ##initialise latin hypercube
-HCtemp<- randomLHS(100000, 6)
-HC$uoE <-(HCtemp[,1])
-HC$uoL <-(HCtemp[,2])
-HC$uP <- (HCtemp[,3])
-HC$Y <- 13#(10*HCtemp[,4])
-HC$n <- 40#(25*HCtemp[,5])
-HC$sf<-(15*HCtemp[,6])
+HCtemp<- randomLHS(10000, 12)
+HC$count<-c(1:10000)
+HC$uoE <-qnorm(HCtemp[,1],mean=0.035,sd=0.007)
+HC$uoL <-qnorm(HCtemp[,2],mean=0.035,sd=0.007)
+HC$uP <- qnorm(HCtemp[3],mean=0.25,sd=0.0457)
+HC$Y <- qnorm(HCtemp[4],mean=13.06,sd=4.53)
+HC$p0<-qnorm(HCtemp[5],mean=0.5,sd=0.05)
+HC$Lx<-(HCtemp[,6])
+HC$Fp<-qunif(HCtemp[,7],min=0.8,max=1)
+HC$o<-qnorm(HCtemp[,8],mean=1,sd=0.05)
+HC$sf1<-(15*HCtemp[,9])
+HC$sf2<-(15*HCtemp[,10])
+HC$sf3<-(15*HCtemp[,11])
+HC$sf4<-(15*HCtemp[,12])
+
 
 HC<-as.data.frame(HC)
 
 
-HC<- paste(HC$uoE,HC$uoL,HC$uP, HC$Y, HC$n, HC$sf, sep=",")#concatonate into single vector 
 
-clusterExport(cl, c("rFx","delta","garkiObs","modSim","GOF"), envir=environment())
+HC<- paste(HC$uoE,HC$uoL,HC$uP, HC$Y,HC$p0,HC$Lx,HC$Fp,HC$o,HC$sf1,HC$sf2,HC$sf3, HC$sf4,HC$count, sep=",")#concatonate into single vector 
+
+clusterExport(cl, c("pGOF","garkiObs101","garkiObs104","garkiObs219","garkiObs220"), envir=environment())
 
 
-system.time(lhcResults<-data.frame(t(sapply(parLapply(cl,HC,GOF), `[`))))#convert results to dataframe
+system.time(lhcResults2<-lapply(HC,pGOF))#convert results to dataframe
 
 colnames(lhcResults)<-c("uoE","uoL","uP","Y","n","sf","logLike")
 
 mins<-lhcResults[which(lhcResults$logLike == max(lhcResults$logLike)), ]#find minimum values
+
+
+#"0.0275392720335688,0.0391684551658979,0.317601558489952,21.8705305912987,0.474725347165231,0.162143399122823,0.921936883796244,1.07328942136458,2.62381167667732,7.33830458177731,4.35943666368211,4.29330090065394,4392"
+
+HC[which(grepl(max(g), g))]
 
 #pr<-paste(mins$uoE,mins$uoL,mins$uP, mins$sf,mins$Y, mins$n, sep=",")#concatonate into single vector 
 

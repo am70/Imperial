@@ -51,14 +51,18 @@ plotMod<-function(n,mcmcRes,obsDat,rf,sf){
   iqr<-iqrFunc(mcmcRes)
   startTime<-min(obsDat$time)/delta
   endTime<-max(obsDat$time)/delta
+  
+  
+  crosscorr.plot(g$results[,-13])
 
 ####95% CI####
-  
+  par(mfrow=c(1,1))
  mid<- pFilt(n,iState,modStep3,dataLikFunc,garkiObs101,pr=c(parms[1],parms[2],parms[3],
-                                                                  parms[4],60,parms[6],parms[7],parms[8],parms[9],parms[13]),rFclust=rf,resM=T)
+                                                                  parms[4],parms[5],parms[6],parms[7],parms[8]),rFclust=rf,resM=T,fxdParams=60)
  colnames(mid)<-c("M")
- plot(mid$M[-1]~timeX,ylim=c(0,50))
- points(garkiObs101$`101`~f,col="red")
+ plot(mid$M[-1]~timeX,ylim=c(0,40))
+ points(garkiObs219$`219`/parms[8]~as.numeric(garkiObs219$time-min(garkiObs219$time)),col="red")
+ 
  low<- pFilt(n,iState,modStep3,dataLikFunc,garkiObs101,pr=c(cI[1,1],cI[1,2],cI[1,3],
                                                                cI[1,4],cI[2,5],cI[2,6],cI[2,7],cI[2,8],cI[1,9],cI[2,sf]),rFclust=rf,resM=T)
  colnames(low)<-c("M")
@@ -103,7 +107,7 @@ timeX<-timeX[-1,]
   
 }
 
-hh1<-plotMod(120,g1$results,garkiObs101,1,10)
+hh1<-plotMod(120,g$results,garkiObs101,1,10)
 hh2<-plotMod(120,g1$results,garkiObs104,1,11)
 hh3<-plotMod(120,g1$results,garkiObs219,2,12)
 hh4<-plotMod(120,g1$results,garkiObs220,2,13)
