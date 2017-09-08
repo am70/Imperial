@@ -18,7 +18,7 @@ function(
   sf = 10, #scaling factor
   dt=delta,
   o=1,
-  n=10,
+  n=40,
   E0=177,
   L0=8,
   P0=1,

@@ -9,9 +9,9 @@
 
 # initial state sampler, samples random initial states # need to fit initial E and use this to inform L, P & M
 
-iState<-function(N,t,prms){
-parms<-mosParamsP(uoE=prms[1],uoL = prms[2],uP=prms[3],Y=prms[4],n=prms[5],sf=prms[10],o=prms[9])
-  o<-prms[7]
+iState<-function(N,t,prms,fxdParams){
+parms<-mosParamsP(uoE=prms[1],uoL = prms[2],uP=prms[3],Y=prms[4],n=as.numeric(fxdParams),sf=prms[8],o=prms[7])
+  Lx<-prms[5]
   dE<-parms$dE
   dL<-parms$dL
   dP<-parms$dP
@@ -35,7 +35,7 @@ parms<-mosParamsP(uoE=prms[1],uoL = prms[2],uP=prms[3],Y=prms[4],n=prms[5],sf=pr
   c=-(UoE*dE)/(UoL*y)
   x=(-b+sqrt(b^2*-4*a*c))/(2*a)
   
-  L<-o#((dE*x-dL-UoL)/(UoL*y))*(1/o)*(K/(x+1))#L
+  L<-Lx#((dE*x-dL-UoL)/(UoL*y))*(1/o)*(K/(x+1))#L
   E<-L/x
   P<-(dL*L)/(Up+dP)
   M<-(dP*P)/(2*Um)
@@ -48,6 +48,7 @@ parms<-mosParamsP(uoE=prms[1],uoL = prms[2],uP=prms[3],Y=prms[4],n=prms[5],sf=pr
 
 ##negative binomial - gamma poisson (mixture) distribution
 nBgP<-function(x,n,p,log=F){
+  p[p>1]<-1
   if(x==0 && n==0) 1
   else if (n==0) 0
   else if(log==T)(lgamma(x+n)-(lgamma(n)+lfactorial(x)))+(log(p^n)+log((1-p)^x))
@@ -80,11 +81,12 @@ modStep3<-function(weightInput){
   initialState<-as.numeric(dataInput[,c(1:4)])#state of E, L, P and M
   currentTime<-as.numeric(dataInput[,c(5)])#time in model to run from
   nextTime<-as.numeric(dataInput[,c(6)])#time in model to run to
-  pr<-as.numeric(dataInput[,c(7:13)])#parameters
+  pr<-as.numeric(dataInput[,c(7:12)])#parameters
+  fixed<-dataInput[14]#fixed parameters, currently just n
   #initialise model
-  if(dataInput[14]==1) rFc<-rFx  else rFc<-rFx2
+  if(dataInput[13]==1) rFc<-rFx  else rFc<-rFx2
   params<-mosParamsP(E0=initialState[1],L0=initialState[2],P0=initialState[3],M0=initialState[4],
-                     uoE=pr[1],uoL=pr[2],uP=pr[3],Y=pr[4],n=pr[5],o=pr[6],sf=pr[7],rF=rFc,time1=currentTime)
+                     uoE=pr[1],uoL=pr[2],uP=pr[3],Y=pr[4],o=pr[5],sf=pr[6],rF=rFc,time1=currentTime,n=as.numeric(fixed))
   #run model between two discrete time periods and return results
   modR <- larvalModP(user=params)#run model
   simDat <- as.data.frame(modR$run(seq(currentTime, nextTime, length.out=nextTime-currentTime)))
@@ -93,18 +95,19 @@ modStep3<-function(weightInput){
 }
 
 
-##model step function - runs model in steps using Odin, returning the model state at a subsequent time point
+##model step function - for use when returning p.filter full results
 modStep4<-function(weightInput){
   #parse input data
   dataInput<-read.table(text = weightInput, sep = ",", colClasses = "numeric")
   initialState<-as.numeric(dataInput[,c(1:4)])#state of E, L, P and M
   currentTime<-as.numeric(dataInput[,c(5)])#time in model to run from
   nextTime<-as.numeric(dataInput[,c(6)])#time in model to run to
-  pr<-as.numeric(dataInput[,c(7:13)])#parameters
+  pr<-as.numeric(dataInput[,c(7:12)])#parameters
+  fixed<-dataInput[14]#fixed parameters, currently just n
   #initialise model
-  if(dataInput[14]==1) rFc<-rFx  else rFc<-rFx2
+  if(dataInput[13]==1) rFc<-rFx  else rFc<-rFx2
   params<-mosParamsP(E0=initialState[1],L0=initialState[2],P0=initialState[3],M0=initialState[4],
-                     uoE=pr[1],uoL=pr[2],uP=pr[3],Y=pr[4],n=pr[5],o=pr[6],sf=pr[7],rF=rFc,time1=currentTime)
+                     uoE=pr[1],uoL=pr[2],uP=pr[3],Y=pr[4],o=pr[5],sf=pr[6],rF=rFc,time1=currentTime,n=as.numeric(fixed))
   #run model between two discrete time periods and return results
   modR <- larvalModP(user=params)#run model
   simDat <- as.data.frame(modR$run(seq(currentTime, nextTime)))
@@ -121,29 +124,31 @@ modStep4<-function(weightInput){
 #                                                                                                                                                #
 ##################################################################################################################################################
 
+betaBinom<-function(k,n,p,w){
+  a<-p*((1/w)-1)
+  b<-(1-p)*((1/w)-1)
+  lbeta(k+a,n-k+b)-lbeta(a,b)+lchoose(n,k)
+}
 
 
-pFilt <- function (n, iState, stepFun, likeFunc, obsData,prms,resM=F,rFclust) 
+pFilt <- function (n, iState, stepFun, likeFunc, obsData,prms,resM=F,rFclust,fxdParams) 
 {
   times = c(obsData$time/delta) #/delta as model is running in discrete time steps
 
-  particles = iState(n, t = times[1],prms = prms) #initial state
-  ll = 0
+  particles = iState(n, t = times[1],prms = prms,fxdParams) #initial state
+  ll = 0 # could start ll with betaBinom of starting values? else losing data from first data point
   rMeans<-NULL
   for (i in 1:length(times[-length(times)])) {
     wp<-paste(particles[,1],particles[,2],particles[,3], particles[,4],times[i],
-              times[i + 1],prms[1],prms[2],prms[3],prms[4],prms[5],prms[9],prms[10],rFclust,sep=",")
-    
-    #if statement for if outputting model results for plotting rather than LL
+              times[i + 1],prms[1],prms[2],prms[3],prms[4],prms[7],prms[8],rFclust,fxdParams,sep=",")
 
-    particlesTemp = parLapply(NULL,wp,stepFun)  #use NULL for dide cluster, cl for local
+
+    particlesTemp =parLapply(cl,wp,stepFun)  #use NULL for dide cluster, cl for local
     particles<-data.frame(t(sapply(particlesTemp, `[`)))
-    
-    likeDat<-paste(particles$M,obsData[i+1,2],prms[6],prms[8],times[i],sep=",")
-    weights = parLapply(NULL,likeDat,likeFunc)
-    
-    weights<-as.vector(unlist(weights))
-     ll = ll + mean(weights)
+
+   # fracPop<-obsData[i+1,2]/prms[7]
+    weights<-  betaBinom(obsData[i+1,2],(1+round(as.vector(unlist(particles$M,0)))),0.01, prms[6])#dnbinom(round(as.vector(unlist(particles$M,0))),round(1+fracPop,0),prms[5],log=T)#as.vector(unlist(weights))
+    ll = ll + mean(weights)
     #normalise weights
     swP=sum(weights)
     weights=weights/swP
@@ -156,8 +161,8 @@ pFilt <- function (n, iState, stepFun, likeFunc, obsData,prms,resM=F,rFclust)
       particlesTemp1 = parLapply(cl,wp,modStep4)
       pt<-NULL
       for(j in 1:n){
-        M<-(particlesTemp1[[j]]$M)
-        pt<-cbind(pt,M)
+        Mt<-(particlesTemp1[[j]]$M)
+        pt<-cbind(pt,Mt)
       }
       pt<-as.data.frame(rowMeans(pt))
       rMeans<-rbind(rMeans,pt)
