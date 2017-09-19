@@ -90,13 +90,7 @@ dataLikFunc <- function(input)
     read.table(text = input,
                sep = ",",
                colClasses = "numeric")
-  #dataInput[1]=Simulated data point
-  #dataInput[2]=Observed data point
-  #dataInput[3]=negBin prob
-  #dataInput[4]=population scaling factor
-  #dataInput[5]=time in model for rainfall calc
-  #rain<-if (dataInput[5]<140) sum(rFx[1:(as.numeric(dataInput[5])-1)]) else sum(rFx[(as.numeric(dataInput[5])-140):(as.numeric(dataInput[5])-1)])
-  fracPop <- dataInput[2] / (dataInput[4] + 1e-5)#*(rain/(dataInput[2]+1))
+  fracPop <- dataInput[2] / (dataInput[4] + 1e-5)
   ll = nBgP(
     as.numeric(round(dataInput[1], 0)),
     as.numeric(1 + fracPop),
@@ -128,8 +122,22 @@ modStep3 <- function(weightInput) {
     rFc <- rFx
   else
     rFc <- rFx2
-  params<-mosParamsP(E0=initialState[1],L0=initialState[2],P0=initialState[3],M0=initialState[4],
-                     uoE=pr[1],uoL=pr[2],uP=pr[3],Y=pr[4],o=pr[5],sf=pr[6],rF=rFc,time1=currentTime,n=as.numeric(fixed))
+  params <-
+    mosParamsP(
+      E0 = initialState[1],
+      L0 = initialState[2],
+      P0 = initialState[3],
+      M0 = initialState[4],
+      uoE = pr[1],
+      uoL = pr[2],
+      uP = pr[3],
+      Y = pr[4],
+      o = pr[5],
+      sf = pr[6],
+      rF = rFc,
+      time1 = currentTime,
+      n = as.numeric(fixed)
+    )
   #run model between two discrete time periods and return results
   modR <- larvalModP(user = params)#run model
   simDat <-
@@ -161,9 +169,22 @@ modStep4 <- function(weightInput) {
     rFc <- rFx
   else
     rFc <- rFx2
-  params<-
-    mosParamsP(E0=initialState[1],L0=initialState[2],P0=initialState[3],M0=initialState[4],
-                     uoE=pr[1],uoL=pr[2],uP=pr[3],Y=pr[4],o=pr[5],sf=pr[6],rF=rFc,time1=currentTime,n=as.numeric(fixed))
+  params <-
+    mosParamsP(
+      E0 = initialState[1],
+      L0 = initialState[2],
+      P0 = initialState[3],
+      M0 = initialState[4],
+      uoE = pr[1],
+      uoL = pr[2],
+      uP = pr[3],
+      Y = pr[4],
+      o = pr[5],
+      sf = pr[6],
+      rF = rFc,
+      time1 = currentTime,
+      n = as.numeric(fixed)
+    )
   #run model between two discrete time periods and return results
   modR <- larvalModP(user = params)#run model
   simDat <- as.data.frame(modR$run(seq(currentTime, nextTime)))
@@ -193,19 +214,42 @@ modStep4 <- function(weightInput) {
 # @param fxedParams fixed parameters - currently just accepting n but may expand to include more than one parameter
 # @param cluster T/F if true, using the dide cluster if false, run locally
 # @return if resM = F log likelihood value, if resM = T mean results of simulation
-pFilt <- function (n, iState, stepFun, likeFunc, obsData,prms,resM=F,rFclust,fxdParams, cluster=F) 
-{
-  times = c(obsData$time/delta) #/delta as model is running in discrete time steps
-
-  particles = iState(n, t = times[1],prms = prms,fxdParams) #initial state
- ll= mean(betaBinom(obsData[1,2],particles[,4],0.01, prms[6]))#starts ll with betaBinom of starting values, else losing data from first data point
-  rMeans<-NULL
-  for (i in 1:length(times[-length(times)])) {
-    wp<-paste(particles[,1],particles[,2],particles[,3], particles[,4],times[i],
-              times[i + 1],prms[1],prms[2],prms[3],prms[4],prms[7],prms[8],rFclust,fxdParams,sep=",")
+pFilt <-
+  function (n,
+            iState,
+            stepFun,
+            likeFunc,
+            obsData,
+            prms,
+            resM = F,
+            rFclust,
+            fxdParams,
+            cluster = F)
+  {
+    times = c(obsData$time / delta) #/delta as model is running in discrete time steps
     
-    
-    
+    particles = iState(n, t = times[1], prms = prms, fxdParams) #initial state
+    ll = mean(betaBinom(obsData[1, 2], particles[, 4], 0.01, prms[6]))#starts ll with betaBinom of starting values, else losing data from first data point
+    rMeans <- NULL
+    for (i in 1:length(times[-length(times)])) {
+      wp <-
+        paste(
+          particles[, 1], #E
+          particles[, 2], #L
+          particles[, 3], #P
+          particles[, 4], #M
+          times[i], #Start time for model run
+          times[i + 1], # End time for model run
+          prms[1], #UoE
+          prms[2], #UoL
+          prms[3], #uP
+          prms[4], #Y
+          prms[7], #o
+          prms[8], #sf
+          rFclust,
+          fxdParams,
+          sep = ","
+        )
     if (cluster == F)
       particlesTemp = parLapply(cl, wp, stepFun) #use NULL for dide cluster, cl for local
     else
@@ -216,13 +260,13 @@ pFilt <- function (n, iState, stepFun, likeFunc, obsData,prms,resM=F,rFclust,fxd
     weights <-
       betaBinom(obsData[i + 1, 2], (1 + round(as.vector(
         unlist(particles$M, 0)
-      ))), 0.01, prms[6])#dnbinom(round(as.vector(unlist(particles$M,0))),round(1+fracPop,0),prms[5],log=T)#as.vector(unlist(weights))
+      ))), 0.01, prms[6])
     ll = ll + mean(weights)
     #normalise weights
     swP = sum(weights)
     weights = weights / swP
     weights <- (weights) - max(weights)
-    weights <- (exp(weights) * 0.9)
+    weights <- exp(weights * 0.9)
     weights[is.na(weights)] <- 1e-50
     
     #used for outputting full runs from pF for model visualisations.

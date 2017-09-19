@@ -11,6 +11,7 @@
 ##function that sums log-likelihood & log-prior inside MCMC sampler - runs for both local (sf) parameters on each targeted village and global parameters
 # @param fitParams new model parameters
 # @param particles number of particles
+
 # @param fxdParams fixed parameters
 # @param cluster T/F if true, using dide cluster, if false running locally
 # @return log likelihood for global and local parameters
@@ -28,8 +29,7 @@ llfnc <- function(fitParams, particles, fxdParams, cluster) {
       as.numeric(substring(names(garkDat)[2], 1, 1))#which rainfall cluster to use
     #run particle filter for village
     p1 <- 
-      pFilt(particles,iState,modStep3,dataLikFunc,garkDat,pr = globalParms,rFclust = rFc,fxdParams = fxdParams,resM = F, cluster = cluster)
-    + lprior(globalParms)
+      pFilt(particles,iState,modStep3,dataLikFunc,garkDat,pr = globalParms,rFclust = rFc,fxdParams = fxdParams,resM = F, cluster = cluster) + lprior(globalParms)
     pX <- 
       rbind(pX, p1)
   }
@@ -39,44 +39,25 @@ llfnc <- function(fitParams, particles, fxdParams, cluster) {
 
 
 
-## Log-Prior function
+## Log-Prior function - specific to this model
 # @parms current parameters
 # @return sum of log priors
 lprior <- function(parms) {
-  dnorm(parms[1],
-        mean = 0.035,
-        sd = 0.015,
-        log = T)
-  +
-    dnorm(parms[2],
-          mean = 0.035,
-          sd = 0.015,
-          log = T)
-  +
-    dnorm(parms[3],
-          mean = 0.25,
-          sd = 0.08,
-          log = T)
-  +
-    dnorm(parms[4],
-          mean = 13.06,
-          sd = 4.53,
-          log = T)
-  +
-    dunif(parms[6],
-          min = 0,
-          max = 1,
-          log = T)
-  +
-    dunif(parms[5],
-          min = 0.01,
-          max = 1000,
-          log = T)
-  +
-    dunif(parms[7],
-          min = 0.001,
-          max = 10,
-          log = T)
+  
+ priorSum<-(dnorm(parms[1], mean = 0.035, sd = 0.06, log = T)
+  +dunif(parms[1], min = 0.001, max = 0.99, log = T)
+  +dnorm(parms[2], mean = 0.035, sd = 0.06, log = T)
+  +dunif(parms[2], min = 0.001, max = 0.99, log = T)
+  +dnorm(parms[3], mean = 0.25, sd = 0.11, log = T)
+  +dunif(parms[3], min = 0.001, max = 0.99, log = T)
+  +dnorm(parms[4], mean = 13.06, sd = 4.53, log = T)
+  +dunif(parms[5], min = 1, max = 1e+5, log = T)
+  +dunif(parms[6], min = 1e-06, max = 1, log = T)
+  +dunif(parms[5], min = 0.01, max = 1000, log = T)
+  +dunif(parms[7], min = 1, max = 10, log = T)
+  +dunif(parms[8], min = 1, max = 1e+20, log = T)
+  )
+return(as.vector(priorSum))
 }
 
 
@@ -128,10 +109,7 @@ sequential.proposer <- function(current, prmNum, sdProps) {
   proposal <- current
   propVal <-
     proposal[prmNum] + (rnorm(1, mean = 0, sd = sdProps[prmNum]))
-  proposal[prmNum] <- if (propVal < 0)
-    1e-10
-  else
-    propVal
+  proposal[prmNum] <- propVal
   return(proposal)
 }
 
@@ -146,7 +124,6 @@ multiv.proposer <-  function(current, sdProps) {
     current + (rmnorm(1, mean = 0, varcov = covar) * sdTune)
   propsosal <- 
     as.vector(proposal)
-  proposal[proposal <= 0] <- 1e-3
   names(proposal) <- 
     names(current)
   proposal
@@ -164,15 +141,15 @@ tuner <- function(curSd, acptR, curAcptR, maxSddProps) {
     curAcptR <- 0.99
   if (curAcptR == 0)
     curAcptR <- 0.01
-  tunedSd = (curSd * qnorm(acptR / 2)) / qnorm(curAcptR / 2)
-  tunedSd[c(which(tunedSd < maxSddProps))] <-
-    maxSddProps[c(which(tunedSd < maxSddProps))]
-  return(tunedSd)
+  curSd = (curSd * qnorm(acptR / 2)) / qnorm(curAcptR / 2)
+  curSd[c(which(curSd < maxSddProps))] <-
+    maxSddProps[c(which(curSd < maxSddProps))]
+  return(curSd)
 }
 
 
 ##proposal sd tuning function for sequential  adaptive tuning
-# @param current s.d.
+# @param current s.d.hh
 # @param target acceptance ratio
 # @param current acceptance ratio
 # @param maximum proposal s.d.
@@ -183,9 +160,9 @@ tunerSeq <- function(curSd, acptR, curAcptR, maxSddProps, i) {
     curAcptR[i] <- 0.99
   if (curAcptR[i] == 0)
     curAcptR[i] <- 0.01
-  tunedSd[i] = (curSd[i] * qnorm(acptR[i] / 2)) / qnorm(curAcptR[i] / 2)
-  tunedSd[i][tunedSd[i] > maxSddProps[i]] <- maxSddProps[i]
-  return(tunedSd[i])
+  curSd[i] = (curSd[i] * qnorm(acptR[i] / 2)) / qnorm(curAcptR[i] / 2)
+  curSd[i][curSd[i] > maxSddProps[i]] <- maxSddProps[i]
+  return(curSd[i])
 }
 
 ##################################################################################################################################################
@@ -248,7 +225,6 @@ mcmcSampler <- function(initParams,
           particles = particles,
           fxdParams = fixedParam,
           cluster)
-  print(curVal)
   ## Initialize matrix to store MCMC chain
   out <- matrix(NA, nr = niter, nc = length(currentParams) + 1)
   out[1,] <- c(currentParams, ll = -curVal) ## add first value
@@ -257,10 +233,7 @@ mcmcSampler <- function(initParams,
     originalCovar <-
     get('covar', envir = environment(proposer))## Store original covariance matrix
   while (iter <= niter) {
-    if ((monitoring > 1) ||
-        (monitoring &&
-         (iter %% tell == 0)))
-      print(paste("on iteration", iter, "of", niter + 1))
+ 
     
     ##var covar matrix update - currently every 50 iterations
     if (adaptiveMCMC == T &
@@ -271,7 +244,6 @@ mcmcSampler <- function(initParams,
         (2.38 ^ 2 / nfitted) * cov(log(out[adptBurn:(iter - 1), 1:nfitted]))
       adaptedCovar <-
         adaptedCovar * .95 + originalCovar * .05 ## 95% adapted & 5% original
-      print(adaptedCovar)
       rownames(adaptedCovar) <-
         colnames(adaptedCovar) <- names(currentParams)
       assign('covar', adaptedCovar, envir = environment(proposer))
@@ -284,22 +256,25 @@ mcmcSampler <- function(initParams,
     }
     
     if (adaptiveMCMC == T & proposerType == 'seq') {
-      print(prmNum)
       if (iter >= startAdapt)
         sdp[prmNum] <-
           tunerSeq(sdp, acceptanceRate, aratio, maxSddProps, prmNum)
-      print(sdp)
       proposal <- 
         proposer(currentParams, prmNum, sdp)
+      if ((monitoring > 1 && iter %% tell == 0)){
+        print(paste("on iteration", iter, "of", niter + 1))
+        print(curVal)
+        print(sdp)
+        print(iterR)
+        print(paste0("a ratio ", aratio))
+        print(proposal)
+      }
     }
     
     if (adaptiveMCMC == F & proposerType == 'seq') {
-      print(sdp)
       proposal <- 
         proposer(currentParams, prmNum, sdp)
     }
-    
-    print(proposal)
     propVal <-
       llfnc(proposal,
             particles = particles,
@@ -307,16 +282,18 @@ mcmcSampler <- function(initParams,
             cluster)
     lmh <-
       propVal - curVal ## likelihood ratio = log likelihood difference
+    
+    if ((monitoring > 1 && iter %% tell == 0)){
+    print(c(
+      lmh = lmh,
+      propVal = propVal,
+      curVal = curVal
+    ))}
+    
     if (is.na(lmh)) {
       ## if NA, do not accept
     } else {
       ## if it's not NA then do acception/rejection algorithm
-      if (monitoring > 1)
-        print(c(
-          lmh = lmh,
-          propVal = propVal,
-          curVal = curVal
-        ))
       if ((lmh >= 0) | (runif(1, 0, 1) <= exp(lmh))) {
         currentParams <- proposal
         acceptRseq[prmNum] <- acceptRseq[prmNum] + 1
@@ -326,17 +303,17 @@ mcmcSampler <- function(initParams,
       }
     }
     
+
+    
     out[iter, ] <- c(currentParams, ll = curVal)
     iter <- iter + 1
     iterR[prmNum] <- iterR[prmNum] + 1
-    print(iterR)
-    print(paste0("a ratio ", aratio))
+
     aratio[prmNum] <-
       acceptRseq[prmNum] / (iterR[prmNum])#acceptrance ratio change for specific parameter number
     prmNum <- prmNum + 1#progress parameter number
     if (prmNum > length(sdProps))
-      prmNum <-
-      1#if parameter number reaches end of parameters, switch back to start
+      prmNum <-1#if parameter number reaches end of parameters, switch back to start
     
   }
   colnames(out) <- c(names(currentParams), 'll')
