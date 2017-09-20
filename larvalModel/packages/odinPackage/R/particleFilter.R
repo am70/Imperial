@@ -246,8 +246,8 @@ pFilt <-
           prms[4], #Y
           prms[7], #o
           prms[8], #sf
-          rFclust,
-          fxdParams,
+          rFclust,#rainfall data set
+          fxdParams,#fixed parameter (n)
           sep = ","
         )
     if (cluster == F)

@@ -173,7 +173,6 @@ tunerSeq <- function(curSd, acptR, curAcptR, maxSddProps, i) {
 #                                                                                                                                                #
 ##################################################################################################################################################
 library(coda)
-
 # @param initial parameter guess
 # @param if T then randomly sample initial parameters instead of initParams value
 # @param fixedParam specific fixed parameters in model, currently just n - needs updating to include more than one value for future flexibility
@@ -261,20 +260,14 @@ mcmcSampler <- function(initParams,
           tunerSeq(sdp, acceptanceRate, aratio, maxSddProps, prmNum)
       proposal <- 
         proposer(currentParams, prmNum, sdp)
-      if ((monitoring > 1 && iter %% tell == 0)){
-        print(paste("on iteration", iter, "of", niter + 1))
-        print(curVal)
-        print(sdp)
-        print(iterR)
-        print(paste0("a ratio ", aratio))
-        print(proposal)
-      }
+    
     }
     
     if (adaptiveMCMC == F & proposerType == 'seq') {
       proposal <- 
         proposer(currentParams, prmNum, sdp)
     }
+    
     propVal <-
       llfnc(proposal,
             particles = particles,
@@ -284,6 +277,12 @@ mcmcSampler <- function(initParams,
       propVal - curVal ## likelihood ratio = log likelihood difference
     
     if ((monitoring > 1 && iter %% tell == 0)){
+      print(paste("on iteration", iter, "of", niter + 1))
+      print(curVal)
+      print(sdp)
+      print(iterR)
+      print(paste0("a ratio ", aratio))
+      print(proposal)
     print(c(
       lmh = lmh,
       propVal = propVal,
@@ -302,9 +301,6 @@ mcmcSampler <- function(initParams,
         curVal <- propVal
       }
     }
-    
-
-    
     out[iter, ] <- c(currentParams, ll = curVal)
     iter <- iter + 1
     iterR[prmNum] <- iterR[prmNum] + 1
