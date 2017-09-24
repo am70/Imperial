@@ -1,0 +1,1840 @@
+14:06:44 **** Rebuild of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:06:48 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:07:01 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int bernTrial(int, float)':
+..\src\testBench.cpp:21:2: error: expected ';' before 'return'
+  return res;
+  ^~~~~~
+..\src\testBench.cpp:22:1: warning: no return statement in function returning non-void [-Wreturn-type]
+ }
+ ^
+14:07:06 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+14:08:35 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+14:08:46 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:08:52 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+14:10:11 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+14:12:00 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:12:26 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+14:13:07 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:13:44 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+14:13:59 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+14:16:20 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+14:16:30 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+14:16:44 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'double bernTrial(int, float)':
+..\src\testBench.cpp:17:23: error: no match for call to '(std::random_device) (int)'
+  std::mt19937 gen(rd(4)); //Standard mersenne_twister_engine seeded with rd()
+                       ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:49:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1609:5: note: candidate: std::random_device::result_type std::random_device::operator()()
+     operator()()
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1609:5: note:   candidate expects 0 arguments, 1 provided
+14:16:53 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+14:17:59 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:18:19 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:18:45 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'double bernTrial(int, float)':
+..\src\testBench.cpp:22:13: error: no match for call to '(std::uniform_real_distribution<>) (int)'
+  res = dis(4);
+             ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:49:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1808:2: note: candidate: std::uniform_real_distribution<_RealType>::result_type std::uniform_real_distribution<_RealType>::operator()(_UniformRandomNumberGenerator&) [with _UniformRandomNumberGenerator = int; _RealType = double; std::uniform_real_distribution<_RealType>::result_type = double] <near match>
+  operator()(_UniformRandomNumberGenerator& __urng)
+  ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1808:2: note:   conversion of argument 1 would be ill-formed:
+..\src\testBench.cpp:22:13: error: invalid initialization of non-const reference of type 'int&' from an rvalue of type 'int'
+  res = dis(4);
+             ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:49:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1813:2: note: candidate: template<class _UniformRandomNumberGenerator> std::uniform_real_distribution<_RealType>::result_type std::uniform_real_distribution<_RealType>::operator()(_UniformRandomNumberGenerator&, const std::uniform_real_distribution<_RealType>::param_type&) [with _UniformRandomNumberGenerator = _UniformRandomNumberGenerator; _RealType = double]
+  operator()(_UniformRandomNumberGenerator& __urng,
+  ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1813:2: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:22:13: note:   candidate expects 2 arguments, 1 provided
+  res = dis(4);
+             ^
+14:18:47 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'double bernTrial(int, float)':
+..\src\testBench.cpp:22:13: error: no match for call to '(std::uniform_real_distribution<>) (int)'
+  res = dis(4);
+             ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:49:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1808:2: note: candidate: std::uniform_real_distribution<_RealType>::result_type std::uniform_real_distribution<_RealType>::operator()(_UniformRandomNumberGenerator&) [with _UniformRandomNumberGenerator = int; _RealType = double; std::uniform_real_distribution<_RealType>::result_type = double] <near match>
+  operator()(_UniformRandomNumberGenerator& __urng)
+  ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1808:2: note:   conversion of argument 1 would be ill-formed:
+..\src\testBench.cpp:22:13: error: invalid initialization of non-const reference of type 'int&' from an rvalue of type 'int'
+  res = dis(4);
+             ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:49:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1813:2: note: candidate: template<class _UniformRandomNumberGenerator> std::uniform_real_distribution<_RealType>::result_type std::uniform_real_distribution<_RealType>::operator()(_UniformRandomNumberGenerator&, const std::uniform_real_distribution<_RealType>::param_type&) [with _UniformRandomNumberGenerator = _UniformRandomNumberGenerator; _RealType = double]
+  operator()(_UniformRandomNumberGenerator& __urng,
+  ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1813:2: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:22:13: note:   candidate expects 2 arguments, 1 provided
+  res = dis(4);
+             ^
+14:19:13 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:19:45 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'double bernTrial(int, float)':
+..\src\testBench.cpp:22:16: error: invalid operands of types 'std::uniform_real_distribution<>::result_type {aka double}' and 'char' to binary 'operator<<'
+  res = dis(gen)<< ' ';
+        ~~~~~~~~^~~~~~
+14:19:53 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'double bernTrial(int, float)':
+..\src\testBench.cpp:22:16: error: expected ';' before '\x20'
+  res = dis(gen)' ';
+                ^~~
+14:20:30 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'double bernTrial(int, float)':
+..\src\testBench.cpp:22:13: error: no match for call to '(std::uniform_real_distribution<>) (int)'
+  res = dis(9);
+             ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:49:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1808:2: note: candidate: std::uniform_real_distribution<_RealType>::result_type std::uniform_real_distribution<_RealType>::operator()(_UniformRandomNumberGenerator&) [with _UniformRandomNumberGenerator = int; _RealType = double; std::uniform_real_distribution<_RealType>::result_type = double] <near match>
+  operator()(_UniformRandomNumberGenerator& __urng)
+  ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1808:2: note:   conversion of argument 1 would be ill-formed:
+..\src\testBench.cpp:22:13: error: invalid initialization of non-const reference of type 'int&' from an rvalue of type 'int'
+  res = dis(9);
+             ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:49:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1813:2: note: candidate: template<class _UniformRandomNumberGenerator> std::uniform_real_distribution<_RealType>::result_type std::uniform_real_distribution<_RealType>::operator()(_UniformRandomNumberGenerator&, const std::uniform_real_distribution<_RealType>::param_type&) [with _UniformRandomNumberGenerator = _UniformRandomNumberGenerator; _RealType = double]
+  operator()(_UniformRandomNumberGenerator& __urng,
+  ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1813:2: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:22:13: note:   candidate expects 2 arguments, 1 provided
+  res = dis(9);
+             ^
+14:20:44 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'double bernTrial(int, float)':
+..\src\testBench.cpp:22:15: error: no match for call to '(std::uniform_real_distribution<>) (double)'
+  res = dis(0.2);
+               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:49:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1808:2: note: candidate: std::uniform_real_distribution<_RealType>::result_type std::uniform_real_distribution<_RealType>::operator()(_UniformRandomNumberGenerator&) [with _UniformRandomNumberGenerator = double; _RealType = double; std::uniform_real_distribution<_RealType>::result_type = double] <near match>
+  operator()(_UniformRandomNumberGenerator& __urng)
+  ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1808:2: note:   conversion of argument 1 would be ill-formed:
+..\src\testBench.cpp:22:15: error: invalid initialization of non-const reference of type 'double&' from an rvalue of type 'double'
+  res = dis(0.2);
+               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:49:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1813:2: note: candidate: template<class _UniformRandomNumberGenerator> std::uniform_real_distribution<_RealType>::result_type std::uniform_real_distribution<_RealType>::operator()(_UniformRandomNumberGenerator&, const std::uniform_real_distribution<_RealType>::param_type&) [with _UniformRandomNumberGenerator = _UniformRandomNumberGenerator; _RealType = double]
+  operator()(_UniformRandomNumberGenerator& __urng,
+  ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1813:2: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:22:15: note:   candidate expects 2 arguments, 1 provided
+  res = dis(0.2);
+               ^
+14:20:52 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'double bernTrial(int, float)':
+..\src\testBench.cpp:22:15: error: no match for call to '(std::uniform_real_distribution<>) (double)'
+  res = dis(9.0);
+               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:49:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1808:2: note: candidate: std::uniform_real_distribution<_RealType>::result_type std::uniform_real_distribution<_RealType>::operator()(_UniformRandomNumberGenerator&) [with _UniformRandomNumberGenerator = double; _RealType = double; std::uniform_real_distribution<_RealType>::result_type = double] <near match>
+  operator()(_UniformRandomNumberGenerator& __urng)
+  ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1808:2: note:   conversion of argument 1 would be ill-formed:
+..\src\testBench.cpp:22:15: error: invalid initialization of non-const reference of type 'double&' from an rvalue of type 'double'
+  res = dis(9.0);
+               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:49:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1813:2: note: candidate: template<class _UniformRandomNumberGenerator> std::uniform_real_distribution<_RealType>::result_type std::uniform_real_distribution<_RealType>::operator()(_UniformRandomNumberGenerator&, const std::uniform_real_distribution<_RealType>::param_type&) [with _UniformRandomNumberGenerator = _UniformRandomNumberGenerator; _RealType = double]
+  operator()(_UniformRandomNumberGenerator& __urng,
+  ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1813:2: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:22:15: note:   candidate expects 2 arguments, 1 provided
+  res = dis(9.0);
+               ^
+14:21:13 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:21:21 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'double bernTrial(int, float)':
+..\src\testBench.cpp:22:15: error: no match for 'operator/' (operand types are 'std::mt19937 {aka std::mersenne_twister_engine<unsigned int, 32u, 624u, 397u, 31u, 2567483615u, 11u, 4294967295u, 7u, 2636928640u, 15u, 4022730752u, 18u, 1812433253u>}' and 'int')
+  res = dis(gen/2);
+            ~~~^~
+14:21:26 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:22:03 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'double bernTrial(int, float)':
+..\src\testBench.cpp:24:9: error: cannot convert 'std::mt19937 {aka std::mersenne_twister_engine<unsigned int, 32u, 624u, 397u, 31u, 2567483615u, 11u, 4294967295u, 7u, 2636928640u, 15u, 4022730752u, 18u, 1812433253u>}' to 'double' in return
+  return gen;
+         ^~~
+14:22:11 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+14:28:03 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+14:28:33 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:28:48 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:29:13 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:29:25 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:30:20 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'double bernTrial(int, float)':
+..\src\testBench.cpp:22:13: error: no match for call to '(std::uniform_real_distribution<>) (int)'
+  res = dis(2);
+             ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:49:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1808:2: note: candidate: std::uniform_real_distribution<_RealType>::result_type std::uniform_real_distribution<_RealType>::operator()(_UniformRandomNumberGenerator&) [with _UniformRandomNumberGenerator = int; _RealType = double; std::uniform_real_distribution<_RealType>::result_type = double] <near match>
+  operator()(_UniformRandomNumberGenerator& __urng)
+  ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1808:2: note:   conversion of argument 1 would be ill-formed:
+..\src\testBench.cpp:22:13: error: invalid initialization of non-const reference of type 'int&' from an rvalue of type 'int'
+  res = dis(2);
+             ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:49:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1813:2: note: candidate: template<class _UniformRandomNumberGenerator> std::uniform_real_distribution<_RealType>::result_type std::uniform_real_distribution<_RealType>::operator()(_UniformRandomNumberGenerator&, const std::uniform_real_distribution<_RealType>::param_type&) [with _UniformRandomNumberGenerator = _UniformRandomNumberGenerator; _RealType = double]
+  operator()(_UniformRandomNumberGenerator& __urng,
+  ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1813:2: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:22:13: note:   candidate expects 2 arguments, 1 provided
+  res = dis(2);
+             ^
+14:30:26 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp:22:12: error: stray '\' in program
+  res = dis(\2);
+            ^
+..\src\testBench.cpp: In function 'double bernTrial(int, float)':
+..\src\testBench.cpp:22:14: error: no match for call to '(std::uniform_real_distribution<>) (int)'
+  res = dis(\2);
+              ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:49:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1808:2: note: candidate: std::uniform_real_distribution<_RealType>::result_type std::uniform_real_distribution<_RealType>::operator()(_UniformRandomNumberGenerator&) [with _UniformRandomNumberGenerator = int; _RealType = double; std::uniform_real_distribution<_RealType>::result_type = double] <near match>
+  operator()(_UniformRandomNumberGenerator& __urng)
+  ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1808:2: note:   conversion of argument 1 would be ill-formed:
+..\src\testBench.cpp:22:14: error: invalid initialization of non-const reference of type 'int&' from an rvalue of type 'int'
+  res = dis(\2);
+              ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:49:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1813:2: note: candidate: template<class _UniformRandomNumberGenerator> std::uniform_real_distribution<_RealType>::result_type std::uniform_real_distribution<_RealType>::operator()(_UniformRandomNumberGenerator&, const std::uniform_real_distribution<_RealType>::param_type&) [with _UniformRandomNumberGenerator = _UniformRandomNumberGenerator; _RealType = double]
+  operator()(_UniformRandomNumberGenerator& __urng,
+  ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1813:2: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:22:14: note:   candidate expects 2 arguments, 1 provided
+  res = dis(\2);
+              ^
+14:30:35 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'double bernTrial(int, float)':
+..\src\testBench.cpp:22:15: error: no match for call to '(std::uniform_real_distribution<>) (char)'
+  res = dis('2');
+               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:49:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1808:2: note: candidate: std::uniform_real_distribution<_RealType>::result_type std::uniform_real_distribution<_RealType>::operator()(_UniformRandomNumberGenerator&) [with _UniformRandomNumberGenerator = char; _RealType = double; std::uniform_real_distribution<_RealType>::result_type = double] <near match>
+  operator()(_UniformRandomNumberGenerator& __urng)
+  ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1808:2: note:   conversion of argument 1 would be ill-formed:
+..\src\testBench.cpp:22:15: error: invalid initialization of non-const reference of type 'char&' from an rvalue of type 'char'
+  res = dis('2');
+               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:49:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1813:2: note: candidate: template<class _UniformRandomNumberGenerator> std::uniform_real_distribution<_RealType>::result_type std::uniform_real_distribution<_RealType>::operator()(_UniformRandomNumberGenerator&, const std::uniform_real_distribution<_RealType>::param_type&) [with _UniformRandomNumberGenerator = _UniformRandomNumberGenerator; _RealType = double]
+  operator()(_UniformRandomNumberGenerator& __urng,
+  ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1813:2: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:22:15: note:   candidate expects 2 arguments, 1 provided
+  res = dis('2');
+               ^
+14:30:47 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp:22:15: error: stray '\' in program
+  res = dis(gen\2);
+               ^
+..\src\testBench.cpp: In function 'double bernTrial(int, float)':
+..\src\testBench.cpp:22:16: error: expected ')' before numeric constant
+  res = dis(gen\2);
+                ^
+14:31:33 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'double bernTrial(int, float)':
+..\src\testBench.cpp:22:16: error: invalid operands of types 'std::uniform_real_distribution<>::result_type {aka double}' and 'char' to binary 'operator<<'
+  res = dis(gen)<< '\1';
+        ~~~~~~~~^~~~~~~
+14:31:44 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'double bernTrial(int, float)':
+..\src\testBench.cpp:22:16: error: invalid operands of types 'std::uniform_real_distribution<>::result_type {aka double}' and 'char' to binary 'operator<<'
+  res = dis(gen)<< '\5';
+        ~~~~~~~~^~~~~~~
+14:31:51 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp:22:19: warning: multi-character character constant [-Wmultichar]
+  res = dis(gen)<< '\5.0';
+                   ^~~~~~
+..\src\testBench.cpp: In function 'double bernTrial(int, float)':
+..\src\testBench.cpp:22:16: error: invalid operands of types 'std::uniform_real_distribution<>::result_type {aka double}' and 'int' to binary 'operator<<'
+  res = dis(gen)<< '\5.0';
+        ~~~~~~~~^~~~~~~~~
+14:33:37 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'double bernTrial(int, float)':
+..\src\testBench.cpp:17:23: error: no match for call to '(std::random_device) (int&)'
+  std::mt19937 gen(rd(n)); //Standard mersenne_twister_engine seeded with rd()
+                       ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:49:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1609:5: note: candidate: std::random_device::result_type std::random_device::operator()()
+     operator()()
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1609:5: note:   candidate expects 0 arguments, 1 provided
+14:35:45 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+14:36:44 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+14:37:03 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:37:12 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:37:27 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:37:34 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:37:40 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+14:38:16 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+14:50:07 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:31:10: warning: right operand of comma operator has no effect [-Wunused-value]
+ cout<<d,g;
+          ^
+g++ -o testBench.exe "src\\testBench.o" 
+14:50:46 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:50:57 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:30:9: warning: unused variable 'd' [-Wunused-variable]
+  double d = bernTrial(11, 5);
+         ^
+g++ -o testBench.exe "src\\testBench.o" 
+14:51:02 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:29:9: warning: unused variable 'g' [-Wunused-variable]
+  double g = bernTrial(11, 5);
+         ^
+g++ -o testBench.exe "src\\testBench.o" 
+14:51:17 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:51:32 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+14:51:42 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:30:9: warning: unused variable 'g' [-Wunused-variable]
+  double g = bernTrial(11, 5);
+         ^
+g++ -o testBench.exe "src\\testBench.o" 
+14:51:47 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:31:9: warning: unused variable 'd' [-Wunused-variable]
+  double d = bernTrial(11, 5);
+         ^
+g++ -o testBench.exe "src\\testBench.o" 
+14:52:01 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'double bernTrial(int, float)':
+..\src\testBench.cpp:21:12: error: 'gen' was not declared in this scope
+  res = dis(gen);
+            ^~~
+..\src\testBench.cpp:21:15: error: 'dis' was not declared in this scope
+  res = dis(gen);
+               ^
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:32:9: warning: unused variable 'd' [-Wunused-variable]
+  double d = bernTrial(11, 5);
+         ^
+14:52:09 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'double bernTrial(int, float)':
+..\src\testBench.cpp:21:12: error: 'gen' was not declared in this scope
+  res = dis(gen);
+            ^~~
+..\src\testBench.cpp:21:15: error: 'dis' was not declared in this scope
+  res = dis(gen);
+               ^
+14:52:22 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'double bernTrial(int, float)':
+..\src\testBench.cpp:22:12: error: 'gen' was not declared in this scope
+  res = dis(gen);
+            ^~~
+14:52:33 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp:14:21: error: 'rd' was not declared in this scope
+ std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+                     ^
+14:52:39 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:52:50 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'double bernTrial(int, float)':
+..\src\testBench.cpp:21:12: error: 'gen' was not declared in this scope
+  res = dis(gen);
+            ^~~
+..\src\testBench.cpp:21:15: error: 'dis' was not declared in this scope
+  res = dis(gen);
+               ^
+14:52:56 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'double bernTrial(int, float)':
+..\src\testBench.cpp:21:12: error: 'gen' was not declared in this scope
+  res = dis(gen);
+            ^~~
+14:53:03 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+14:57:18 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:57:48 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:58:03 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:58:31 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:58:44 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+14:58:56 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+14:59:17 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+14:59:32 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+15:00:10 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+15:00:21 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+15:00:29 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+15:00:37 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+15:00:43 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+15:00:53 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+15:01:21 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+15:01:41 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+15:02:31 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+15:02:44 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+15:21:00 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'double bernTrial(int, float)':
+..\src\testBench.cpp:19:36: error: expected primary-expression before 'd'
+  res = std::poisson_distribution<> d(4);
+                                    ^
+15:26:18 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+15:26:24 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+15:26:44 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+15:26:55 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+15:27:41 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'luint poisson(luint)':
+..\src\testBench.cpp:22:14: error: 'mrand' was not declared in this scope
+     return d(mrand);
+              ^~~~~
+15:28:00 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'luint poisson(luint)':
+..\src\testBench.cpp:22:9: error: expected ';' before 'd'
+     gen d(mrand);
+         ^
+..\src\testBench.cpp:22:17: warning: statement has no effect [-Wunused-value]
+     gen d(mrand);
+                 ^
+..\src\testBench.cpp:23:1: warning: no return statement in function returning non-void [-Wreturn-type]
+ }
+ ^
+15:28:07 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'luint poisson(luint)':
+..\src\testBench.cpp:22:8: error: expected ';' before 'd'
+     rd d(mrand);
+        ^
+..\src\testBench.cpp:22:16: warning: statement has no effect [-Wunused-value]
+     rd d(mrand);
+                ^
+..\src\testBench.cpp:23:1: warning: no return statement in function returning non-void [-Wreturn-type]
+ }
+ ^
+15:28:17 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+15:29:55 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp:9:6: error: 'random_device' in namespace 'std' does not name a type
+ std::random_device rd;
+      ^~~~~~~~~~~~~
+..\src\testBench.cpp:10:6: error: 'uniform_real_distribution' in namespace 'std' does not name a template type
+ std::uniform_real_distribution<> dis(0, 1);
+      ^~~~~~~~~~~~~~~~~~~~~~~~~
+..\src\testBench.cpp:11:6: error: 'mt19937' in namespace 'std' does not name a type
+ std::mt19937 mrand(std::time(0));
+      ^~~~~~~
+..\src\testBench.cpp: In function 'int bernTrial(int, float)':
+..\src\testBench.cpp:19:10: error: 'mrand' was not declared in this scope
+  if (dis(mrand)<p) res++;
+          ^~~~~
+..\src\testBench.cpp:19:15: error: 'dis' was not declared in this scope
+  if (dis(mrand)<p) res++;
+               ^
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:27:4: error: 'cout' was not declared in this scope
+    cout<<bernTrial(10,0.4)
+    ^~~~
+15:30:43 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+15:31:28 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+15:32:02 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+15:32:09 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+15:33:55 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+Info: Nothing to build for testBench
+15:38:25 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+16:51:20 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+16:52:24 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+16:55:08 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+16:55:16 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+16:55:24 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:53:25: warning: left operand of comma operator has no effect [-Wunused-value]
+          cout << cell[1,2];
+                         ^
+g++ -o testBench.exe "src\\testBench.o" 
+16:55:31 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+16:55:51 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+16:56:05 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+16:56:41 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:53:24: error: no match for call to '(std::__cxx11::string {aka std::__cxx11::basic_string<char>}) (int)'
+          cout << cell(1);
+                        ^
+16:56:50 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+16:57:06 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+16:58:50 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:56:13: error: 'g' was not declared in this scope
+     cout << g;
+             ^
+16:59:19 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+16:59:40 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:57:13: error: 'g' was not declared in this scope
+     cout << g;
+             ^
+17:00:19 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:57:13: error: 'cell' was not declared in this scope
+     cout << cell
+             ^~~~
+17:00:41 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:54:19: error: expected initializer before '<<' token
+          string g << cell
+                   ^~
+17:00:57 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:48:5: error: expected initializer before 'while'
+     while(std::getline(data,line))
+     ^~~~~
+..\src\testBench.cpp:58:2: error: expected '}' at end of input
+  }
+  ^
+17:01:03 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:48:5: error: expected initializer before 'while'
+     while(std::getline(data,line))
+     ^~~~~
+..\src\testBench.cpp:58:2: error: expected '}' at end of input
+  }
+  ^
+17:01:15 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+17:01:27 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+Info: Nothing to build for testBench
+17:01:36 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:54:13: error: no match for 'operator<<' (operand types are 'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' and 'std::__cxx11::string {aka std::__cxx11::basic_string<char>}')
+           g << cell;
+           ~~^~~~~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\string:52:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\locale_classes.h:40,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ios_base.h:41,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:42,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\basic_string.h:5325:5: note: candidate: template<class _CharT, class _Traits, class _Alloc> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&)
+     operator<<(basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\basic_string.h:5325:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ios_base.h:46:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:42,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\system_error:209:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::error_code&)
+     operator<<(basic_ostream<_CharT, _Traits>& __os, const error_code& __e)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\system_error:209:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:497:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, _CharT)
+     operator<<(basic_ostream<_CharT, _Traits>& __out, _CharT __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:497:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:502:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, char)
+     operator<<(basic_ostream<_CharT, _Traits>& __out, char __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:502:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:508:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, char)
+     operator<<(basic_ostream<char, _Traits>& __out, char __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:508:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<char, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:514:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, signed char)
+     operator<<(basic_ostream<char, _Traits>& __out, signed char __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:514:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<char, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:519:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, unsigned char)
+     operator<<(basic_ostream<char, _Traits>& __out, unsigned char __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:519:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<char, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:539:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const _CharT*)
+     operator<<(basic_ostream<_CharT, _Traits>& __out, const _CharT* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:539:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:638:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:321:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const char*)
+     operator<<(basic_ostream<_CharT, _Traits>& __out, const char* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:321:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:556:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const char*)
+     operator<<(basic_ostream<char, _Traits>& __out, const char* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:556:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<char, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:569:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const signed char*)
+     operator<<(basic_ostream<char, _Traits>& __out, const signed char* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:569:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<char, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:574:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const unsigned char*)
+     operator<<(basic_ostream<char, _Traits>& __out, const unsigned char* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:574:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<char, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:628:5: note: candidate: template<class _CharT, class _Traits, class _Tp> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&&, const _Tp&)
+     operator<<(basic_ostream<_CharT, _Traits>&& __os, const _Tp& __x)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:628:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:49:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1269:5: note: candidate: template<class _RandomNumberEngine, unsigned int __w, class _UIntType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::independent_bits_engine<_RandomNumberEngine, __w, _UIntType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1269:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:477:5: note: candidate: template<class _UIntType1, unsigned int __w1, unsigned int __n1, unsigned int __m1, unsigned int __r1, _UIntType1 __a1, unsigned int __u1, _UIntType1 __d1, unsigned int __s1, _UIntType1 __b1, unsigned int __t1, _UIntType1 __c1, unsigned int __l1, _UIntType1 __f1, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:477:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:877:5: note: candidate: template<class _IntType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::uniform_int_distribution<_IntType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:877:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:936:5: note: candidate: template<class _RealType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::uniform_real_distribution<_IntType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:936:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2123:5: note: candidate: template<class _RealType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::cauchy_distribution<_RealType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2123:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:998:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::bernoulli_distribution&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:998:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1898:5: note: candidate: template<class _RealType1, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::normal_distribution<_RealType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1898:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1080:5: note: candidate: template<class _IntType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::geometric_distribution<_IntType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1080:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2444:5: note: candidate: template<class _RealType1, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::gamma_distribution<_RealType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2444:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1731:5: note: candidate: template<class _RealType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::exponential_distribution<_RealType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1731:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2522:5: note: candidate: template<class _RealType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::weibull_distribution<_RealType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2522:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2598:5: note: candidate: template<class _RealType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::extreme_value_distribution<_RealType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2598:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:156:5: note: candidate: template<class _UIntType, _UIntType __a, _UIntType __c, _UIntType __m, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::linear_congruential_engine<_UIntType, __a, __c, __m>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:156:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:632:5: note: candidate: template<class _UIntType, unsigned int __w, unsigned int __s, unsigned int __r, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::subtract_with_carry_engine<_UIntType, __w, __s, __r>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:632:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:702:5: note: candidate: template<class _RandomNumberEngine, unsigned int __p, unsigned int __r, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::discard_block_engine<_RandomNumberEngine, __p, __r>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:702:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:831:5: note: candidate: template<class _RandomNumberEngine, unsigned int __k, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::shuffle_order_engine<_RandomNumberEngine, __k>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:831:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1195:5: note: candidate: template<class _IntType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::negative_binomial_distribution<_IntType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1195:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1400:5: note: candidate: template<class _IntType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::poisson_distribution<_IntType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1400:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1667:5: note: candidate: template<class _IntType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::binomial_distribution<_IntType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1667:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1963:5: note: candidate: template<class _RealType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::lognormal_distribution<_RealType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1963:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2036:5: note: candidate: template<class _RealType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::chi_squared_distribution<_RealType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2036:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2200:5: note: candidate: template<class _RealType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::fisher_f_distribution<_RealType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2200:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2275:5: note: candidate: template<class _RealType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::student_t_distribution<_RealType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2275:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2734:5: note: candidate: template<class _IntType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::discrete_distribution<_IntType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2734:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2944:5: note: candidate: template<class _RealType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::piecewise_constant_distribution<_RealType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2944:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:3160:5: note: candidate: template<class _RealType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::piecewise_linear_distribution<_RealType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:3160:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:16: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+           g << cell;
+                ^~~~
+17:01:45 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+17:01:59 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+17:02:06 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+17:02:12 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:54:20: error: expected primary-expression before ']' token
+           g = cell[];
+                    ^
+17:02:16 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+17:02:21 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+17:02:30 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+17:02:36 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+17:02:50 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+17:03:00 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:54:21: error: expected ']' before ':' token
+           g = cell[1:5];
+                     ^
+..\src\testBench.cpp:54:21: error: expected ';' before ':' token
+17:03:06 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:54:22: warning: left operand of comma operator has no effect [-Wunused-value]
+           g = cell[1,5];
+                      ^
+g++ -o testBench.exe "src\\testBench.o" 
+17:03:16 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+17:04:11 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:55:9: error: expected ';' before '}' token
+         }
+         ^
+17:04:17 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+17:05:29 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+17:06:06 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:54:25: warning: statement has no effect [-Wunused-value]
+          cout<<cell;'\n';
+                         ^
+g++ -o testBench.exe "src\\testBench.o" 
+17:06:14 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:54:20: error: expected ';' before '\xa'
+          cout<<cell'\n';
+                    ^~~~
+17:07:15 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:54:23: error: expected ';' before '\xa'
+          cout << cell '\n';
+                       ^~~~
+17:07:33 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:55:9: error: expected ';' before '}' token
+         }
+         ^
+..\src\testBench.cpp:55:9: warning: statement has no effect [-Wunused-value]
+17:07:41 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:54:28: warning: statement has no effect [-Wunused-value]
+          cout << cell; '\n';
+                            ^
+g++ -o testBench.exe "src\\testBench.o" 
+17:08:18 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:54:23: error: expected ';' before 'std'
+          cout << cell std::endl;
+                       ^~~
+17:08:24 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:54:23: error: expected ';' before 'endl'
+          cout << cell endl;
+                       ^~~~
+17:08:56 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+17:09:21 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:55:13: warning: statement has no effect [-Wunused-value]
+          'n';
+             ^
+g++ -o testBench.exe "src\\testBench.o" 
+17:10:31 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+17:10:52 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+17:11:00 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+17:11:27 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+17:11:46 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+..\src\testBench.cpp: In function 'int main()':
+..\src\testBench.cpp:54:12: error: no match for 'operator<<' (operand types are 'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' and 'std::__cxx11::string {aka std::__cxx11::basic_string<char>}')
+          g << cell << '\n';
+          ~~^~~~~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\string:52:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\locale_classes.h:40,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ios_base.h:41,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:42,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\basic_string.h:5325:5: note: candidate: template<class _CharT, class _Traits, class _Alloc> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&)
+     operator<<(basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\basic_string.h:5325:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ios_base.h:46:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:42,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\system_error:209:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::error_code&)
+     operator<<(basic_ostream<_CharT, _Traits>& __os, const error_code& __e)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\system_error:209:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:497:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, _CharT)
+     operator<<(basic_ostream<_CharT, _Traits>& __out, _CharT __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:497:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:502:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, char)
+     operator<<(basic_ostream<_CharT, _Traits>& __out, char __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:502:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:508:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, char)
+     operator<<(basic_ostream<char, _Traits>& __out, char __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:508:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<char, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:514:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, signed char)
+     operator<<(basic_ostream<char, _Traits>& __out, signed char __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:514:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<char, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:519:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, unsigned char)
+     operator<<(basic_ostream<char, _Traits>& __out, unsigned char __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:519:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<char, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:539:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const _CharT*)
+     operator<<(basic_ostream<_CharT, _Traits>& __out, const _CharT* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:539:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:638:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:321:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const char*)
+     operator<<(basic_ostream<_CharT, _Traits>& __out, const char* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:321:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:556:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const char*)
+     operator<<(basic_ostream<char, _Traits>& __out, const char* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:556:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<char, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:569:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const signed char*)
+     operator<<(basic_ostream<char, _Traits>& __out, const signed char* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:569:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<char, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:574:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const unsigned char*)
+     operator<<(basic_ostream<char, _Traits>& __out, const unsigned char* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:574:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<char, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\testBench.cpp:9:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:628:5: note: candidate: template<class _CharT, class _Traits, class _Tp> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&&, const _Tp&)
+     operator<<(basic_ostream<_CharT, _Traits>&& __os, const _Tp& __x)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:628:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:49:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1269:5: note: candidate: template<class _RandomNumberEngine, unsigned int __w, class _UIntType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::independent_bits_engine<_RandomNumberEngine, __w, _UIntType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.h:1269:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:477:5: note: candidate: template<class _UIntType1, unsigned int __w1, unsigned int __n1, unsigned int __m1, unsigned int __r1, _UIntType1 __a1, unsigned int __u1, _UIntType1 __d1, unsigned int __s1, _UIntType1 __b1, unsigned int __t1, _UIntType1 __c1, unsigned int __l1, _UIntType1 __f1, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:477:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:877:5: note: candidate: template<class _IntType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::uniform_int_distribution<_IntType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:877:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:936:5: note: candidate: template<class _RealType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::uniform_real_distribution<_IntType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:936:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2123:5: note: candidate: template<class _RealType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::cauchy_distribution<_RealType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2123:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:998:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::bernoulli_distribution&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:998:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1898:5: note: candidate: template<class _RealType1, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::normal_distribution<_RealType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1898:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1080:5: note: candidate: template<class _IntType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::geometric_distribution<_IntType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1080:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2444:5: note: candidate: template<class _RealType1, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::gamma_distribution<_RealType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2444:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1731:5: note: candidate: template<class _RealType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::exponential_distribution<_RealType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1731:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2522:5: note: candidate: template<class _RealType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::weibull_distribution<_RealType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2522:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2598:5: note: candidate: template<class _RealType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::extreme_value_distribution<_RealType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2598:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:156:5: note: candidate: template<class _UIntType, _UIntType __a, _UIntType __c, _UIntType __m, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::linear_congruential_engine<_UIntType, __a, __c, __m>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:156:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:632:5: note: candidate: template<class _UIntType, unsigned int __w, unsigned int __s, unsigned int __r, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::subtract_with_carry_engine<_UIntType, __w, __s, __r>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:632:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:702:5: note: candidate: template<class _RandomNumberEngine, unsigned int __p, unsigned int __r, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::discard_block_engine<_RandomNumberEngine, __p, __r>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:702:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:831:5: note: candidate: template<class _RandomNumberEngine, unsigned int __k, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::shuffle_order_engine<_RandomNumberEngine, __k>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:831:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1195:5: note: candidate: template<class _IntType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::negative_binomial_distribution<_IntType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1195:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1400:5: note: candidate: template<class _IntType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::poisson_distribution<_IntType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1400:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1667:5: note: candidate: template<class _IntType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::binomial_distribution<_IntType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1667:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1963:5: note: candidate: template<class _RealType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::lognormal_distribution<_RealType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:1963:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2036:5: note: candidate: template<class _RealType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::chi_squared_distribution<_RealType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2036:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2200:5: note: candidate: template<class _RealType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::fisher_f_distribution<_RealType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2200:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2275:5: note: candidate: template<class _RealType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::student_t_distribution<_RealType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2275:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2734:5: note: candidate: template<class _IntType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::discrete_distribution<_IntType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2734:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2944:5: note: candidate: template<class _RealType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::piecewise_constant_distribution<_RealType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:2944:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\random:51:0,
+                 from ..\src\testBench.cpp:10:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:3160:5: note: candidate: template<class _RealType, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::piecewise_linear_distribution<_RealType>&)
+     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\random.tcc:3160:5: note:   template argument deduction/substitution failed:
+..\src\testBench.cpp:54:15: note:   'std::__cxx11::string {aka std::__cxx11::basic_string<char>}' is not derived from 'std::basic_ostream<_CharT, _Traits>'
+          g << cell << '\n';
+               ^~~~
+17:11:53 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+17:12:08 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+17:12:17 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 
+17:12:56 **** Incremental Build of configuration Debug for project testBench ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\testBench.o" "..\\src\\testBench.cpp" 
+g++ -o testBench.exe "src\\testBench.o" 

@@ -1,0 +1,58 @@
+//============================================================================
+// Name        : testBench.cpp
+// Author      : 
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <iostream>
+#include <random>
+#include <ctime>
+#include <fstream>
+#include <sstream>
+#include <string>
+
+using namespace std;
+std::random_device rd; //Will be used to obtain a seed for the random number engine
+std::uniform_real_distribution<> dis(0, 1);
+std::mt19937 mrand(std::time(0));
+typedef long unsigned int luint;
+std::ifstream csv("C:\\Imperial\\larvalModel\\Data\\meteoFUP1.csv");
+
+//bernouli trial function
+double bernTrial(int n, float p) {
+	float res = 0;
+	int t =1;
+	while (t<n){
+	if (dis(mrand)<p) res++;
+	t++;
+	}
+	return res;
+}
+
+luint poisson(luint lambda)
+{
+    std::poisson_distribution<luint> d(lambda);
+    return d(mrand);
+}
+
+
+
+
+int main()
+{
+    std::ifstream  data("C:\\Imperial\\larvalModel\\Data\\meteoFUP1.csv");
+    std::string line;
+    string g;
+    while(std::getline(data,line))
+    {
+        std::stringstream  lineStream(line);
+        std::string        cell;
+        while(std::getline(lineStream,cell,','))
+        {
+        	 g = cell[1,5];
+        }
+    }
+cout << g;
+ }
