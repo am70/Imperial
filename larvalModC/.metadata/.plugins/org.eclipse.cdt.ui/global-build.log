@@ -1,0 +1,1142 @@
+10:50:49 **** Rebuild of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\hello.o" "..\\src\\hello.cpp" 
+g++ -o hello.exe "src\\hello.o" 
+Info: Nothing to build for hello
+11:12:33 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\hello.o" "..\\src\\hello.cpp" 
+g++ -o hello.exe "src\\hello.o" 
+11:29:26 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\hello.o" "..\\src\\hello.cpp" 
+..\src\hello.cpp:15:8: error: 'int max' redeclared as different kind of symbol
+ int max(10, 20);
+        ^
+..\src\hello.cpp:3:5: note: previous declaration 'int max(int, int)'
+ int max(int num1, int num2) {
+     ^~~
+11:29:41 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\hello.o" "..\\src\\hello.cpp" 
+..\src\hello.cpp:15:8: error: 'int max' redeclared as different kind of symbol
+ int max(10, 20);
+        ^
+..\src\hello.cpp:3:5: note: previous declaration 'int max(int, int)'
+ int max(int num1, int num2) {
+     ^~~
+11:29:57 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\hello.o" "..\\src\\hello.cpp" 
+..\src\hello.cpp:15:8: error: 'int max' redeclared as different kind of symbol
+ int max(10, 20);
+        ^
+..\src\hello.cpp:3:5: note: previous declaration 'int max(int, int)'
+ int max(int num1, int num2) {
+     ^~~
+11:30:00 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\hello.o" "..\\src\\hello.cpp" 
+..\src\hello.cpp:15:8: error: 'int max' redeclared as different kind of symbol
+ int max(10, 20);
+        ^
+..\src\hello.cpp:3:5: note: previous declaration 'int max(int, int)'
+ int max(int num1, int num2) {
+     ^~~
+11:30:45 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\hello.o" "..\\src\\hello.cpp" 
+g++ -o hello.exe "src\\hello.o" 
+Info: Nothing to build for hello
+11:40:24 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\hello.o" "..\\src\\hello.cpp" 
+..\src\hello.cpp: In function 'int mod(double, double, int)':
+..\src\hello.cpp:15:4: warning: 'K' may be used uninitialized in this function [-Wmaybe-uninitialized]
+   r=K;
+   ~^~
+g++ -o hello.exe "src\\hello.o" 
+11:41:01 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\hello.o" "..\\src\\hello.cpp" 
+..\src\hello.cpp: In function 'int mod(double, double, int)':
+..\src\hello.cpp:12:7: warning: unused variable 'K' [-Wunused-variable]
+   int K;
+       ^
+g++ -o hello.exe "src\\hello.o" 
+11:41:08 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\hello.o" "..\\src\\hello.cpp" 
+..\src\hello.cpp: In function 'int mod(double, double, int)':
+..\src\hello.cpp:12:7: warning: unused variable 'K' [-Wunused-variable]
+   int K;
+       ^
+g++ -o hello.exe "src\\hello.o" 
+11:41:13 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\hello.o" "..\\src\\hello.cpp" 
+..\src\hello.cpp: In function 'int mod(double, double, int)':
+..\src\hello.cpp:12:7: warning: unused variable 'K' [-Wunused-variable]
+   int K;
+       ^
+g++ -o hello.exe "src\\hello.o" 
+11:41:30 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\hello.o" "..\\src\\hello.cpp" 
+g++ -o hello.exe "src\\hello.o" 
+11:42:23 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\hello.o" "..\\src\\hello.cpp" 
+..\src\hello.cpp: In function 'int mod(double, double, int)':
+..\src\hello.cpp:19:9: error: cannot convert 'std::vector<int>' to 'int' in return
+  return r;
+         ^
+11:42:53 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\hello.o" "..\\src\\hello.cpp" 
+..\src\hello.cpp: In function 'int mod(double, double, int)':
+..\src\hello.cpp:21:1: warning: no return statement in function returning non-void [-Wreturn-type]
+ }
+ ^
+g++ -o hello.exe "src\\hello.o" 
+11:45:49 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\hello.o" "..\\src\\hello.cpp" 
+..\src\hello.cpp:6:1: error: invalid use of template-name 'std::vector' without an argument list
+ vector mod(double uoE, double uoL, int time) {
+ ^~~~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\vector:64:0,
+                 from ..\src\hello.cpp:3:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_vector.h:214:11: note: 'template<class _Tp, class _Alloc> class std::vector' declared here
+     class vector : protected _Vector_base<_Tp, _Alloc>
+           ^~~~~~
+..\src\hello.cpp: In function 'int main()':
+..\src\hello.cpp:26:20: error: 'mod' was not declared in this scope
+   z =  mod(10,0.2,1);
+                    ^
+11:49:09 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\hello.o" "..\\src\\hello.cpp" 
+..\src\hello.cpp: In function 'int main()':
+..\src\hello.cpp:26:20: error: cannot convert 'std::vector<int>' to 'int' in assignment
+   z =  mod(10,0.2,1);
+                    ^
+11:49:49 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\hello.o" "..\\src\\hello.cpp" 
+..\src\hello.cpp: In function 'int main()':
+..\src\hello.cpp:27:28: error: no match for 'operator<<' (operand types are 'std::basic_ostream<char>' and 'std::vector<int>')
+   cout << "The result is " << z;
+   ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:108:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(std::basic_ostream<_CharT, _Traits>::__ostream_type& (*)(std::basic_ostream<_CharT, _Traits>::__ostream_type&)) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(__ostream_type& (*__pf)(__ostream_type&))
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:108:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'std::basic_ostream<char>::__ostream_type& (*)(std::basic_ostream<char>::__ostream_type&) {aka std::basic_ostream<char>& (*)(std::basic_ostream<char>&)}'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:117:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(std::basic_ostream<_CharT, _Traits>::__ios_type& (*)(std::basic_ostream<_CharT, _Traits>::__ios_type&)) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>; std::basic_ostream<_CharT, _Traits>::__ios_type = std::basic_ios<char>]
+       operator<<(__ios_type& (*__pf)(__ios_type&))
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:117:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'std::basic_ostream<char>::__ios_type& (*)(std::basic_ostream<char>::__ios_type&) {aka std::basic_ios<char>& (*)(std::basic_ios<char>&)}'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:127:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(std::ios_base& (*)(std::ios_base&)) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(ios_base& (*__pf) (ios_base&))
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:127:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'std::ios_base& (*)(std::ios_base&)'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:166:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(long int) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(long __n)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:166:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'long int'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:170:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(long unsigned int) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(unsigned long __n)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:170:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'long unsigned int'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:174:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(bool) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(bool __n)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:174:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'bool'
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:638:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:91:5: note: candidate: std::basic_ostream<_CharT, _Traits>& std::basic_ostream<_CharT, _Traits>::operator<<(short int) [with _CharT = char; _Traits = std::char_traits<char>]
+     basic_ostream<_CharT, _Traits>::
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:91:5: note:   no known conversion for argument 1 from 'std::vector<int>' to 'short int'
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:181:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(short unsigned int) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(unsigned short __n)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:181:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'short unsigned int'
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:638:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:105:5: note: candidate: std::basic_ostream<_CharT, _Traits>& std::basic_ostream<_CharT, _Traits>::operator<<(int) [with _CharT = char; _Traits = std::char_traits<char>]
+     basic_ostream<_CharT, _Traits>::
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:105:5: note:   no known conversion for argument 1 from 'std::vector<int>' to 'int'
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:192:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(unsigned int) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(unsigned int __n)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:192:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'unsigned int'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:201:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(long long int) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(long long __n)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:201:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'long long int'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:205:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(long long unsigned int) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(unsigned long long __n)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:205:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'long long unsigned int'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:220:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(double) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(double __f)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:220:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'double'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:224:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(float) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(float __f)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:224:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'float'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:232:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(long double) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(long double __f)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:232:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'long double'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:245:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(const void*) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(const void* __p)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:245:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'const void*'
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:638:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:119:5: note: candidate: std::basic_ostream<_CharT, _Traits>& std::basic_ostream<_CharT, _Traits>::operator<<(std::basic_ostream<_CharT, _Traits>::__streambuf_type*) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__streambuf_type = std::basic_streambuf<char>]
+     basic_ostream<_CharT, _Traits>::
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:119:5: note:   no known conversion for argument 1 from 'std::vector<int>' to 'std::basic_ostream<char>::__streambuf_type* {aka std::basic_streambuf<char>*}'
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\string:52:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\locale_classes.h:40,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ios_base.h:41,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:42,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\basic_string.h:5325:5: note: candidate: template<class _CharT, class _Traits, class _Alloc> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&)
+     operator<<(basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\basic_string.h:5325:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:31: note:   'std::vector<int>' is not derived from 'const std::__cxx11::basic_string<_CharT, _Traits, _Alloc>'
+   cout << "The result is " << z;
+                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ios_base.h:46:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:42,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\system_error:209:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::error_code&)
+     operator<<(basic_ostream<_CharT, _Traits>& __os, const error_code& __e)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\system_error:209:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:31: note:   cannot convert 'z' (type 'std::vector<int>') to type 'const std::error_code&'
+   cout << "The result is " << z;
+                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:497:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, _CharT)
+     operator<<(basic_ostream<_CharT, _Traits>& __out, _CharT __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:497:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:31: note:   deduced conflicting types for parameter '_CharT' ('char' and 'std::vector<int>')
+   cout << "The result is " << z;
+                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:502:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, char)
+     operator<<(basic_ostream<_CharT, _Traits>& __out, char __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:502:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:31: note:   cannot convert 'z' (type 'std::vector<int>') to type 'char'
+   cout << "The result is " << z;
+                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:508:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, char)
+     operator<<(basic_ostream<char, _Traits>& __out, char __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:508:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:31: note:   cannot convert 'z' (type 'std::vector<int>') to type 'char'
+   cout << "The result is " << z;
+                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:514:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, signed char)
+     operator<<(basic_ostream<char, _Traits>& __out, signed char __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:514:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:31: note:   cannot convert 'z' (type 'std::vector<int>') to type 'signed char'
+   cout << "The result is " << z;
+                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:519:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, unsigned char)
+     operator<<(basic_ostream<char, _Traits>& __out, unsigned char __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:519:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:31: note:   cannot convert 'z' (type 'std::vector<int>') to type 'unsigned char'
+   cout << "The result is " << z;
+                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:539:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const _CharT*)
+     operator<<(basic_ostream<_CharT, _Traits>& __out, const _CharT* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:539:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:31: note:   mismatched types 'const _CharT*' and 'std::vector<int>'
+   cout << "The result is " << z;
+                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:638:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:321:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const char*)
+     operator<<(basic_ostream<_CharT, _Traits>& __out, const char* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:321:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:31: note:   cannot convert 'z' (type 'std::vector<int>') to type 'const char*'
+   cout << "The result is " << z;
+                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:556:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const char*)
+     operator<<(basic_ostream<char, _Traits>& __out, const char* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:556:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:31: note:   cannot convert 'z' (type 'std::vector<int>') to type 'const char*'
+   cout << "The result is " << z;
+                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:569:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const signed char*)
+     operator<<(basic_ostream<char, _Traits>& __out, const signed char* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:569:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:31: note:   cannot convert 'z' (type 'std::vector<int>') to type 'const signed char*'
+   cout << "The result is " << z;
+                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:574:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const unsigned char*)
+     operator<<(basic_ostream<char, _Traits>& __out, const unsigned char* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:574:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:31: note:   cannot convert 'z' (type 'std::vector<int>') to type 'const unsigned char*'
+   cout << "The result is " << z;
+                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:628:5: note: candidate: std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&&, const _Tp&) [with _CharT = char; _Traits = std::char_traits<char>; _Tp = std::vector<int>] <near match>
+     operator<<(basic_ostream<_CharT, _Traits>&& __os, const _Tp& __x)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:628:5: note:   conversion of argument 1 would be ill-formed:
+..\src\hello.cpp:27:8: error: cannot bind 'std::basic_ostream<char>' lvalue to 'std::basic_ostream<char>&&'
+   cout << "The result is " << z;
+   ~~~~~^~~~~~~~~~~~~~~~~~~
+11:49:53 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\hello.o" "..\\src\\hello.cpp" 
+..\src\hello.cpp: In function 'int main()':
+..\src\hello.cpp:27:28: error: no match for 'operator<<' (operand types are 'std::basic_ostream<char>' and 'std::vector<int>')
+   cout << "The result is " << z;
+   ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:108:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(std::basic_ostream<_CharT, _Traits>::__ostream_type& (*)(std::basic_ostream<_CharT, _Traits>::__ostream_type&)) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(__ostream_type& (*__pf)(__ostream_type&))
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:108:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'std::basic_ostream<char>::__ostream_type& (*)(std::basic_ostream<char>::__ostream_type&) {aka std::basic_ostream<char>& (*)(std::basic_ostream<char>&)}'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:117:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(std::basic_ostream<_CharT, _Traits>::__ios_type& (*)(std::basic_ostream<_CharT, _Traits>::__ios_type&)) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>; std::basic_ostream<_CharT, _Traits>::__ios_type = std::basic_ios<char>]
+       operator<<(__ios_type& (*__pf)(__ios_type&))
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:117:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'std::basic_ostream<char>::__ios_type& (*)(std::basic_ostream<char>::__ios_type&) {aka std::basic_ios<char>& (*)(std::basic_ios<char>&)}'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:127:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(std::ios_base& (*)(std::ios_base&)) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(ios_base& (*__pf) (ios_base&))
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:127:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'std::ios_base& (*)(std::ios_base&)'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:166:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(long int) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(long __n)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:166:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'long int'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:170:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(long unsigned int) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(unsigned long __n)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:170:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'long unsigned int'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:174:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(bool) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(bool __n)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:174:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'bool'
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:638:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:91:5: note: candidate: std::basic_ostream<_CharT, _Traits>& std::basic_ostream<_CharT, _Traits>::operator<<(short int) [with _CharT = char; _Traits = std::char_traits<char>]
+     basic_ostream<_CharT, _Traits>::
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:91:5: note:   no known conversion for argument 1 from 'std::vector<int>' to 'short int'
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:181:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(short unsigned int) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(unsigned short __n)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:181:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'short unsigned int'
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:638:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:105:5: note: candidate: std::basic_ostream<_CharT, _Traits>& std::basic_ostream<_CharT, _Traits>::operator<<(int) [with _CharT = char; _Traits = std::char_traits<char>]
+     basic_ostream<_CharT, _Traits>::
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:105:5: note:   no known conversion for argument 1 from 'std::vector<int>' to 'int'
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:192:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(unsigned int) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(unsigned int __n)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:192:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'unsigned int'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:201:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(long long int) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(long long __n)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:201:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'long long int'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:205:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(long long unsigned int) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(unsigned long long __n)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:205:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'long long unsigned int'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:220:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(double) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(double __f)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:220:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'double'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:224:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(float) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(float __f)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:224:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'float'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:232:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(long double) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(long double __f)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:232:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'long double'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:245:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(const void*) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(const void* __p)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:245:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'const void*'
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:638:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:119:5: note: candidate: std::basic_ostream<_CharT, _Traits>& std::basic_ostream<_CharT, _Traits>::operator<<(std::basic_ostream<_CharT, _Traits>::__streambuf_type*) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__streambuf_type = std::basic_streambuf<char>]
+     basic_ostream<_CharT, _Traits>::
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:119:5: note:   no known conversion for argument 1 from 'std::vector<int>' to 'std::basic_ostream<char>::__streambuf_type* {aka std::basic_streambuf<char>*}'
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\string:52:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\locale_classes.h:40,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ios_base.h:41,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:42,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\basic_string.h:5325:5: note: candidate: template<class _CharT, class _Traits, class _Alloc> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&)
+     operator<<(basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\basic_string.h:5325:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:31: note:   'std::vector<int>' is not derived from 'const std::__cxx11::basic_string<_CharT, _Traits, _Alloc>'
+   cout << "The result is " << z;
+                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ios_base.h:46:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:42,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\system_error:209:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::error_code&)
+     operator<<(basic_ostream<_CharT, _Traits>& __os, const error_code& __e)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\system_error:209:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:31: note:   cannot convert 'z' (type 'std::vector<int>') to type 'const std::error_code&'
+   cout << "The result is " << z;
+                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:497:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, _CharT)
+     operator<<(basic_ostream<_CharT, _Traits>& __out, _CharT __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:497:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:31: note:   deduced conflicting types for parameter '_CharT' ('char' and 'std::vector<int>')
+   cout << "The result is " << z;
+                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:502:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, char)
+     operator<<(basic_ostream<_CharT, _Traits>& __out, char __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:502:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:31: note:   cannot convert 'z' (type 'std::vector<int>') to type 'char'
+   cout << "The result is " << z;
+                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:508:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, char)
+     operator<<(basic_ostream<char, _Traits>& __out, char __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:508:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:31: note:   cannot convert 'z' (type 'std::vector<int>') to type 'char'
+   cout << "The result is " << z;
+                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:514:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, signed char)
+     operator<<(basic_ostream<char, _Traits>& __out, signed char __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:514:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:31: note:   cannot convert 'z' (type 'std::vector<int>') to type 'signed char'
+   cout << "The result is " << z;
+                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:519:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, unsigned char)
+     operator<<(basic_ostream<char, _Traits>& __out, unsigned char __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:519:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:31: note:   cannot convert 'z' (type 'std::vector<int>') to type 'unsigned char'
+   cout << "The result is " << z;
+                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:539:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const _CharT*)
+     operator<<(basic_ostream<_CharT, _Traits>& __out, const _CharT* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:539:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:31: note:   mismatched types 'const _CharT*' and 'std::vector<int>'
+   cout << "The result is " << z;
+                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:638:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:321:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const char*)
+     operator<<(basic_ostream<_CharT, _Traits>& __out, const char* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:321:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:31: note:   cannot convert 'z' (type 'std::vector<int>') to type 'const char*'
+   cout << "The result is " << z;
+                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:556:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const char*)
+     operator<<(basic_ostream<char, _Traits>& __out, const char* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:556:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:31: note:   cannot convert 'z' (type 'std::vector<int>') to type 'const char*'
+   cout << "The result is " << z;
+                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:569:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const signed char*)
+     operator<<(basic_ostream<char, _Traits>& __out, const signed char* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:569:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:31: note:   cannot convert 'z' (type 'std::vector<int>') to type 'const signed char*'
+   cout << "The result is " << z;
+                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:574:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const unsigned char*)
+     operator<<(basic_ostream<char, _Traits>& __out, const unsigned char* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:574:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:31: note:   cannot convert 'z' (type 'std::vector<int>') to type 'const unsigned char*'
+   cout << "The result is " << z;
+                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:628:5: note: candidate: std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&&, const _Tp&) [with _CharT = char; _Traits = std::char_traits<char>; _Tp = std::vector<int>] <near match>
+     operator<<(basic_ostream<_CharT, _Traits>&& __os, const _Tp& __x)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:628:5: note:   conversion of argument 1 would be ill-formed:
+..\src\hello.cpp:27:8: error: cannot bind 'std::basic_ostream<char>' lvalue to 'std::basic_ostream<char>&&'
+   cout << "The result is " << z;
+   ~~~~~^~~~~~~~~~~~~~~~~~~
+11:50:39 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\hello.o" "..\\src\\hello.cpp" 
+..\src\hello.cpp: In function 'int main()':
+..\src\hello.cpp:27:8: error: no match for 'operator<<' (operand types are 'std::ostream {aka std::basic_ostream<char>}' and 'std::vector<int>')
+   cout << z
+   ~~~~~^~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:108:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(std::basic_ostream<_CharT, _Traits>::__ostream_type& (*)(std::basic_ostream<_CharT, _Traits>::__ostream_type&)) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(__ostream_type& (*__pf)(__ostream_type&))
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:108:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'std::basic_ostream<char>::__ostream_type& (*)(std::basic_ostream<char>::__ostream_type&) {aka std::basic_ostream<char>& (*)(std::basic_ostream<char>&)}'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:117:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(std::basic_ostream<_CharT, _Traits>::__ios_type& (*)(std::basic_ostream<_CharT, _Traits>::__ios_type&)) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>; std::basic_ostream<_CharT, _Traits>::__ios_type = std::basic_ios<char>]
+       operator<<(__ios_type& (*__pf)(__ios_type&))
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:117:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'std::basic_ostream<char>::__ios_type& (*)(std::basic_ostream<char>::__ios_type&) {aka std::basic_ios<char>& (*)(std::basic_ios<char>&)}'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:127:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(std::ios_base& (*)(std::ios_base&)) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(ios_base& (*__pf) (ios_base&))
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:127:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'std::ios_base& (*)(std::ios_base&)'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:166:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(long int) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(long __n)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:166:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'long int'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:170:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(long unsigned int) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(unsigned long __n)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:170:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'long unsigned int'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:174:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(bool) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(bool __n)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:174:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'bool'
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:638:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:91:5: note: candidate: std::basic_ostream<_CharT, _Traits>& std::basic_ostream<_CharT, _Traits>::operator<<(short int) [with _CharT = char; _Traits = std::char_traits<char>]
+     basic_ostream<_CharT, _Traits>::
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:91:5: note:   no known conversion for argument 1 from 'std::vector<int>' to 'short int'
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:181:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(short unsigned int) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(unsigned short __n)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:181:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'short unsigned int'
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:638:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:105:5: note: candidate: std::basic_ostream<_CharT, _Traits>& std::basic_ostream<_CharT, _Traits>::operator<<(int) [with _CharT = char; _Traits = std::char_traits<char>]
+     basic_ostream<_CharT, _Traits>::
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:105:5: note:   no known conversion for argument 1 from 'std::vector<int>' to 'int'
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:192:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(unsigned int) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(unsigned int __n)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:192:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'unsigned int'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:201:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(long long int) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(long long __n)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:201:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'long long int'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:205:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(long long unsigned int) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(unsigned long long __n)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:205:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'long long unsigned int'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:220:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(double) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(double __f)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:220:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'double'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:224:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(float) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(float __f)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:224:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'float'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:232:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(long double) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(long double __f)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:232:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'long double'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:245:7: note: candidate: std::basic_ostream<_CharT, _Traits>::__ostream_type& std::basic_ostream<_CharT, _Traits>::operator<<(const void*) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__ostream_type = std::basic_ostream<char>]
+       operator<<(const void* __p)
+       ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:245:7: note:   no known conversion for argument 1 from 'std::vector<int>' to 'const void*'
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:638:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:119:5: note: candidate: std::basic_ostream<_CharT, _Traits>& std::basic_ostream<_CharT, _Traits>::operator<<(std::basic_ostream<_CharT, _Traits>::__streambuf_type*) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_ostream<_CharT, _Traits>::__streambuf_type = std::basic_streambuf<char>]
+     basic_ostream<_CharT, _Traits>::
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:119:5: note:   no known conversion for argument 1 from 'std::vector<int>' to 'std::basic_ostream<char>::__streambuf_type* {aka std::basic_streambuf<char>*}'
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\string:52:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\locale_classes.h:40,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ios_base.h:41,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:42,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\basic_string.h:5325:5: note: candidate: template<class _CharT, class _Traits, class _Alloc> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&)
+     operator<<(basic_ostream<_CharT, _Traits>& __os,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\basic_string.h:5325:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:11: note:   'std::vector<int>' is not derived from 'const std::__cxx11::basic_string<_CharT, _Traits, _Alloc>'
+   cout << z
+           ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ios_base.h:46:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:42,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\system_error:209:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::error_code&)
+     operator<<(basic_ostream<_CharT, _Traits>& __os, const error_code& __e)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\system_error:209:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:11: note:   cannot convert 'z' (type 'std::vector<int>') to type 'const std::error_code&'
+   cout << z
+           ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:497:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, _CharT)
+     operator<<(basic_ostream<_CharT, _Traits>& __out, _CharT __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:497:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:11: note:   deduced conflicting types for parameter '_CharT' ('char' and 'std::vector<int>')
+   cout << z
+           ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:502:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, char)
+     operator<<(basic_ostream<_CharT, _Traits>& __out, char __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:502:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:11: note:   cannot convert 'z' (type 'std::vector<int>') to type 'char'
+   cout << z
+           ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:508:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, char)
+     operator<<(basic_ostream<char, _Traits>& __out, char __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:508:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:11: note:   cannot convert 'z' (type 'std::vector<int>') to type 'char'
+   cout << z
+           ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:514:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, signed char)
+     operator<<(basic_ostream<char, _Traits>& __out, signed char __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:514:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:11: note:   cannot convert 'z' (type 'std::vector<int>') to type 'signed char'
+   cout << z
+           ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:519:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, unsigned char)
+     operator<<(basic_ostream<char, _Traits>& __out, unsigned char __c)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:519:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:11: note:   cannot convert 'z' (type 'std::vector<int>') to type 'unsigned char'
+   cout << z
+           ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:539:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const _CharT*)
+     operator<<(basic_ostream<_CharT, _Traits>& __out, const _CharT* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:539:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:11: note:   mismatched types 'const _CharT*' and 'std::vector<int>'
+   cout << z
+           ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:638:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:321:5: note: candidate: template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const char*)
+     operator<<(basic_ostream<_CharT, _Traits>& __out, const char* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ostream.tcc:321:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:11: note:   cannot convert 'z' (type 'std::vector<int>') to type 'const char*'
+   cout << z
+           ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:556:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const char*)
+     operator<<(basic_ostream<char, _Traits>& __out, const char* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:556:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:11: note:   cannot convert 'z' (type 'std::vector<int>') to type 'const char*'
+   cout << z
+           ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:569:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const signed char*)
+     operator<<(basic_ostream<char, _Traits>& __out, const signed char* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:569:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:11: note:   cannot convert 'z' (type 'std::vector<int>') to type 'const signed char*'
+   cout << z
+           ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:574:5: note: candidate: template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const unsigned char*)
+     operator<<(basic_ostream<char, _Traits>& __out, const unsigned char* __s)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:574:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:27:11: note:   cannot convert 'z' (type 'std::vector<int>') to type 'const unsigned char*'
+   cout << z
+           ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39:0,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:628:5: note: candidate: std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&&, const _Tp&) [with _CharT = char; _Traits = std::char_traits<char>; _Tp = std::vector<int>] <near match>
+     operator<<(basic_ostream<_CharT, _Traits>&& __os, const _Tp& __x)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:628:5: note:   conversion of argument 1 would be ill-formed:
+..\src\hello.cpp:27:11: error: cannot bind 'std::ostream {aka std::basic_ostream<char>}' lvalue to 'std::basic_ostream<char>&&'
+   cout << z
+           ^
+11:52:16 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\hello.o" "..\\src\\hello.cpp" 
+..\src\hello.cpp: In function 'int main()':
+..\src\hello.cpp:28:53: error: conversion from 'std::vector<int>::iterator {aka __gnu_cxx::__normal_iterator<int*, std::vector<int> >}' to non-scalar type 'std::vector<char>::const_iterator {aka __gnu_cxx::__normal_iterator<const char*, std::vector<char> >}' requested
+   for (std::vector<char>::const_iterator i = z.begin(); i != z.end(); ++i)
+                                              ~~~~~~~^~
+..\src\hello.cpp:28:59: error: no match for 'operator!=' (operand types are 'std::vector<char>::const_iterator {aka __gnu_cxx::__normal_iterator<const char*, std::vector<char> >}' and 'std::vector<int>::iterator {aka __gnu_cxx::__normal_iterator<int*, std::vector<int> >}')
+   for (std::vector<char>::const_iterator i = z.begin(); i != z.end(); ++i)
+                                                         ~~^~~~~~~~~~
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iosfwd:40:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\postypes.h:221:5: note: candidate: template<class _StateT> bool std::operator!=(const std::fpos<_StateT>&, const std::fpos<_StateT>&)
+     operator!=(const fpos<_StateT>& __lhs, const fpos<_StateT>& __rhs)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\postypes.h:221:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:28:68: note:   'std::vector<char>::const_iterator {aka __gnu_cxx::__normal_iterator<const char*, std::vector<char> >}' is not derived from 'const std::fpos<_StateT>'
+   for (std::vector<char>::const_iterator i = z.begin(); i != z.end(); ++i)
+                                                                    ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_algobase.h:64:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\char_traits.h:39,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:40,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_pair.h:444:5: note: candidate: template<class _T1, class _T2> constexpr bool std::operator!=(const std::pair<_T1, _T2>&, const std::pair<_T1, _T2>&)
+     operator!=(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_pair.h:444:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:28:68: note:   'std::vector<char>::const_iterator {aka __gnu_cxx::__normal_iterator<const char*, std::vector<char> >}' is not derived from 'const std::pair<_T1, _T2>'
+   for (std::vector<char>::const_iterator i = z.begin(); i != z.end(); ++i)
+                                                                    ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_algobase.h:67:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\char_traits.h:39,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:40,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_iterator.h:304:5: note: candidate: template<class _Iterator> bool std::operator!=(const std::reverse_iterator<_Iterator>&, const std::reverse_iterator<_Iterator>&)
+     operator!=(const reverse_iterator<_Iterator>& __x,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_iterator.h:304:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:28:68: note:   'std::vector<char>::const_iterator {aka __gnu_cxx::__normal_iterator<const char*, std::vector<char> >}' is not derived from 'const std::reverse_iterator<_Iterator>'
+   for (std::vector<char>::const_iterator i = z.begin(); i != z.end(); ++i)
+                                                                    ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_algobase.h:67:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\char_traits.h:39,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:40,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_iterator.h:361:5: note: candidate: template<class _IteratorL, class _IteratorR> bool std::operator!=(const std::reverse_iterator<_Iterator>&, const std::reverse_iterator<_IteratorR>&)
+     operator!=(const reverse_iterator<_IteratorL>& __x,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_iterator.h:361:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:28:68: note:   'std::vector<char>::const_iterator {aka __gnu_cxx::__normal_iterator<const char*, std::vector<char> >}' is not derived from 'const std::reverse_iterator<_Iterator>'
+   for (std::vector<char>::const_iterator i = z.begin(); i != z.end(); ++i)
+                                                                    ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_algobase.h:67:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\char_traits.h:39,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:40,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_iterator.h:1125:5: note: candidate: template<class _IteratorL, class _IteratorR> bool std::operator!=(const std::move_iterator<_IteratorL>&, const std::move_iterator<_IteratorR>&)
+     operator!=(const move_iterator<_IteratorL>& __x,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_iterator.h:1125:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:28:68: note:   'std::vector<char>::const_iterator {aka __gnu_cxx::__normal_iterator<const char*, std::vector<char> >}' is not derived from 'const std::move_iterator<_IteratorL>'
+   for (std::vector<char>::const_iterator i = z.begin(); i != z.end(); ++i)
+                                                                    ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_algobase.h:67:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\char_traits.h:39,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:40,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_iterator.h:1131:5: note: candidate: template<class _Iterator> bool std::operator!=(const std::move_iterator<_IteratorL>&, const std::move_iterator<_IteratorL>&)
+     operator!=(const move_iterator<_Iterator>& __x,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_iterator.h:1131:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:28:68: note:   'std::vector<char>::const_iterator {aka __gnu_cxx::__normal_iterator<const char*, std::vector<char> >}' is not derived from 'const std::move_iterator<_IteratorL>'
+   for (std::vector<char>::const_iterator i = z.begin(); i != z.end(); ++i)
+                                                                    ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\string:41:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\locale_classes.h:40,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ios_base.h:41,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:42,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\allocator.h:158:5: note: candidate: template<class _T1, class _T2> bool std::operator!=(const std::allocator<_CharT>&, const std::allocator<_T2>&)
+     operator!=(const allocator<_T1>&, const allocator<_T2>&)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\allocator.h:158:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:28:68: note:   'std::vector<char>::const_iterator {aka __gnu_cxx::__normal_iterator<const char*, std::vector<char> >}' is not derived from 'const std::allocator<_CharT>'
+   for (std::vector<char>::const_iterator i = z.begin(); i != z.end(); ++i)
+                                                                    ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\string:41:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\locale_classes.h:40,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ios_base.h:41,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:42,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\allocator.h:164:5: note: candidate: template<class _Tp> bool std::operator!=(const std::allocator<_CharT>&, const std::allocator<_CharT>&)
+     operator!=(const allocator<_Tp>&, const allocator<_Tp>&)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\allocator.h:164:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:28:68: note:   'std::vector<char>::const_iterator {aka __gnu_cxx::__normal_iterator<const char*, std::vector<char> >}' is not derived from 'const std::allocator<_CharT>'
+   for (std::vector<char>::const_iterator i = z.begin(); i != z.end(); ++i)
+                                                                    ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\string:52:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\locale_classes.h:40,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ios_base.h:41,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:42,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\basic_string.h:5097:5: note: candidate: template<class _CharT, class _Traits, class _Alloc> bool std::operator!=(const std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&, const std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&)
+     operator!=(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\basic_string.h:5097:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:28:68: note:   'std::vector<char>::const_iterator {aka __gnu_cxx::__normal_iterator<const char*, std::vector<char> >}' is not derived from 'const std::__cxx11::basic_string<_CharT, _Traits, _Alloc>'
+   for (std::vector<char>::const_iterator i = z.begin(); i != z.end(); ++i)
+                                                                    ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\string:52:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\locale_classes.h:40,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ios_base.h:41,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:42,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\basic_string.h:5110:5: note: candidate: template<class _CharT, class _Traits, class _Alloc> bool std::operator!=(const _CharT*, const std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&)
+     operator!=(const _CharT* __lhs,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\basic_string.h:5110:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:28:68: note:   mismatched types 'const _CharT*' and '__gnu_cxx::__normal_iterator<const char*, std::vector<char> >'
+   for (std::vector<char>::const_iterator i = z.begin(); i != z.end(); ++i)
+                                                                    ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\string:52:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\locale_classes.h:40,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ios_base.h:41,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:42,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\basic_string.h:5122:5: note: candidate: template<class _CharT, class _Traits, class _Alloc> bool std::operator!=(const std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&, const _CharT*)
+     operator!=(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\basic_string.h:5122:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:28:68: note:   'std::vector<char>::const_iterator {aka __gnu_cxx::__normal_iterator<const char*, std::vector<char> >}' is not derived from 'const std::__cxx11::basic_string<_CharT, _Traits, _Alloc>'
+   for (std::vector<char>::const_iterator i = z.begin(); i != z.end(); ++i)
+                                                                    ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ios_base.h:46:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:42,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\system_error:311:3: note: candidate: bool std::operator!=(const std::error_code&, const std::error_code&)
+   operator!=(const error_code& __lhs, const error_code& __rhs) noexcept
+   ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\system_error:311:3: note:   no known conversion for argument 1 from 'std::vector<char>::const_iterator {aka __gnu_cxx::__normal_iterator<const char*, std::vector<char> >}' to 'const std::error_code&'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\system_error:315:3: note: candidate: bool std::operator!=(const std::error_code&, const std::error_condition&)
+   operator!=(const error_code& __lhs, const error_condition& __rhs) noexcept
+   ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\system_error:315:3: note:   no known conversion for argument 1 from 'std::vector<char>::const_iterator {aka __gnu_cxx::__normal_iterator<const char*, std::vector<char> >}' to 'const std::error_code&'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\system_error:319:3: note: candidate: bool std::operator!=(const std::error_condition&, const std::error_code&)
+   operator!=(const error_condition& __lhs, const error_code& __rhs) noexcept
+   ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\system_error:319:3: note:   no known conversion for argument 1 from 'std::vector<char>::const_iterator {aka __gnu_cxx::__normal_iterator<const char*, std::vector<char> >}' to 'const std::error_condition&'
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\system_error:323:3: note: candidate: bool std::operator!=(const std::error_condition&, const std::error_condition&)
+   operator!=(const error_condition& __lhs,
+   ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\system_error:323:3: note:   no known conversion for argument 1 from 'std::vector<char>::const_iterator {aka __gnu_cxx::__normal_iterator<const char*, std::vector<char> >}' to 'const std::error_condition&'
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\locale_facets.h:48:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\basic_ios.h:37,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:44,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\streambuf_iterator.h:210:5: note: candidate: template<class _CharT, class _Traits> bool std::operator!=(const std::istreambuf_iterator<_CharT, _Traits>&, const std::istreambuf_iterator<_CharT, _Traits>&)
+     operator!=(const istreambuf_iterator<_CharT, _Traits>& __a,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\streambuf_iterator.h:210:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:28:68: note:   'std::vector<char>::const_iterator {aka __gnu_cxx::__normal_iterator<const char*, std::vector<char> >}' is not derived from 'const std::istreambuf_iterator<_CharT, _Traits>'
+   for (std::vector<char>::const_iterator i = z.begin(); i != z.end(); ++i)
+                                                                    ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\vector:64:0,
+                 from ..\src\hello.cpp:3:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_vector.h:1533:5: note: candidate: template<class _Tp, class _Alloc> bool std::operator!=(const std::vector<_Tp, _Alloc>&, const std::vector<_Tp, _Alloc>&)
+     operator!=(const vector<_Tp, _Alloc>& __x, const vector<_Tp, _Alloc>& __y)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_vector.h:1533:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:28:68: note:   'std::vector<char>::const_iterator {aka __gnu_cxx::__normal_iterator<const char*, std::vector<char> >}' is not derived from 'const std::vector<_Tp, _Alloc>'
+   for (std::vector<char>::const_iterator i = z.begin(); i != z.end(); ++i)
+                                                                    ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\mingw32\bits\c++allocator.h:33:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\allocator.h:46,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\string:41,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\locale_classes.h:40,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\ios_base.h:41,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:42,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ext\new_allocator.h:144:5: note: candidate: template<class _Tp> bool __gnu_cxx::operator!=(const __gnu_cxx::new_allocator<_Tp>&, const __gnu_cxx::new_allocator<_Tp>&)
+     operator!=(const new_allocator<_Tp>&, const new_allocator<_Tp>&)
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ext\new_allocator.h:144:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:28:68: note:   'std::vector<char>::const_iterator {aka __gnu_cxx::__normal_iterator<const char*, std::vector<char> >}' is not derived from 'const __gnu_cxx::new_allocator<_Tp>'
+   for (std::vector<char>::const_iterator i = z.begin(); i != z.end(); ++i)
+                                                                    ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_algobase.h:67:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\char_traits.h:39,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:40,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_iterator.h:877:5: note: candidate: template<class _Iterator, class _Container> bool __gnu_cxx::operator!=(const __gnu_cxx::__normal_iterator<_Iterator, _Container>&, const __gnu_cxx::__normal_iterator<_Iterator, _Container>&)
+     operator!=(const __normal_iterator<_Iterator, _Container>& __lhs,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_iterator.h:877:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:28:68: note:   deduced conflicting types for parameter '_Iterator' ('const char*' and 'int*')
+   for (std::vector<char>::const_iterator i = z.begin(); i != z.end(); ++i)
+                                                                    ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_algobase.h:67:0,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\char_traits.h:39,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ios:40,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\ostream:38,
+                 from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\iostream:39,
+                 from ..\src\hello.cpp:2:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_iterator.h:870:5: note: candidate: template<class _IteratorL, class _IteratorR, class _Container> bool __gnu_cxx::operator!=(const __gnu_cxx::__normal_iterator<_IteratorL, _Container>&, const __gnu_cxx::__normal_iterator<_IteratorR, _Container>&)
+     operator!=(const __normal_iterator<_IteratorL, _Container>& __lhs,
+     ^~~~~~~~
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_iterator.h:870:5: note:   template argument deduction/substitution failed:
+..\src\hello.cpp:28:68: note:   deduced conflicting types for parameter '_Container' ('std::vector<char>' and 'std::vector<int>')
+   for (std::vector<char>::const_iterator i = z.begin(); i != z.end(); ++i)
+                                                                    ^
+11:52:31 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\hello.o" "..\\src\\hello.cpp" 
+g++ -o hello.exe "src\\hello.o" 
+11:52:39 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\hello.o" "..\\src\\hello.cpp" 
+g++ -o hello.exe "src\\hello.o" 
+11:52:45 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\hello.o" "..\\src\\hello.cpp" 
+g++ -o hello.exe "src\\hello.o" 
+12:01:36 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\popMod.o" "..\\src\\popMod.cpp" 
+g++ -o hello.exe "src\\popMod.o" 
+12:01:43 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\popMod.o" "..\\src\\popMod.cpp" 
+..\src\popMod.cpp: In function 'int main()':
+..\src\popMod.cpp:28:21: error: too few arguments to function 'std::vector<int> mod(double, double, int, int, int, int, int, int, int, int, int, int, int, int, int, int)'
+   z =  mod(10,0.2,50);
+                     ^
+..\src\popMod.cpp:6:18: note: declared here
+ std::vector<int> mod(double uoE, double uoL, int uP, int uM, int Y, int S,
+                  ^~~
+15:03:38 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\popMod.o" "..\\src\\popMod.cpp" 
+..\src\popMod.cpp: In function 'std::vector<int> mPmod(float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float)':
+..\src\popMod.cpp:30:5: warning: variable 'Be' set but not used [-Wunused-but-set-variable]
+ int Be =0;
+     ^~
+..\src\popMod.cpp:31:5: warning: unused variable 'Bl' [-Wunused-variable]
+ int Bl =0;
+     ^~
+..\src\popMod.cpp:32:5: warning: unused variable 'Bp' [-Wunused-variable]
+ int Bp =0;
+     ^~
+..\src\popMod.cpp:33:5: warning: unused variable 'Bm' [-Wunused-variable]
+ int Bm =0;
+     ^~
+..\src\popMod.cpp:34:5: warning: unused variable 'nt' [-Wunused-variable]
+ int nt =0;
+     ^~
+..\src\popMod.cpp:39:7: warning: variable 'uL' set but not used [-Wunused-but-set-variable]
+ float uL;
+       ^~
+g++ -o hello.exe "src\\popMod.o" 
+15:29:04 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\popMod.o" "..\\src\\popMod.cpp" 
+..\src\popMod.cpp: In function 'int bernTrial(int, float)':
+..\src\popMod.cpp:17:10: error: 'gen' was not declared in this scope
+  if (dis(gen)<p) res++;
+          ^~~
+15:29:14 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\popMod.o" "..\\src\\popMod.cpp" 
+..\src\popMod.cpp: In function 'std::vector<int> mPmod(float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float)':
+..\src\popMod.cpp:32:5: warning: variable 'Bl' set but not used [-Wunused-but-set-variable]
+ int Bl =0;
+     ^~
+..\src\popMod.cpp:33:5: warning: variable 'Bp' set but not used [-Wunused-but-set-variable]
+ int Bp =0;
+     ^~
+..\src\popMod.cpp:34:5: warning: variable 'Bm' set but not used [-Wunused-but-set-variable]
+ int Bm =0;
+     ^~
+..\src\popMod.cpp:35:5: warning: variable 'nt' set but not used [-Wunused-but-set-variable]
+ int nt =0;
+     ^~
+g++ -o hello.exe "src\\popMod.o" 
+16:02:20 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\popMod.o" "..\\src\\popMod.cpp" 
+g++ -o hello.exe "src\\popMod.o" 
+16:08:50 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\popMod.o" "..\\src\\popMod.cpp" 
+g++ -o hello.exe "src\\popMod.o" 
+16:09:12 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\popMod.o" "..\\src\\popMod.cpp" 
+g++ -o hello.exe "src\\popMod.o" 
+16:09:26 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\popMod.o" "..\\src\\popMod.cpp" 
+g++ -o hello.exe "src\\popMod.o" 
+16:15:38 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\popMod.o" "..\\src\\popMod.cpp" 
+g++ -o hello.exe "src\\popMod.o" 
+16:18:06 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\popMod.o" "..\\src\\popMod.cpp" 
+..\src\popMod.cpp:37:15: error: 'vector' is not a type
+   float time, vector rf) {
+               ^~~~~~
+..\src\popMod.cpp: In function 'std::vector<int> mPmod(float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, int)':
+..\src\popMod.cpp:59:1: error: expected ';' before 'uE'
+ uE = uoE*dt*(1+((E+L)/(K)));
+ ^~
+..\src\popMod.cpp:59:28: warning: statement has no effect [-Wunused-value]
+ uE = uoE*dt*(1+((E+L)/(K)));
+                            ^
+..\src\popMod.cpp:51:7: warning: unused variable 'trx' [-Wunused-variable]
+ float trx = tr/dt;
+       ^~~
+..\src\popMod.cpp: In function 'int main()':
+..\src\popMod.cpp:89:51: error: too few arguments to function 'std::vector<int> mPmod(float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, int)'
+     0.096,13.25,3,14,20,0.25,10,93.6,177,8,1,7,133);
+                                                   ^
+..\src\popMod.cpp:35:18: note: declared here
+ std::vector<int> mPmod(float dE, float dL, float dP,float uoE, float uoL, float uP, float uM, float Y, float S,
+                  ^~~~~
+16:18:49 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\popMod.o" "..\\src\\popMod.cpp" 
+..\src\popMod.cpp:37:15: error: 'vector' is not a type
+   float time, vector rf) {
+               ^~~~~~
+..\src\popMod.cpp: In function 'int main()':
+..\src\popMod.cpp:90:51: error: too few arguments to function 'std::vector<int> mPmod(float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, int)'
+     0.096,13.25,3,14,20,0.25,10,93.6,177,8,1,7,133);
+                                                   ^
+..\src\popMod.cpp:35:18: note: declared here
+ std::vector<int> mPmod(float dE, float dL, float dP,float uoE, float uoL, float uP, float uM, float Y, float S,
+                  ^~~~~

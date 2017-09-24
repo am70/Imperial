@@ -1,0 +1,16 @@
+16:18:49 **** Incremental Build of configuration Debug for project hello ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\popMod.o" "..\\src\\popMod.cpp" 
+..\src\popMod.cpp:37:15: error: 'vector' is not a type
+   float time, vector rf) {
+               ^~~~~~
+..\src\popMod.cpp: In function 'int main()':
+..\src\popMod.cpp:90:51: error: too few arguments to function 'std::vector<int> mPmod(float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, int)'
+     0.096,13.25,3,14,20,0.25,10,93.6,177,8,1,7,133);
+                                                   ^
+..\src\popMod.cpp:35:18: note: declared here
+ std::vector<int> mPmod(float dE, float dL, float dP,float uoE, float uoL, float uP, float uM, float Y, float S,
+                  ^~~~~
+
+16:18:50 Build Finished (took 327ms)
+

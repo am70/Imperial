@@ -1,0 +1,31 @@
+// function example
+#include <iostream>
+#include <vector>
+using namespace std;
+
+std::vector<int> mod(double uoE, double uoL, int time) {
+	int t;
+	t = 0;
+	std::vector <int> r;
+
+	while (t < time) {
+
+		uoE = uoE + (uoE * uoL);
+		t++;
+		r.push_back( uoE );
+
+	}
+
+return(r);
+
+}
+
+int main ()
+{
+  std::vector<int> z;
+  z =  mod(10,0.2,1);
+
+  for (std::vector<char>::const_iterator i = z.begin(); i != z.end(); ++i)
+      std::cout << *i << ' ';
+
+}

@@ -1,0 +1,28 @@
+// function example
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int mod(double uoE, double uoL, int time) {
+	int t;
+	t = 0;
+	std::vector <int> r;
+
+	while (t < time) {
+
+		uoE = uoE + (uoE * uoL);
+		t++;
+		r.push_back( uoE );
+
+	}
+
+	return r;
+
+}
+
+int main ()
+{
+  int z;
+  z =  mod(10,0.2,1);
+  cout << "The result is " << z;
+}
