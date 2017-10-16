@@ -7,18 +7,6 @@
 #########################################################################################################################################
 library(miscTools)
 
-n100<-read.csv("Q:\\Imperial\\larvalModel\\Outputs\\pMCMC\\n100.csv",sep=" ")
-n80<-read.csv("Q:\\Imperial\\larvalModel\\Outputs\\pMCMC\\n80.csv",sep=" ")
-n60<-read.csv("Q:\\Imperial\\larvalModel\\Outputs\\pMCMC\\n60.csv",sep=" ")
-n40<-read.csv("Q:\\Imperial\\larvalModel\\Outputs\\pMCMC\\n40.csv",sep=" ")
-n20<-read.csv("Q:\\Imperial\\larvalModel\\Outputs\\pMCMC\\n20.csv",sep=" ")
-n10<-read.csv("Q:\\Imperial\\larvalModel\\Outputs\\pMCMC\\n10.csv",sep=" ")
-
-
-nx<-read.csv("Q:\\Imperial\\larvalModel\\Outputs\\pMCMC\\nx.csv",sep=" ")
-
-
-
 cIfunc<-function(x){
   quantRes<-as.data.frame(c(1:2))
   for(i in 1:(ncol(x)-1)){
@@ -45,7 +33,7 @@ iqrFunc<-function(x){
   iqrRes[,-1]
 }
 
-plotMod<-function(n,mcmcRes,obsDat,rf,sf){
+plotMod<-function(n,mcmcRes,obsDat,rf,sf,fxd,z){
   parms<-colMedians(mcmcRes)
   cI<-cIfunc(mcmcRes)
   iqr<-iqrFunc(mcmcRes)
@@ -53,53 +41,63 @@ plotMod<-function(n,mcmcRes,obsDat,rf,sf){
   endTime<-max(obsDat$time)/delta
   
   
-  crosscorr.plot(g$results[,-13])
+#  crosscorr.plot(g$results[,-13])
 
 ####95% CI####
   par(mfrow=c(1,1))
- mid<- pFilt(n,iState,modStep3,dataLikFunc,garkiObs101,pr=c(parms[1],parms[2],parms[3],
-                                                                  parms[4],parms[5],parms[6],parms[7],parms[8]),rFclust=rf,resM=T,fxdParams=60)
- colnames(mid)<-c("M")
- plot(mid$M[-1]~timeX,ylim=c(0,40))
- points(garkiObs219$`219`/parms[8]~as.numeric(garkiObs219$time-min(garkiObs219$time)),col="red")
+ mid<- pFilt(n,iState,modStep3,dataLikFunc,obsDat,pr=c(parms[1],parms[2],parms[3],
+                                                                  parms[4],parms[z],parms[9],parms[sf],parms[14]),rFclust=rf,resM=T,fxdParams=fxd)
+ colnames(mid)<-c("E","L","P","M")
+ #plot(mid$M~timeX$time,col="white")
+ #lines(mid$M~timeX$time,col="blue")
+#points(obsDat$`101`/0.01~obsDat$time,col="red")
+
+
+  #for(i in 1:nrow(g)){
+  #fs<-betaBinom(g[i, 3], g[i,2], 0.01, parms[6])
+  
+ # print(fs)
+ # }
+
  
- low<- pFilt(n,iState,modStep3,dataLikFunc,garkiObs101,pr=c(cI[1,1],cI[1,2],cI[1,3],
-                                                               cI[1,4],cI[2,5],cI[2,6],cI[2,7],cI[2,8],cI[1,9],cI[2,sf]),rFclust=rf,resM=T)
- colnames(low)<-c("M")
+ low<- pFilt(n,iState,modStep3,dataLikFunc,obsDat,pr=c(cI[1,1],cI[1,2],cI[1,3],
+                                                               cI[1,4],cI[2,z],cI[2,9],cI[2,sf],cI[1,14]),rFclust=rf,resM=T,fxdParams=fxd)
+ colnames(low)<-c("E","L","P","M")
  
- high<- pFilt(n,iState,modStep3,dataLikFunc,garkiObs101,pr=c(cI[2,1],cI[2,2],cI[2,3],
-                                                              cI[2,4],cI[1,5],cI[1,6],cI[1,7],cI[1,8],cI[2,9],cI[1,sf]),rFclust=rf,resM=T)
- colnames(high)<-c("M")
+ high<- pFilt(n,iState,modStep3,dataLikFunc,obsDat,pr=c(cI[2,1],cI[2,2],cI[2,3],
+                                                              cI[2,4],cI[2,z],cI[1,9],cI[1,sf],cI[2,14]),rFclust=rf,resM=T,fxdParams=fxd)
+ colnames(high)<-c("E","L","P","M")
  
  ####IQR####
  
- lowIqr<- pFilt(n,iState,modStep3,dataLikFunc,garkiObs101,pr=c(iqr[1,1],iqr[1,2],iqr[1,3],
-                                                               iqr[1,4],iqr[2,5],iqr[2,6],iqr[2,7],iqr[2,8],iqr[1,9],iqr[2,sf]),rFclust=rf,resM=T)
- colnames(lowIqr)<-c("M")
+ lowIqr<- pFilt(n,iState,modStep3,dataLikFunc,obsDat,pr=c(iqr[1,1],iqr[1,2],iqr[1,3],
+                                                               iqr[1,4],iqr[2,5],iqr[2,9],iqr[2,sf],iqr[1,14]),rFclust=rf,resM=T,fxdParams=fxd)
+ colnames(lowIqr)<-c("E","L","P","M")
  
- highIqr<- pFilt(n,iState,modStep3,dataLikFunc,garkiObs101,pr=c(iqr[2,1],iqr[2,2],iqr[2,3],
-                                                                iqr[2,4],iqr[1,5],iqr[1,6],iqr[1,7],iqr[1,8],iqr[2,9],iqr[1,sf]),rFclust=rf,resM=T)
- colnames(highIqr)<-c("M")
+ highIqr<- pFilt(n,iState,modStep3,dataLikFunc,obsDat,pr=c(iqr[2,1],iqr[2,2],iqr[2,3],
+                                                                iqr[2,4],cI[2,z],iqr[1,9],iqr[1,sf],iqr[2,14]),rFclust=rf,resM=T,fxdParams=fxd)
+ colnames(highIqr)<-c("E","L","P","M")
  
 mid$time<-1:nrow(mid)*0.25
 
-timeX<-as.data.frame(1:nrow(mid))*0.25
+timeX<-as.data.frame(1:nrow(mid))*delta
 colnames(timeX)<-c("time")
 obsDat$time<-obsDat$time-min(obsDat$time)
 timeX<-merge(obsDat,timeX,all=T)
 colnames(timeX)<-c("time","M")
 timeX<-timeX[-1,]
 #timeX[is.na(timeX)]<-0
+print(as.numeric(max(timeX$M,na.rm=T))/0.01)
   
-  ggplot(data = mid,aes(x=mid$time,y=mid$M))+
-    expand_limits(y=c(0,50))+
-    geom_ribbon(aes(x=mid$time, ymax=highIqr$M, ymin=lowIqr$M), fill="dark grey", alpha=.5)+
-    geom_ribbon(aes(x=mid$time, ymax=high$M, ymin=low$M), fill="grey", alpha=.5)+
-    geom_line(aes(x=mid$time,y = low$M), colour = 'dark grey')+
-    geom_line(aes(x=mid$time,y = high$M), colour = 'dark grey')+
-    geom_line(aes(x=mid$time,y = lowIqr$M), colour = 'dark grey')+
-    geom_line(aes(x=mid$time,y = highIqr$M), colour = 'dark grey')+
-    geom_point(x=timeX$time,y=timeX$M,col="red")+
+  ggplot(data = mid,aes(x=mid$time,y=timeX$M/0.01))+
+   expand_limits(y=c(0,(as.numeric(max(timeX$M,na.rm=T))/0.01)))+
+   # geom_ribbon(aes(x=mid$time, ymax=highIqr$M, ymin=lowIqr$M), fill="dark grey", alpha=.5)+
+    #geom_ribbon(aes(x=mid$time, ymax=high$M, ymin=low$M), fill="grey", alpha=.5)+
+    #geom_line(aes(x=mid$time,y = low$M), colour = 'dark grey')+
+   # geom_line(aes(x=mid$time,y = high$M), colour = 'dark grey')+
+   # geom_line(aes(x=mid$time,y = lowIqr$M), colour = 'dark grey')+
+   # geom_line(aes(x=mid$time,y = highIqr$M), colour = 'dark grey')+
+    geom_point(x=timeX$time,y=timeX$M/0.01,col="red")+
     geom_line(aes(x=mid$time,mid$M))+
     xlab("time")+
     ylab("M")+
@@ -107,10 +105,10 @@ timeX<-timeX[-1,]
   
 }
 
-hh1<-plotMod(120,g$results,garkiObs101,1,10)
-hh2<-plotMod(120,g1$results,garkiObs104,1,11)
-hh3<-plotMod(120,g1$results,garkiObs219,2,12)
-hh4<-plotMod(120,g1$results,garkiObs220,2,13)
+hh1<-plotMod(44,pp$results,garkiObs101,1,10,7,5)
+hh2<-plotMod(44,pp$results,garkiObs104,1,11,7,6)
+hh3<-plotMod(44,pp$results,garkiObs219,2,12,7,7)
+hh4<-plotMod(44,pp$results,garkiObs220,2,13,7,8)
 
 grid.arrange(hh1,hh2,hh3,hh4)
 
@@ -142,25 +140,25 @@ points(garkiObs220$time/delta,(garkiObs220$`220`/parms[8]),col="red")
 library("gridExtra")
 
 plotDens<-function(mcmc){
-  uoEprior<-rnorm(94999,mean=0.035,sd=0.00485)
-  uoLprior<-rnorm(94999,mean=0.035,sd=0.00485)
-  uPprior<-rnorm(94999,mean=0.25,sd=0.0357)
-  Yprior<-rnorm(94999,mean=13.06,sd=3.53)
-  p0prior<-rnorm(94999,mean=0.5,sd=0.015)
+  uoEprior<-rnorm( nrow(mcmc),mean=0.035,sd=0.009)
+  uoLprior<-rnorm( nrow(mcmc),mean=0.035,sd=0.009)
+  uPprior<-rnorm( nrow(mcmc),mean=0.25,sd=0.11)
+  Yprior<-rnorm( nrow(mcmc),mean=13.06,sd=4.53)
+  #p0prior<-rnorm(94999,mean=0.5,sd=0.015)
   
   
   p1<-ggplot(data = mcmc,aes(uoE))+
-    geom_density(kernel = "gaussian", adjust = 1.5, aes(colour="Posterior"),fill="red", size=1,alpha=0.1)+
+    geom_density(kernel = "gaussian", adjust = 7, aes(colour="Posterior"),fill="red", size=1,alpha=0.1)+
     geom_density(kernel = "gaussian", adjust = 1, aes(uoEprior,colour="Prior"), size=1,fill="blue",alpha=0.1)+
     scale_colour_manual(values=c("Posterior"="red", "Prior"="blue"), name="Densities")+
     theme_bw()
   p2<-ggplot(data = mcmc,aes(uoL))+
-    geom_density(kernel = "gaussian", adjust = 2, aes(colour="Posterior"),fill="red", size=1,alpha=0.1)+
+    geom_density(kernel = "gaussian", adjust = 3, aes(colour="Posterior"),fill="red", size=1,alpha=0.1)+
     geom_density(kernel = "gaussian", adjust = 1, aes(uoLprior,colour="Prior"), size=1,fill="blue",alpha=0.1)+
     scale_colour_manual(values=c("Posterior"="red", "Prior"="blue"), name="Densities")+
     theme_bw()
   p3<-ggplot(data = mcmc,aes(uP))+
-    geom_density(kernel = "gaussian", adjust = 2, aes(colour="Posterior"),fill="red", size=1,alpha=0.1)+
+    geom_density(kernel = "gaussian", adjust = 5, aes(colour="Posterior"),fill="red", size=1,alpha=0.1)+
     geom_density(kernel = "gaussian", adjust = 1, aes(uPprior,colour="Prior"), size=1,fill="blue",alpha=0.1)+
     scale_colour_manual(values=c("Posterior"="red", "Prior"="blue"), name="Densities")+
     theme_bw()
@@ -169,22 +167,14 @@ plotDens<-function(mcmc){
     geom_density(kernel = "gaussian", adjust = 1, aes(Yprior,colour="Prior"), size=1,fill="blue",alpha=0.1)+
     scale_colour_manual(values=c("Posterior"="red", "Prior"="blue"), name="Densities")+
     theme_bw()
-  p5<-ggplot(data = mcmc,aes(p0))+
-    geom_density(kernel = "gaussian", adjust = 7, aes(colour="Posterior"),fill="red", size=1,alpha=0.1)+
-    geom_density(kernel = "gaussian", adjust = 1, aes(p0prior,colour="Prior"), size=1,fill="blue",alpha=0.1)+
-    scale_colour_manual(values=c("Posterior"="red", "Prior"="blue"), name="Densities")+
-    theme_bw()
+  #p5<-ggplot(data = mcmc,aes(o))+
+   # geom_density(kernel = "gaussian", adjust = 7, aes(colour="Posterior"),fill="red", size=1,alpha=0.1)+
+  #  geom_density(kernel = "gaussian", adjust = 1, aes(p0prior,colour="Prior"), size=1,fill="blue",alpha=0.1)+
+   # scale_colour_manual(values=c("Posterior"="red", "Prior"="blue"), name="Densities")+
+    #theme_bw()
 
-  grid.arrange(p1, p2, p3, p4,p5)
+  grid.arrange(p1, p2, p3, p4)
 }
-
-plotDens(as.data.frame(g1$results))
-plotDens(n100)
-plotDens(n80)
-plotDens(n60)
-plotDens(n40)
-plotDens(n20)
-plotDens(n10)
 
 
 
@@ -242,3 +232,68 @@ dat<-cbind(p1[-1],garkiObsX[-18,])
 plot(dat$`p1[-1]`~dat$time,col="white",ylim=c(0,40))
 lines(dat$`p1[-1]`~dat$time)
 points(dat$`111`/parms[8]~dat$time,col="red")
+
+
+
+
+
+##########plot and record
+
+plotRec<-function(clustRes,name,tr){
+  res<-clustRes$results
+  w=1800
+  h=1200
+  
+  fileName<-paste0("Q:\\Imperial\\larvalModel\\Figures\\pMMH figures\\",name)
+  dir.create(fileName)
+  
+  write.table(res,paste0(fileName,"\\mcmcRes.csv"))
+  
+  
+  png(filename=paste0(fileName,"\\fig1.png"),width = w, height = h,pointsize=30)
+  plot(res[,c(1:3)])
+  dev.off()
+  png(filename=paste0(fileName,"\\fig2.png"),width = w, height = h,pointsize=30)
+  plot(res[,c(4:6)])
+  dev.off()
+  png(filename=paste0(fileName,"\\fig3.png"),width = w, height = h,pointsize=30)
+  plot(res[,c(7:9)])
+  dev.off()
+  png(filename=paste0(fileName,"\\fig4.png"),width = w, height = h,pointsize=30)
+  plot(res[,c(10:12)])
+  dev.off()
+  png(filename=paste0(fileName,"\\fig5.png"),width = w, height = h,pointsize=30)
+  plot(res[,c(13:15)])
+  dev.off()
+#  png(filename=paste0(fileName,"\\fig5.png"),width = w, height = h,pointsize=30)
+# plot(res[,c(13)])
+ # dev.off()
+  
+  hh1<-plotMod(44,res,garkiObs101,1,10,tr,5)
+  hh2<-plotMod(44,res,garkiObs104,1,11,tr,6)
+  hh3<-plotMod(44,res,garkiObs219,2,12,tr,7)
+  hh4<-plotMod(44,res,garkiObs220,2,13,tr,8)
+  
+  png(filename=paste0(fileName,"\\fits.png"),width = w, height = h)
+  plot(grid.arrange(hh1,hh2,hh3,hh4))
+  dev.off()
+  
+  png(filename=paste0(fileName,"\\crossCor.png"),width = w, height = h)
+  crosscorr.plot(res)
+  dev.off()
+ 
+  png(filename=paste0(fileName,"\\density.png"),width = w, height = h)
+  plotDens(as.data.frame(res))
+  dev.off()
+  dev.off()
+
+
+  
+  print(colMedians(res))
+  
+  
+}
+
+f<-obj$task_get("c5ccf1e406561fe5309e0190b5ef0ecd")
+plotRec(f$result(),"Z_Inf uoE0.015 50k tr7 short",7)
+

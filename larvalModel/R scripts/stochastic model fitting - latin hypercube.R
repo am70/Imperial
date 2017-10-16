@@ -67,39 +67,35 @@ larvalR <- odin::odin({
   P0<-user()
   M0<-user()
   time1<-user()
+  o<-user()
   
   #initial values
-  initial(Be)<-0
-  initial(Bl)<-0
-  initial(Bp)<-0
-  initial(Bm)<-0
-  initial(nt)<-0
   
   initial(E) <- E0
   initial(L) <- L0
   initial(P) <- P0
   initial(M) <- M0
+  initial(timeX)<-time1
+  initial(ts)<-0
   
-  initial(Reff)<-time1
+  K <-if (timeX<=trx) (1+(sf*((1/trx)*(sum(rF[0:(timeX-1)]))))) else (1+(sf*((1/trx)*(sum(rF[(timeX-trx):timeX-1])))))
   
- # K<-if (step<=trx) (1+(sf*((1/trx)*(sum(rF[0:(step-1)]))))) else sf*((1/(trx*(1-exp(-step/trx))))*(sum(rF[0:step])*exp(-(step-step))/trx))
-  K <-if (step<=trx) (1+(sf*((1/trx)*(sum(rF[0:(step-1)]))))) else (1+(sf*((1/trx)*(sum(rF[(step-trx):step-1])))))
+  uE<-uoE*dt*exp((E+L)/K)  #^o >1 density dep. mortality gets greater quicker as density increases 0-1 the opposite
+  uL<-uoL*dt*exp(Y*(E+L)/K)
   
-  uE<-uoE*dt*(1+((E+L)/(K)))
-  uL<-uoL*dt*(1+(Y*(E+L)/(K)))
+  update(timeX)<-timeX+1
+  Be<-if((dE+uE)*dt<1) rbinom(E,(dE+uE)*dt) else rbinom(E,1)
+  Bl<-if ((dL+uL)*dt<1) rbinom(L, (dL+uL)*dt) else rbinom(L,1)
+  Bp<-rbinom(P,(dP+uP)*dt)
+  Bm<-rbinom(M,uM*dt)
+  nt<-rbinom(M,(dt/S))
+  update(ts)<-M-Bm
   
-  update(Be)<-if((dE+uE)*dt<1) rbinom(E,(dE+uE)*dt) else rbinom(E,1)
-  update(Bl)<-if ((dL+uL)*dt<1) rbinom(L, (dL+uL)*dt) else rbinom(L,1)
-  update(Bp)<-if((dP+uP)*dt<1) rbinom(P,(dP+uP)*dt) else rbinom(P,1)
-  update(Bm)<-if (uM*dt<1) rbinom(M,uM*dt) else rbinom(M,1)
-  update(nt)<-rbinom(M,(dt/S))
+  update(E)<-E-Be+rpois(nt*n) #else rpois(nt*n)
+  update(L)<-L-Bl+rbinom(Be,(dE/(uE+dE))) #else rbinom(Be,(dE/(uE+dE)))
+  update(P)<-P-Bp+rbinom(Bl,(dL/(uL+dL))) #else rbinom(Bl,(dL/(uL+dL)))
+  update(M)<-if(M-Bm>0)M+round(0.5*(rbinom(Bp,(dP/(uP+dP)))))-Bm else 1+round(0.5*(rbinom(Bp,(dP/(uP+dP)))))
   
-  update(Reff)<-Reff+1#0.5*(Emax/(exp(uM*S)-1))*(1/(1+uE/dE))*(1/(1+uL/dL))*(1/(1+(uP*dt)/dP))
-  
-  update(E)<-if(E-Be>0)E-Be+rpois(nt*n) else rpois(nt*n)
-  update(L)<-if(L-Bl>0)L-Bl+rbinom(Be,(dE/(uE+dE))) else rbinom(Be,(dE/(uE+dE)))
-  update(P)<-if(P-Bp>0)P-Bp+rbinom(Bl,(dL/(uL+dL))) else rbinom(Bl,(dL/(uL+dL)))
-  update(M)<-if(M-Bm>0)M+(0.5*(rbinom(Bp,(dP/(uP+dP)))))-Bm else M+(0.5*(rbinom(Bp,(dP/(uP+dP)))))
   
 })
 
@@ -112,10 +108,17 @@ larvalR <- odin::odin({
 #                                                                                                                                       #
 #########################################################################################################################################
 
+parms<-mosParamsP(uoE=0.09007434,uoL=0.03156214,uP=0.2499843,Y=11.501,
+           o=7.827497,sf=57110,n=50,time1=1244,E0=4311, L0=35, P0=5, M0=42)
+modR <- larvalR(user=parms)
+simDat <- as.data.frame(modR$run(1244:2000))
+summary(is.na(simDat$M))
+plot(simDat$M)
+
 ##model simulation function - starts simulation from same random seed each time
 modSim <- function(parms, obsDat) {
-  modR <- larvalModP(user=parms)
-  simDat <- as.data.frame(modR$run(0:2000))
+  modR <- larvalR(user=parms)
+  simDat <- as.data.frame(modR$run(1244:3000))
   simDat<-simDat[seq(1, NROW(simDat), by = 1/delta),]
   simDat$step<-simDat$step*delta
   matchedTimes <- simDat$step %in% garkiObs$time
