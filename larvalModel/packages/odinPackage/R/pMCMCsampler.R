@@ -15,50 +15,32 @@
 # @param fxdParams fixed parameters
 # @param cluster T/F if true, using dide cluster, if false running locally
 # @return log likelihood for global and local parameters
-llfnc <- function(fitParams, particles, fxdParams, cluster) {
+llfnc <- function(fitParams, particles, fxdParams, cluster,priorFunc,obsDat) {
   pX <- NULL
   for (i in 1:4) {
     globalParms <-
-      fitParams[c(1:8)]
-    globalParms[8] <-
-      fitParams[c(i + 7)]#i+8 to fit the scaling factor specific for each village
+      fitParams[c(1:5,9,10,14)]
+  
+      globalParms[5] <-
+      fitParams[c(i + 4)]#i+6 to fit the scaling factor specific for each village
+  
+      globalParms[7] <-
+      fitParams[c(i + 9)]#i+6 to fit the scaling factor specific for each village
+    
     garkDat <-
-      garkiObsX[, c(1, i + 1)]#i+1 as first column is "time"
+      obsDat[, c(1, i + 1)]#i+1 as first column is "time"
     garkDat <- na.omit(garkDat)
     rFc <-
       as.numeric(substring(names(garkDat)[2], 1, 1))#which rainfall cluster to use
     #run particle filter for village
     p1 <- 
-      pFilt(particles,iState,modStep3,dataLikFunc,garkDat,pr = globalParms,rFclust = rFc,fxdParams = fxdParams,resM = F, cluster = cluster) + lprior(globalParms)
-    pX <- 
+      pFilt(particles,iState,modStep3,dataLikFunc,garkDat,pr = globalParms,rFclust = rFc,fxdParams = fxdParams,resM = F, cluster = cluster) + priorFunc(globalParms)
+     pX <- 
       rbind(pX, p1)
   }
   return(sum(pX))
 }
 
-
-
-
-## Log-Prior function - specific to this model
-# @parms current parameters
-# @return sum of log priors
-lprior <- function(parms) {
-  
- priorSum<-(dnorm(parms[1], mean = 0.035, sd = 0.06, log = T)
-  +dunif(parms[1], min = 0.001, max = 0.99, log = T)
-  +dnorm(parms[2], mean = 0.035, sd = 0.06, log = T)
-  +dunif(parms[2], min = 0.001, max = 0.99, log = T)
-  +dnorm(parms[3], mean = 0.25, sd = 0.11, log = T)
-  +dunif(parms[3], min = 0.001, max = 0.99, log = T)
-  +dnorm(parms[4], mean = 13.06, sd = 4.53, log = T)
-  +dunif(parms[5], min = 1, max = 1e+5, log = T)
-  +dunif(parms[6], min = 1e-06, max = 1, log = T)
-  +dunif(parms[5], min = 0.01, max = 1000, log = T)
-  +dunif(parms[7], min = 1, max = 10, log = T)
-  +dunif(parms[8], min = 1, max = 1e+20, log = T)
-  )
-return(as.vector(priorSum))
-}
 
 
 # set bounds on initial parameter guesses if using random start values
@@ -191,6 +173,7 @@ library(coda)
 # @param tell print monitoring information every x number of iterations
 # @param cluster T/F if true, using dide cluster, if false running locally
 mcmcSampler <- function(initParams,
+                        parameterFunc,
                         randInit = T,
                         fixedParam = 40,
                         proposer = sequential.proposer,
@@ -206,7 +189,11 @@ mcmcSampler <- function(initParams,
                         adptBurn = 200,
                         acceptanceRate = 0.9,
                         tell = 100,
-                        cluster = F) {
+                        cluster = F,
+                        oDat,
+                        priorFunc) {
+  
+print(priorFunc)
   aratio <- rep(0, length(sdProps))#starting acceptance ratio
   acceptRseq <- rep(0, length(sdProps))
   iterR <- rep(0, length(sdProps))
@@ -223,7 +210,7 @@ mcmcSampler <- function(initParams,
     llfnc(currentParams,
           particles = particles,
           fxdParams = fixedParam,
-          cluster)
+          cluster,priorFunc = priorFunc,obsDat=oDat)
   ## Initialize matrix to store MCMC chain
   out <- matrix(NA, nr = niter, nc = length(currentParams) + 1)
   out[1,] <- c(currentParams, ll = -curVal) ## add first value
@@ -272,7 +259,7 @@ mcmcSampler <- function(initParams,
       llfnc(proposal,
             particles = particles,
             fxdParams = fixedParam,
-            cluster)
+            cluster,priorFunc=priorFunc,obsDat = oDat)
     lmh <-
       propVal - curVal ## likelihood ratio = log likelihood difference
     

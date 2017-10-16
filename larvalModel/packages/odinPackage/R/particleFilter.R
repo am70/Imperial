@@ -14,8 +14,8 @@
 # @fxdParams fixed parameter (currently just for n in mosParamsP) - maybe update for multiple fixed parameters
 # @return conditions for E, L, P and M
 iState<-function(N,t,prms,fxdParams){
-parms<-mosParamsP(uoE=prms[1],uoL = prms[2],uP=prms[3],Y=prms[4],n=as.numeric(fxdParams),sf=prms[8],o=prms[7])
-Lx <- prms[5]
+parms<-mosParamsP(uoE=prms[1],uoL = prms[2],uP=prms[3],Y=prms[4],n=prms[8],sf=prms[7])
+z <- prms[5]#fitted (E-L)
 dE <- parms$dE
 dL <- parms$dL
 dP <- parms$dP
@@ -26,25 +26,28 @@ n <- parms$n
 UoE <- parms$uoE
 UoL <- parms$uoL
 rF <- parms$rF
-Um <- parms$uM
-Up <- parms$uP
+uM <- parms$uM
+uP <- parms$uP
 tr <- parms$tr / delta
+B<-parms$B
+
 
 K <- (1 + (sf * ((1 / tr) * (sum(
   rF[(t - tr):t - 1]
 )))))
 
-a = ((n / S) * dP * dL) / ((2 * Um) * (Up * dP))
-b = (UoE / (y * UoL)) * (dL + UoL) - dE - UoE
-c = -(UoE * dE) / (UoL * y)
-x = (-b + sqrt(b ^ 2 * -4 * a * c)) / (2 * a)
+a=(1/2*dL*dP)/(uM*(dP+uP))
 
-L <- Lx#((dE*x-dL-UoL)/(UoL*y))*(1/o)*(K/(x+1))#L
-E <- L / x
-P <- (dL * L) / (Up + dP)
-M <- (dP * P) / (2 * Um)
+uE=UoE*exp(z/K)
+uL=UoL*exp(y*z/K)
+
+
+E=((B*a)*z)/(dE+(B*a)+uE)
+L=(dE*z)/(dE+dL+uL)
+M=(1/2*dL*dP*L)/uM*(dP+uP)
+P=2*uM*M/dP
 conds <- cbind(E, L, P, M)
-conds <- conds[rep(seq_len(nrow(conds)), each = N), ]
+conds <- conds[rep(seq_len(nrow(conds)), each = N),]
 return(round(conds, 0))
 }
 
@@ -115,10 +118,10 @@ modStep3 <- function(weightInput) {
   currentTime <-
     as.numeric(dataInput[, c(5)])#time in model to run from
   nextTime <- as.numeric(dataInput[, c(6)])#time in model to run to
-  pr <- as.numeric(dataInput[, c(7:12)])#parameters
+  pr <- as.numeric(dataInput[, c(7:11,13)])#parameters
   fixed <- dataInput[14]#fixed parameters, currently just n
   #initialise model
-  if (dataInput[13] == 1)
+  if (dataInput[12] == 1)
     rFc <- rFx
   else
     rFc <- rFx2
@@ -132,11 +135,11 @@ modStep3 <- function(weightInput) {
       uoL = pr[2],
       uP = pr[3],
       Y = pr[4],
-      o = pr[5],
-      sf = pr[6],
+      sf = pr[5],
+      n = pr[6],
       rF = rFc,
       time1 = currentTime,
-      n = as.numeric(fixed)
+      tr = as.numeric(fixed)
     )
   #run model between two discrete time periods and return results
   modR <- larvalModP(user = params)#run model
@@ -145,7 +148,7 @@ modStep3 <- function(weightInput) {
       currentTime, nextTime, length.out = nextTime - currentTime
     )))
   res2 <- (simDat[simDat$step == nextTime, ])#return model state
-  return(as.data.frame(rbind(res2[, c(8:11)])))
+  return(as.data.frame(rbind(res2[, c(3:6)])))
 }
 
 
@@ -162,10 +165,10 @@ modStep4 <- function(weightInput) {
   currentTime <-
     as.numeric(dataInput[, c(5)])#time in model to run from
   nextTime <- as.numeric(dataInput[, c(6)])#time in model to run to
-  pr <- as.numeric(dataInput[, c(7:12)])#parameters
+  pr <- as.numeric(dataInput[, c(7:11,13)])#parameters
   fixed <- dataInput[14]#fixed parameters, currently just n
   #initialise model
-  if (dataInput[13] == 1)
+  if (dataInput[12] == 1)
     rFc <- rFx
   else
     rFc <- rFx2
@@ -179,11 +182,11 @@ modStep4 <- function(weightInput) {
       uoL = pr[2],
       uP = pr[3],
       Y = pr[4],
-      o = pr[5],
-      sf = pr[6],
+      sf = pr[5],
+      n = pr[6],
       rF = rFc,
       time1 = currentTime,
-      n = as.numeric(fixed)
+      tr = as.numeric(fixed)
     )
   #run model between two discrete time periods and return results
   modR <- larvalModP(user = params)#run model
@@ -244,24 +247,26 @@ pFilt <-
           prms[2], #UoL
           prms[3], #uP
           prms[4], #Y
-          prms[7], #o
-          prms[8], #sf
+          prms[7], #z
           rFclust,#rainfall data set
-          fxdParams,#fixed parameter (n)
+          prms[8],#n
+          fxdParams,#fixed parameter tr
           sep = ","
         )
     if (cluster == F)
-      particlesTemp = parLapply(cl, wp, stepFun) #use NULL for dide cluster, cl for local
+      particlesTemp = parLapply(cl,wp, stepFun) #use NULL for dide cluster, cl for local
     else
       particlesTemp = parLapply(NULL, wp, stepFun)
-    particles <- data.frame(t(sapply(particlesTemp, `[`)))
     
+    particles <- data.frame(t(sapply(particlesTemp, `[`)))
+
     # fracPop<-obsData[i+1,2]/prms[7]
     weights <-
-      betaBinom(obsData[i + 1, 2], (1 + round(as.vector(
+      betaBinom(obsData[i + 1, 2], (20 + round(as.vector(
         unlist(particles$M, 0)
       ))), 0.01, prms[6])
     ll = ll + mean(weights)
+
     #normalise weights
     swP = sum(weights)
     weights = weights / swP
@@ -276,12 +281,32 @@ pFilt <-
       else
         particlesTemp1 = parLapply(NULL, wp, modStep4)
       pt <- NULL
+      pt1<- NULL
+      pt2<- NULL
+      pt3<- NULL
+
       for (j in 1:n) {
         Mt <- (particlesTemp1[[j]]$M)
         pt <- cbind(pt, Mt)
+        
+        Et <- (particlesTemp1[[j]]$E)
+        pt1 <- cbind(pt1, Et)
+        
+        Lt <- (particlesTemp1[[j]]$L)
+        pt2 <- cbind(pt2, Lt)
+
+        Pt <- (particlesTemp1[[j]]$P)
+        pt3 <- cbind(pt3, Pt)
+        
       }
+      
       pt <- as.data.frame(rowMeans(pt))
-      rMeans <- rbind(rMeans, pt)
+      pt1 <- as.data.frame(rowMeans(pt1))
+      pt2 <- as.data.frame(rowMeans(pt2))
+      pt3 <- as.data.frame(rowMeans(pt3))
+
+      px<-cbind(pt1,pt2,pt3,pt)
+      rMeans <- rbind(rMeans, px)
     }
     
     
