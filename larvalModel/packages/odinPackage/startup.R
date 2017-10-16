@@ -55,8 +55,8 @@ garki$ag_sum <-
   rowSums(garki[, c(9:16)])#create sum of A.gambiae spray samples
 garki$Date <- as.Date(garki$Date)
 garki72 <-
-  subset(garki,
-         Date >= as.Date("1972-04-27") & Date <= as.Date("1973-01-01"))
+  subset(garki,#1972-05-27
+         Date >= as.Date("1972-05-30") & Date <= as.Date("1973-01-01"))
 for (i in c(101  ,   104   ,  219,  220)) {
   print(i)
   if (i < 200)
@@ -120,25 +120,53 @@ clusterExport(cl, c("rFx", "rFx2", "delta", "garkiObs", "nBgP"), envir =
 #                                                                                                                                                #
 ##################################################################################################################################################
 
+
+
+
+## Log-Prior function - specific to this model
+# @parms current parameters
+# @return sum of log priors
+lprior <- function(parms) {
+  
+  priorSum<-(dnorm(parms[1], mean = 0.035, sd = 0.015, log = T)
+             +dunif(parms[1], min = 0.001, max = 0.99, log = T)
+             +dnorm(parms[2], mean = 0.035, sd = 0.015, log = T)
+             +dunif(parms[2], min = 0.001, max = 0.99, log = T)
+             +dnorm(parms[3], mean = 0.25, sd = 0.11, log = T)
+             +dunif(parms[3], min = 0.001, max = 0.99, log = T)
+             +dnorm(parms[4], mean = 13.06, sd = 4.53, log = T)
+             +dunif(parms[5], min = 1, max = 1e+5, log = T)
+            # +dnorm(parms[5], mean = 75, sd = 10, log = T)
+             +dunif(parms[6], min = 1e-06, max = 1, log = T)
+             +dunif(parms[5], min = 0.01, max = 100000, log = T)
+             +dunif(parms[7], min = 1, max = 1e+20, log = T)
+             +dunif(parms[8],min=1,max=93.6,log=T)
+  )
+  return(priorSum)
+}
+
+
+
 #set.seed(44)
-system.time(runX200z6x3 <- mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.24359410,Y=17.29277120,Lx=20,w=0.01,
-                                                      o=8.5,sf1=1.520443e+06,sf2=3.688647e+06,sf3=5.504015e+06,sf4=4.329563e+06 )
-                                     ,nburn=100
-                                     ,monitoring=2
-                                     ,proposer = sequential.proposer
-                                     ,sdProps=c(0.01,0.01,0.1,1,1,0.1,0.1,1000,1000,1000,1000)
-                                     ,maxSddProps=c(0.1,0.1,0.1,Inf,Inf,0.1,0.5,1500000,1500000,1500000,1500000)
-                                     ,randInit = F
-                                     ,fixedParam=50
-                                     ,adaptiveMCMC = T
-                                     ,proposerType = 'seq'
-                                     ,startAdapt = 150
-                                     ,particles=25
-                                     ,acceptanceRate =c(0.4,0.4,0.4,0.5,0.5,0.5,0.3,0.6,0.45,0.6,0.6)
-                                     ,niter = 1000
-                                     ,tell=1
-                                     ,cluster =F
-                                     ))
+system.time(runX200z6x3uoE0.1 <-  mcmcSampler(initParams = c(uoE=0.03,uoL=0.03156214,uP=0.2499843,Y=11.5012,z1=75,z2=75,z3=75,z4=75,w=0.01
+                                                             ,sf1=57110,sf2=12660,sf3=8097,sf4=64342,n=50)
+                                              ,nburn=5000
+                                              ,monitoring=2
+                                              , proposer = sequential.proposer
+                                              ,sdProps=c(0.01,0.01,0.1,1,1,1,1,1,0.1,3,3,3,3,3)
+                                              ,maxSddProps=c(0.1,0.1,0.1,Inf,Inf,Inf,Inf,Inf,0.1,1500000,1500000,1500000,1500000,Inf)
+                                              , randInit = F
+                                              ,fixedParam=7
+                                              ,adaptiveMCMC = T
+                                              ,proposerType = 'seq'
+                                              , startAdapt = 150
+                                              ,tell = 1
+                                              , particles=50
+                                              ,acceptanceRate =c(0.3,0.3,0.3,0.5,0.5,0.5,0.5,0.5,0.5,0.6,0.45,0.6,0.6,0.5)
+                                              , niter = 30000
+                                              ,cluster = F
+                                              ,oDat=garkiObsX
+                                              ,priorFunc=lprior))
 
 write.table(runX200z4$results,"Q:\\Imperial\\res2.csv")
 
@@ -147,11 +175,10 @@ write.table(runX200z4$results,"Q:\\Imperial\\res2.csv")
 
 
 #test just particle filter
-testParams  = c(uoE=0.035,uoL=0.035,uP=0.24359410,Y=17.29277120,Lx=20,w=0.01,
-                           o=1.04163691,sf1=100,sf2=100,sf3=100,sf4=100)
+testParams  = c(3.000000e-02, 3.156214e-02 ,2.499843e-01 ,1.150120e+01 ,3.513033e+01, 1.000000e-02 ,7.827497e+00 ,3.771100e+05, 5.000000e+01)
 res4<-NULL
 system.time(for (i in 1:100){
-  ss<-pFilt(25,iState,modStep3,dataLikFunc,garkiObs101,pr=testParams,fxdParams=50,rFclust=1, cluster = F) + lprior(testParams)
+  ss<-pFilt(50,iState,modStep3,dataLikFunc,garkiObs101,pr = testParams,rFclust = 1,fxdParams = 7,resM = F, cluster = F)#+ lprior(testParams)
   res4<-rbind(ss,res4)
   print(ss)
 })
@@ -197,7 +224,7 @@ ctx <- context::context_save(root,
                              sources=sources,
                              packages = c("lhs","deSolve","lubridate","odinPackage","dde","buildr","coda","parallel","snow","mnormt","rmutil"))
 
-obj <- didehpc::queue_didehpc(ctx,didehpc::didehpc_config(cluster="mrc",home="//fi--san02/homes/alm210",cores=16,parallel = T))
+obj <- didehpc::queue_didehpc(ctx,didehpc::didehpc_config(cluster="didemrchnb",home="//fi--san02/homes/alm210",cores=32,parallel = T))
 
 
 #########################################################################################################################################
@@ -208,123 +235,144 @@ obj <- didehpc::queue_didehpc(ctx,didehpc::didehpc_config(cluster="mrc",home="//
 
 minSpd=c(0.001,0.001,0.003,0.001,0.001,0.001,0.001,0.00001,0.03)
 
-runX60InfHigh <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.24359410,Y=17.29277120,Lx=20,w=0.01,
-                                                    o=8.6,sf1=1.520443e+06,sf2=3.688647e+06,sf3=5.504015e+06,sf4=4.329563e+06 )
-                                            ,nburn=5000
-                                            ,monitoring=2
-                                            , proposer = sequential.proposer
-                                     ,sdProps=c(0.01,0.01,0.1,1,1,0.1,0.1,3,3,3,3)
-                                     ,maxSddProps=c(0.1,0.1,0.1,Inf,Inf,0.1,0.5,1500000,1500000,1500000,1500000)
-                                     , randInit = F
-                                            ,fixedParam=60
-                                     ,adaptiveMCMC = T
-                                     ,proposerType = 'seq'
-                                            , startAdapt = 150
-                                            , particles=24
-                                            ,acceptanceRate =c(0.3,0.3,0.3,0.5,0.5,0.5,0.3,0.6,0.45,0.6,0.6)
-                                            , niter = 1000000
-                                            ,cluster = T),name="pMMH n60 100k high")
-  
 
-runX60 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.24359410,Y=17.29277120,Lx=20,w=0.01,
-                                                 o=8.6,sf1=1.520443e+06,sf2=3.688647e+06,sf3=5.504015e+06,sf4=4.329563e+06)
-                                     ,nburn=10000
+
+
+
+## Log-Prior function - specific to this model
+# @parms current parameters
+# @return sum of log priors
+lprior <- function(parms) {
+  
+  priorSum<-(dnorm(parms[1], mean = 0.035, sd = 0.015, log = T)
+             +dunif(parms[1], min = 0.001, max = 0.99, log = T)
+             +dnorm(parms[2], mean = 0.035, sd = 0.015, log = T)
+             +dunif(parms[2], min = 0.001, max = 0.99, log = T)
+             +dnorm(parms[3], mean = 0.25, sd = 0.11, log = T)
+             +dunif(parms[3], min = 0.001, max = 0.99, log = T)
+             +dnorm(parms[4], mean = 13.06, sd = 4.53, log = T)
+             +dunif(parms[5], min = 1, max = 1e+5, log = T)
+          #   +dnorm(parms[5], mean = 75, sd = 10, log = T)
+             +dunif(parms[6], min = 1e-06, max = 1, log = T)
+             +dunif(parms[5], min = 0.01, max = 100000, log = T)
+             +dunif(parms[7], min = 1, max = 1e+20, log = T)
+             +dunif(parms[8],min=1,max=93.6,log=T)
+  )
+  return(priorSum)
+}
+
+
+runXTrn50<- obj$enqueue( mcmcSampler(initParams = c(uoE=0.03,uoL=0.03156214,uP=0.2499843,Y=11.5012,z1=75,z2=75,z3=75,z4=75,w=0.01
+                                                    ,sf1=57110,sf2=12660,sf3=8097,sf4=64342,n=50)
+                                     ,nburn=5000
                                      ,monitoring=2
                                      , proposer = sequential.proposer
-                                  ,sdProps=c(0.01,0.01,0.1,1,1,0.1,0.1,3,3,3,3)
-                                  ,maxSddProps=c(0.1,0.1,0.1,Inf,Inf,0.1,0.5,200000,200000,200000,200000)
-                                  , randInit = F
-                                     ,fixedParam=60
-                                  ,adaptiveMCMC = T
-                                  ,proposerType = 'seq'
+                                     ,sdProps=c(0.01,0.01,0.1,1,1,1,1,1,0.1,3,3,3,3,3)
+                                     ,maxSddProps=c(0.1,0.1,0.1,Inf,Inf,Inf,Inf,Inf,0.1,1500000,1500000,1500000,1500000,Inf)
+                                     , randInit = F
+                                     ,fixedParam=7
+                                     ,adaptiveMCMC = T
+                                     ,proposerType = 'seq'
                                      , startAdapt = 150
-                                     , particles=24
-                                     ,acceptanceRate =c(0.3,0.3,0.3,0.5,0.5,0.5,0.3,0.6,0.45,0.6,0.6)
-                                     , niter = 1000000
-                                     ,cluster = T),name="pMMH n60 1mil")
-
-runX50 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.24359410,Y=17.29277120,Lx=20,w=0.01,
-                                                 o=8.6,sf1=1.520443e+06,sf2=3.688647e+06,sf3=5.504015e+06,sf4=4.329563e+06 )
-                                  ,nburn=10000
-                                  ,monitoring=2
-                                  , proposer = sequential.proposer
-                                  ,sdProps=c(0.01,0.01,0.1,1,1,0.1,0.1,3,3,3,3)
-                                  ,maxSddProps=c(0.1,0.1,0.1,Inf,Inf,0.1,0.5,200000,200000,200000,200000)
-                                  , randInit = F
-                                  ,fixedParam=50
-                                  ,adaptiveMCMC = T
-                                  ,proposerType = 'seq'
-                                  , startAdapt = 150
-                                  , particles=24
-                                  ,acceptanceRate =c(0.3,0.3,0.3,0.5,0.5,0.5,0.3,0.6,0.45,0.6,0.6)
-                                  , niter = 1000000
-                                  ,cluster = T),name="pMMH n50 1mil")
+                                     ,tell = 20
+                                     , particles=50
+                                     ,acceptanceRate =c(0.3,0.3,0.3,0.5,0.5,0.5,0.5,0.5,0.5,0.6,0.45,0.6,0.6,0.5)
+                                     , niter = 50000
+                                     ,cluster = T
+                                     ,oDat=garkiObsX
+                                     ,priorFunc=lprior),name="pMMH Z_Inf uoE0.015 50k tr7")
 
 
-runX40 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.24359410,Y=17.29277120,Lx=20,w=0.01,
-                                                 o=8.6,sf1=1.520443e+06,sf2=3.688647e+06,sf3=5.504015e+06,sf4=4.329563e+06 )
-                                  ,nburn=10000
-                                  ,monitoring=2
-                                  , proposer = sequential.proposer
-                                  ,sdProps=c(0.01,0.01,0.1,1,1,0.1,0.1,3,3,3,3)
-                                  ,maxSddProps=c(0.1,0.1,0.1,Inf,Inf,0.1,0.5,200000,200000,200000,200000)
-                                  , randInit = F
-                                  ,fixedParam=40
-                                  ,adaptiveMCMC = T
-                                  ,proposerType = 'seq'
-                                  , startAdapt = 150
-                                  , particles=24
-                                  ,acceptanceRate =c(0.3,0.3,0.3,0.5,0.5,0.5,0.3,0.6,0.45,0.6,0.6)
-                                  , niter = 1000000
-                                  ,cluster = T),name="pMMH n40 1mil")
 
-runX30 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.24359410,Y=17.29277120,Lx=20,w=0.01,
-                                                 o=8.6,sf1=1.520443e+06,sf2=3.688647e+06,sf3=5.504015e+06,sf4=4.329563e+06 )
-                                  ,nburn=10000
-                                  ,monitoring=2
-                                  , proposer = sequential.proposer
-                                  ,sdProps=c(0.01,0.01,0.1,1,1,0.1,0.1,3,3,3,3)
-                                  ,maxSddProps=c(0.1,0.1,0.1,Inf,Inf,0.1,0.5,200000,200000,200000,200000)
-                                  , randInit = F
-                                  ,fixedParam=30
-                                  ,adaptiveMCMC = T
-                                  ,proposerType = 'seq'
-                                  , startAdapt = 150
-                                  , particles=24
-                                  ,acceptanceRate =c(0.3,0.3,0.3,0.5,0.5,0.5,0.3,0.6,0.45,0.6,0.6)
-                                  , niter = 1000000
-                                  ,cluster = T),name="pMMH n30 1mil")
 
-runX20 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.24359410,Y=17.29277120,Lx=20,w=0.01,
-                                                 o=8.6,sf1=1.520443e+06,sf2=3.688647e+06,sf3=5.504015e+06,sf4=4.329563e+06 )
-                                  ,nburn=10000
-                                  ,monitoring=2
-                                  , proposer = sequential.proposer
-                                  ,sdProps=c(0.01,0.01,0.1,1,1,0.1,0.1,3,3,3,3)
-                                  ,maxSddProps=c(0.1,0.1,0.1,Inf,Inf,0.1,0.5,200000,200000,200000,200000)
-                                  , randInit = F
-                                  ,fixedParam=20
-                                  ,adaptiveMCMC = T
-                                  ,proposerType = 'seq'
-                                  , startAdapt = 150
-                                  , particles=24
-                                  ,acceptanceRate =c(0.3,0.3,0.3,0.5,0.5,0.5,0.3,0.6,0.45,0.6,0.6)
-                                  , niter = 1000000
-                                  ,cluster = T),name="pMMH n20 1mil")
+runXTrn50<- obj$enqueue( mcmcSampler(initParams = c(uoE=0.03,uoL=0.03156214,uP=0.2499843,Y=11.5012,z1=75,z2=75,z3=75,z4=75,w=0.01
+                                                    ,sf1=57110,sf2=12660,sf3=8097,sf4=64342,n=50)
+                                     ,nburn=5000
+                                     ,monitoring=2
+                                     , proposer = sequential.proposer
+                                     ,sdProps=c(0.01,0.01,0.1,1,1,1,1,1,0.1,3,3,3,3,3)
+                                     ,maxSddProps=c(0.1,0.1,0.1,Inf,Inf,Inf,Inf,Inf,0.1,1500000,1500000,1500000,1500000,Inf)
+                                     , randInit = F
+                                     ,fixedParam=14
+                                     ,adaptiveMCMC = T
+                                     ,proposerType = 'seq'
+                                     , startAdapt = 150
+                                     ,tell = 20
+                                     , particles=50
+                                     ,acceptanceRate =c(0.3,0.3,0.3,0.5,0.5,0.5,0.5,0.5,0.5,0.6,0.45,0.6,0.6,0.5)
+                                     , niter = 50000
+                                     ,cluster = T
+                                     ,oDat=garkiObsX
+                                     ,priorFunc=lprior),name="pMMH Z_Inf uoE0.015 50k tr14")
 
-runX10 <- obj$enqueue(mcmcSampler(initParams = c(uoE=0.035,uoL=0.035,uP=0.24359410,Y=17.29277120,Lx=20,w=0.01,
-                                                 o=8.6,sf1=1.520443e+06,sf2=3.688647e+06,sf3=5.504015e+06,sf4=4.329563e+06 )
-                                  ,nburn=10000
-                                  ,monitoring=2
-                                  , proposer = sequential.proposer
-                                  ,sdProps=c(0.01,0.01,0.1,1,1,0.1,0.1,3,3,3,3)
-                                  ,maxSddProps=c(0.1,0.1,0.1,Inf,Inf,0.1,0.5,200000,200000,200000,200000)
-                                  , randInit = F
-                                  ,fixedParam=10
-                                  ,adaptiveMCMC = T
-                                  ,proposerType = 'seq'
-                                  , startAdapt = 150
-                                  , particles=24
-                                  ,acceptanceRate =c(0.3,0.3,0.3,0.5,0.5,0.5,0.3,0.6,0.45,0.6,0.6)
-                                  , niter = 1000000
-                                  ,cluster = T),name="pMMH n10 1mil")
+
+
+
+
+## Log-Prior function - specific to this model
+# @parms current parameters
+# @return sum of log priors
+lprior <- function(parms) {
+  
+  priorSum<-(dnorm(parms[1], mean = 0.035, sd = 0.015, log = T)
+             +dunif(parms[1], min = 0.001, max = 0.99, log = T)
+             +dnorm(parms[2], mean = 0.035, sd = 0.015, log = T)
+             +dunif(parms[2], min = 0.001, max = 0.99, log = T)
+             +dnorm(parms[3], mean = 0.25, sd = 0.11, log = T)
+             +dunif(parms[3], min = 0.001, max = 0.99, log = T)
+             +dnorm(parms[4], mean = 13.06, sd = 4.53, log = T)
+             +dunif(parms[5], min = 1, max = 1e+5, log = T)
+                +dnorm(parms[5], mean = 75, sd = 10, log = T)
+             +dunif(parms[6], min = 1e-06, max = 1, log = T)
+             +dunif(parms[5], min = 0.01, max = 100000, log = T)
+             +dunif(parms[7], min = 1, max = 1e+20, log = T)
+             +dunif(parms[8],min=1,max=93.6,log=T)
+  )
+  return(priorSum)
+}
+
+
+runXTrn50<- obj$enqueue( mcmcSampler(initParams = c(uoE=0.03,uoL=0.03156214,uP=0.2499843,Y=11.5012,z1=75,z2=75,z3=75,z4=75,w=0.01
+                                                    ,sf1=57110,sf2=12660,sf3=8097,sf4=64342,n=50)
+                                     ,nburn=5000
+                                     ,monitoring=2
+                                     , proposer = sequential.proposer
+                                     ,sdProps=c(0.01,0.01,0.1,1,1,1,1,1,0.1,3,3,3,3,3)
+                                     ,maxSddProps=c(0.1,0.1,0.1,Inf,Inf,Inf,Inf,Inf,0.1,1500000,1500000,1500000,1500000,Inf)
+                                     , randInit = F
+                                     ,fixedParam=7
+                                     ,adaptiveMCMC = T
+                                     ,proposerType = 'seq'
+                                     , startAdapt = 150
+                                     ,tell = 20
+                                     , particles=50
+                                     ,acceptanceRate =c(0.3,0.3,0.3,0.5,0.5,0.5,0.5,0.5,0.5,0.6,0.45,0.6,0.6,0.5)
+                                     , niter = 50000
+                                     ,cluster = T
+                                     ,oDat=garkiObsX,
+                                     priorFunc=lprior),name="pMMH Z_75_sd10 uoE0.015 50k tr7")
+
+
+
+
+runXTrn50<- obj$enqueue( mcmcSampler(initParams = c(uoE=0.03,uoL=0.03156214,uP=0.2499843,Y=11.5012,z1=75,z2=75,z3=75,z4=75,w=0.01
+                                                    ,sf1=57110,sf2=12660,sf3=8097,sf4=64342,n=50)
+                                     ,nburn=5000
+                                     ,monitoring=2
+                                     , proposer = sequential.proposer
+                                     ,sdProps=c(0.01,0.01,0.1,1,1,1,1,1,0.1,3,3,3,3,3)
+                                     ,maxSddProps=c(0.1,0.1,0.1,Inf,Inf,Inf,Inf,Inf,0.1,1500000,1500000,1500000,1500000,Inf)
+                                     , randInit = F
+                                     ,fixedParam=14
+                                     ,adaptiveMCMC = T
+                                     ,proposerType = 'seq'
+                                     , startAdapt = 150
+                                     ,tell = 20
+                                     , particles=50
+                                     ,acceptanceRate =c(0.3,0.3,0.3,0.5,0.5,0.5,0.5,0.5,0.5,0.6,0.45,0.6,0.6,0.5)
+                                     , niter = 50000
+                                     ,cluster = T
+                                     ,oDat=garkiObsX,
+                                     priorFunc=lprior),name="pMMH Z_75_sd10 uoE0.015 50k tr14")
+
+
