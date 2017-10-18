@@ -5,6 +5,8 @@
 #include <ctime>
 #include <string>
 #include<fstream>
+#include <numeric>
+
 
 
 using namespace std;
@@ -14,8 +16,9 @@ std::mt19937 mrand(std::time(0));
 typedef long unsigned int luint;
 
 
-//bernouli trial function
-int bernTrial(int n, float p) {
+
+//binomial function
+int binom(int n, double p) {
 	int res = 0;
 	int t = 1;
 	while (t<n) {
@@ -35,50 +38,59 @@ luint rpois(luint lambda)
 	else return (0);
 }
 
-
 //mosquito population model function
 
-std::vector<int> mPmod(float dE, float dL, float dP, float uoE, float uoL, float uP, float uM, float Y, float S,
-	float tr, float sf, float dt, float n, float Emax, float E0, float L0, float P0, float M0,
-	float time) {
-	int t = 0;
-	int Be = 0;
-	int Bl = 0;
-	int Bp = 0;
-	int Bm = 0;
-	float nt = 0.0;
-	float E = E0;
-	float L = L0;
-	float P = P0;
-	float M = M0;
-	int K = 100;
-	float uE;
-	float uL;
-	float trx = tr / dt;
+std::vector<double> mPmod(double dE, double dL, double dP, double uoE, double uoL, double uP, double uM, double Y, double S,
+	double tr, double sf, double dt, double n, double Emax, double E0, double L0, double P0, double M0,
+	double time, vector<int> rF) {
+	double t = 0;
+	double Be = 0;
+	double Bl = 0;
+	double Bp = 0;
+	double Bm = 0;
+	double nt = 0.0;
+	double E = E0;
+	double L = L0;
+	double P = P0;
+	double M = M0;
+	double K = 100;
+	double uE;
+	double uL;
+	double trx = tr / dt;
+	double rFsum;
 
-	std::vector<int> r;
+	
+
+	std::vector<double> r;
 
 	while (t < time) {
 
+		if (t <= trx) { K = (1 + (sf*((1 / trx)))); }
+	else {
+			vector<int>::const_iterator first = rF.begin() + t - trx;
+			vector<int>::const_iterator last = rF.begin() + t;
+			vector<int> rFx(first, last);
+			rFsum = std::accumulate(rFx.begin(), rFx.end(), 0);
+			K = (1 + (sf*((1 / trx)*rFsum)));
+		}
 
-		K = 100;//if (time <= trx) ? ? ? if (t<=trx) (1+(sf*((1/trx)*(sum(rF[0:(timeX-1)]))))) else (1+(sf*((1/trx)*(sum(rF[(timeX-trx):timeX-1])))))
+	uE = uoE*dt*(1 + (E + L) / (K));
+	uL = uoL*dt*(1 + (Y*(E + L) / (K)));
 
-		uE = uoE*dt*(1 + ((E + L) / (K)));
-		uL = uoL*dt*(1 + (Y*(E + L) / (K)));
 
-		if ((dE + uE)*dt<1) Be = bernTrial(E, (dE + uE)*dt); else Be = bernTrial(E, 1);
-		if ((dL + uL)*dt<1) Bl = bernTrial(L, (dL + uL)*dt); else Bl = bernTrial(L, 1);
+		if ((dE + uE)*dt<1) Be = binom(E, (dE + uE)*dt); else Be = binom(E, 1);
+		if ((dL + uL)*dt<1) Bl = binom(L, (dL + uL)*dt); else Bl = binom(L, 1);
 
-		Bp = bernTrial(P, (dP + uP)*dt);
-		Bm = bernTrial(M, uM*dt);
-		nt = bernTrial(M, (dt / S));
+		Bp = binom(P, (dP + uP)*dt);
+		Bm = binom(M, uM*dt);
+		nt = binom(M, (dt / S));
 		E = E - Be + rpois(n*nt);
-		L = L - Bl + bernTrial(Be, (dE / (uE + dE)));
-		P = P - Bp + bernTrial(Bl, (dL / (uL + dL)));
-		M = M + (0.5*(bernTrial(Bp, (dP / (uP + dP))))) - Bm;
+		L = L - Bl + binom(Be, (dE / (uE + dE)));
+		P = P - Bp + binom(Bl, (dL / (uL + dL)));
+		M = M + (0.5*(binom(Bp, (dP / (uP + dP))))) - Bm;
 
 		t++;
-		r.push_back(M);
+		r.push_back(Be);
 
 	}
 
@@ -92,31 +104,59 @@ std::vector<int> mPmod(float dE, float dL, float dP, float uoE, float uoL, float
 
 int main()
 {
-	vector<double>rainfall;
-	// open file    
-	ifstream inputFile("Q:\Imperial\rainfall.txt");
 
-	// test file open   
+
+	vector<int>rainfall;
+	// open file    
+	ifstream inputFile("C:\\Imperial\\rf1.txt");
+
+	
+
+	// open file
 	if (inputFile) {
-		double value;
+		int value;
 		
 		// read the elements in the file into a vector  
 		while (inputFile >> value) {
 		//	getline(inputFile, value, ' ');
 			rainfall.push_back(value);
 		}
+	
 	}
+	//std::vector<int>   sub(&rainfall[50], &rainfall[60]);
+	int st = 0;
+	int stime = 500;
+	vector<int> gg;
 
 
+		std::vector<double> z;
+		z = mPmod(
+			0.150, //dE
+			0.269, //dL
+			1.563, //dP
+			0.034, //uoE
+			0.035, //uoL
+			0.25, //uP
+			0.096, //uM
+			13.25, //Y
+			3, //S
+			7, //tr
+			50, //sf
+			0.25, //dt
+			60, //n
+			93.6, //Emax
+			177, //E0
+			8, //L0
+			1, //P0
+			7, //M0
+			600, //time
+			rainfall);
 
-		std::vector<int> z;
-		z = mPmod(0.150, 0.269, 1.563,
-			0.034, 0.035, 0.25,
-			0.096, 13.25, 3, 14, 20, 0.25, 60.0, 93.6, 177, 8, 1, 7, 133);
-
-		for (std::vector<double>::const_iterator i = rainfall.begin(); i != rainfall.end(); ++i)
-			std::cout << *i << ' ';
+		for (std::vector<double>::const_iterator i = z.begin(); i != z.end(); ++i)
+			std::cout << *i << ',';
 		cin.get();
+
+		
 
 	}
 
