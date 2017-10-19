@@ -1,0 +1,12 @@
+﻿  lMod.cpp
+lMod.cpp(61): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+lMod.cpp(63): warning C4244: 'argument': conversion from 'double' to '__int64', possible loss of data
+lMod.cpp(64): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+lMod.cpp(78): warning C4244: 'argument': conversion from 'double' to 'luint', possible loss of data
+lMod.cpp(81): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+  Generating code
+  25 of 249 functions (10.0%) were compiled, the rest were copied from previous compilation.
+    15 functions were new in current compilation
+    21 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  lModCpp.vcxproj -> Q:\Imperial\lModCpp\x64\Release\lModCpp.exe

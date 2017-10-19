@@ -1,26 +1,9 @@
 ﻿  lMod.cpp
-q:\imperial\lmodcpp\lmodcpp\lmod.cpp(13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-q:\imperial\lmodcpp\lmodcpp\lmod.cpp(69): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-q:\imperial\lmodcpp\lmodcpp\lmod.cpp(70): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-q:\imperial\lmodcpp\lmodcpp\lmod.cpp(72): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-q:\imperial\lmodcpp\lmodcpp\lmod.cpp(73): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-q:\imperial\lmodcpp\lmodcpp\lmod.cpp(74): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-q:\imperial\lmodcpp\lmodcpp\lmod.cpp(74): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-q:\imperial\lmodcpp\lmodcpp\lmod.cpp(75): warning C4244: 'argument': conversion from 'float' to 'luint', possible loss of data
-q:\imperial\lmodcpp\lmodcpp\lmod.cpp(78): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-q:\imperial\lmodcpp\lmodcpp\lmod.cpp(81): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-q:\imperial\lmodcpp\lmodcpp\lmod.cpp(97): warning C4129: 'I': unrecognized character escape sequence
-q:\imperial\lmodcpp\lmodcpp\lmod.cpp(105): error C2672: 'getline': no matching overloaded function found
-q:\imperial\lmodcpp\lmodcpp\lmod.cpp(105): error C2780: 'std::basic_istream<_Elem,_Traits> &std::getline(std::basic_istream<_Elem,_Traits> &,std::basic_string<_Elem,_Traits,_Alloc> &)': expects 2 arguments - 3 provided
-  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\string(155): note: see declaration of 'std::getline'
-q:\imperial\lmodcpp\lmodcpp\lmod.cpp(105): error C2784: 'std::basic_istream<_Elem,_Traits> &std::getline(std::basic_istream<_Elem,_Traits> &,std::basic_string<_Elem,_Traits,_Alloc> &,const _Elem)': could not deduce template argument for 'std::basic_istream<_Elem,_Traits> &' from 'std::ifstream'
-  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\string(144): note: see declaration of 'std::getline'
-q:\imperial\lmodcpp\lmodcpp\lmod.cpp(105): error C2784: 'std::basic_istream<_Elem,_Traits> &std::getline(std::basic_istream<_Elem,_Traits> &,std::basic_string<_Elem,_Traits,_Alloc> &,const _Elem)': could not deduce template argument for 'std::basic_string<_Elem,_Traits,_Alloc> &' from 'double'
-  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\string(144): note: see declaration of 'std::getline'
-q:\imperial\lmodcpp\lmodcpp\lmod.cpp(105): error C2780: 'std::basic_istream<_Elem,_Traits> &std::getline(std::basic_istream<_Elem,_Traits> &&,std::basic_string<_Elem,_Traits,_Alloc> &)': expects 2 arguments - 3 provided
-  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\string(124): note: see declaration of 'std::getline'
-q:\imperial\lmodcpp\lmodcpp\lmod.cpp(105): error C2784: 'std::basic_istream<_Elem,_Traits> &std::getline(std::basic_istream<_Elem,_Traits> &&,std::basic_string<_Elem,_Traits,_Alloc> &,const _Elem)': could not deduce template argument for 'std::basic_istream<_Elem,_Traits> &&' from 'std::ifstream'
-  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\string(71): note: see declaration of 'std::getline'
-q:\imperial\lmodcpp\lmodcpp\lmod.cpp(105): error C2784: 'std::basic_istream<_Elem,_Traits> &std::getline(std::basic_istream<_Elem,_Traits> &&,std::basic_string<_Elem,_Traits,_Alloc> &,const _Elem)': could not deduce template argument for 'std::basic_string<_Elem,_Traits,_Alloc> &' from 'double'
-  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\string(71): note: see declaration of 'std::getline'
-q:\imperial\lmodcpp\lmodcpp\lmod.cpp(115): warning C4305: 'argument': truncation from 'double' to 'float'
+q:\imperial\lmodcpp\lmodcpp\lmod.cpp(14): warning C4091: '': ignored on left of 'std::binomial_distribution<int>' when no variable is declared
+q:\imperial\lmodcpp\lmodcpp\lmod.cpp(17): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+q:\imperial\lmodcpp\lmodcpp\lmod.cpp(63): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+q:\imperial\lmodcpp\lmodcpp\lmod.cpp(65): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+q:\imperial\lmodcpp\lmodcpp\lmod.cpp(66): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+q:\imperial\lmodcpp\lmodcpp\lmod.cpp(80): warning C4244: 'argument': conversion from 'double' to 'luint', possible loss of data
+q:\imperial\lmodcpp\lmodcpp\lmod.cpp(83): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+  lModCpp.vcxproj -> Q:\Imperial\lModCpp\Debug\lModCpp.exe
