@@ -6,21 +6,26 @@
 #include <string>
 #include<fstream>
 #include <numeric>
-#include <boost/regex.hpp>
-
 
 
 
 using namespace std;
-
+std::random_device rd;
 std::uniform_real_distribution<> dis(0, 1);
 std::mt19937 mrand(std::time(0));
 typedef long unsigned int luint;
 
+
+
 //binomial function
 int binom(int n, double p) {
-	std::binomial_distribution<int> distribution(n, p);
-	return  distribution(mrand);
+	int res = 0;
+	int t = 1;
+	while (t<n) {
+		if (dis(mrand)<p) res++;
+		t++;
+	}
+	return res;
 }
 
 //random poisson draw
@@ -35,37 +40,39 @@ luint rpois(luint lambda)
 
 //mosquito population model function
 
-std::vector<int> mPmod(double dE, double dL, double dP, double uoE, double uoL, double uP, double uM, double Y, double S,
-	double tr, double sf, double dt, double n, double Emax, int E0, int L0, int P0, int M0,
+std::vector<double> mPmod(double dE, double dL, double dP, double uoE, double uoL, double uP, double uM, double Y, double S,
+	double tr, double sf, double dt, double n, double Emax, double E0, double L0, double P0, double M0,
 	double time, vector<int> rF) {
-	int t = 0;
-	int Be = 0;
-	int Bl = 0;
-	int Bp = 0;
-	int Bm = 0;
-	int nt = 0;
-	int E = E0;
-	int L = L0;
-	int P = P0;
-	int M = M0;
-	int K = 100;
+	double t = 0;
+	double Be = 0;
+	double Bl = 0;
+	double Bp = 0;
+	double Bm = 0;
+	double nt = 0.0;
+	double E = E0;
+	double L = L0;
+	double P = P0;
+	double M = M0;
+	double K = 100;
 	double uE;
 	double uL;
 	double trx = tr / dt;
-	int rFsum;
+	double rFsum;
 
 	
 
-	std::vector<int> r;
+	std::vector<double> r;
 
 	while (t < time) {
 
 		if (t <= trx) { K = (1 + (sf*((1 / trx)))); }
 	else {
-		rFsum = std::accumulate(rF.begin() + (t - trx), rF.end() - t, 0);
-			K =  (1 + (sf*((1 / trx)*rFsum)));
+			vector<int>::const_iterator first = rF.begin() + t - trx;
+			vector<int>::const_iterator last = rF.begin() + t;
+			vector<int> rFx(first, last);
+			rFsum = std::accumulate(rFx.begin(), rFx.end(), 0);
+			K = (1 + (sf*((1 / trx)*rFsum)));
 		}
-
 
 	uE = uoE*dt*(1 + (E + L) / (K));
 	uL = uoL*dt*(1 + (Y*(E + L) / (K)));
@@ -83,7 +90,7 @@ std::vector<int> mPmod(double dE, double dL, double dP, double uoE, double uoL, 
 		M = M + (0.5*(binom(Bp, (dP / (uP + dP))))) - Bm;
 
 		t++;
-		r.push_back(M);
+		r.push_back(Be);
 
 	}
 
@@ -97,12 +104,11 @@ std::vector<int> mPmod(double dE, double dL, double dP, double uoE, double uoL, 
 
 int main()
 {
-	clock_t tStart = clock();
-	/* Do your stuff here */
+
 
 	vector<int>rainfall;
 	// open file    
-	ifstream inputFile("Q:\\Imperial\\rf2.txt");
+	ifstream inputFile("C:\\Imperial\\rf1.txt");
 
 	
 
@@ -119,10 +125,11 @@ int main()
 	}
 	//std::vector<int>   sub(&rainfall[50], &rainfall[60]);
 	int st = 0;
-	int stime = 1000;
-	   
-	while (st < stime) {
-		std::vector<int> z;
+	int stime = 500;
+	vector<int> gg;
+
+
+		std::vector<double> z;
 		z = mPmod(
 			0.150, //dE
 			0.269, //dL
@@ -134,25 +141,20 @@ int main()
 			13.25, //Y
 			3, //S
 			7, //tr
-			60000.0, //sf
+			50, //sf
 			0.25, //dt
-			76.16875, //n
+			60, //n
 			93.6, //Emax
-			39250, //E0
-			216, //L0
-			106, //P0
-			862, //M0
-			1056, //time
+			177, //E0
+			8, //L0
+			1, //P0
+			7, //M0
+			600, //time
 			rainfall);
-		st++;
-	}
-	printf("Time taken: %.2fs\n", (double)(clock() - tStart) / CLOCKS_PER_SEC);
-	cin.get();
-	return 0;
 
-	//	for (std::vector<double>::const_iterator i = z.begin(); i != z.end(); ++i)
-	//		std::cout << *i << ',';
-	//	cin.get();
+		for (std::vector<double>::const_iterator i = z.begin(); i != z.end(); ++i)
+			std::cout << *i << ',';
+		cin.get();
 
 		
 
