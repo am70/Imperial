@@ -35,13 +35,14 @@ vector<tuple<int,int,int,int>> mPmod(modParms parmsx) {
 
 	vector<int> rF = parmsx.rF;
 
+
 	vector<tuple<int, int, int, int>> r;
 
 	while (t < time) {
 
 		if (t <= trx) { K = (1 + (sf*((1 / trx)))); }
 		else {
-			rFsum = std::accumulate(rF.begin() + (t - trx), rF.end() - t, 0);
+			rFsum = std::accumulate(rF.begin() + (t - trx), rF.begin() + t, 0);
 			K = (1 + (sf*((1 / trx)*rFsum)));
 		}
 
@@ -62,11 +63,8 @@ vector<tuple<int,int,int,int>> mPmod(modParms parmsx) {
 		M = M + (0.5*(binom(Bp, (dP / (uP + dP))))) - Bm;
 
 		t++;
-
 		r.emplace_back(make_tuple(E,L,P,M));
-
 	}
-
 	return r;
 
 }

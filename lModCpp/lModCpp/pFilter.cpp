@@ -1,7 +1,6 @@
 #include "lModH.h"
 boost::mt19937 mrand(std::time(0));
-vector<int> rainfall1 = txtReader("Q:\\Imperial\\rf1.txt");
-vector<int> rainfall2 = txtReader("Q:\\Imperial\\rf2.txt");
+
 modParms tParms;//parameter struct to store new param values
 
 
@@ -38,7 +37,9 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 	//int t = iParms.startTime;
 	double trx = iParms.tr / iParms.dt;
 
-	int rFsum = std::accumulate(rF.begin() + (time - trx), rF.end() - time, 0);
+	
+
+	int rFsum = std::accumulate(rF.begin() + (time - trx), rF.begin() + time, 0);
 	K = (1 + (sf*((1 / trx)*rFsum)));
 
 	a = (0.5 * dL*dP) / (uM*(dP + uP));
@@ -83,7 +84,7 @@ luint rpois(luint lambda)
 //@param b
 //@return log beta
 double lbeta(double a, double b) {
-	return double(lgamma(a)*lgamma(b)) / lgamma(a + b);
+	return double(lgamma(a)+lgamma(b)) - lgamma(a + b);
 }
 
 // Beta binomial likelihood function
@@ -95,7 +96,7 @@ double lbeta(double a, double b) {
 double betaBinom(double k, double n, double p, double w) {
 	double a = p * ((1 / w) - 1);
 	double b = (1 - p) * ((1 / w) - 1);
-	lbeta(k + a, n - k + b) - lbeta(a, b) + log(boost::math::binomial_coefficient<double>(n, k));
+	return lbeta(k + a, n - k + b) - lbeta(a, b) + log(boost::math::binomial_coefficient<double>(n, k));
 }
 
 
@@ -104,16 +105,14 @@ double betaBinom(double k, double n, double p, double w) {
 //@param obsData, observed data for calculating likelihood value
 //@return tuple containing state ints for E, L, P, M and likelihood (non-log), at the end of 
 //a model run with designated start and end times
-tuple<int, int, int, int, double> modStepFnc(wpStruct wp, vector< tuple<int, int> > obsData) {
+tuple<int, int, int, int, double> modStepFnc(wpStruct wp, int obsData) {
 	vector<int> rFc;
 	vector<tuple<int, int, int, int>> modRun;
 	double weight;
 
-	if (wp.rFclust == 1)
-		rFc = rainfall1;
-	else
-		rFc = rainfall2;
+	rFc = wp.rFclust;
 
+	
 	tParms.E0 = wp.E0;
 	tParms.L0 = wp.L0;
 	tParms.P0 = wp.P0;
@@ -121,13 +120,31 @@ tuple<int, int, int, int, double> modStepFnc(wpStruct wp, vector< tuple<int, int
 	tParms.startTime = wp.startTime;
 	tParms.endTime = wp.endTime;
 	tParms.rF = rFc;
-
 	modRun = mPmod(tParms);
-	weight = betaBinom(get<1>(obsData[0]), get<3>(modRun.back()), 0.01, wp.w); //add weights to tuple
 
-	tuple<int, int, int, int, double> res = {get<0>(modRun.back()),get<1>(modRun.back()),get<2>(modRun.back()),get<3>(modRun.back()), exp(weight)};
+
+
+	weight = betaBinom(obsData, 1+get<3>(modRun.back()), 0.01, wp.w); //add weights to tuple
+	tuple<int, int, int, int, double> res = {get<0>(modRun.back()),get<1>(modRun.back()),get<2>(modRun.back()),get<3>(modRun.back()), weight};
+
+
 	return res;
 }
+
+//rand sample function
+auto rSamp(std::vector<std::tuple<int, int, int, int, double>>& samp)
+{
+	std::vector<std::tuple<int,int,int,int, double>> temp;              // return value
+	std::vector<double> v;                                  // weights
+	for (auto&& i : samp)
+		v.push_back(exp(std::get<4>(i)));                        // get exponential weights
+	std::discrete_distribution<int> dd{ v.begin(), v.end() }; // create distribution
+	//static std::random_device rd;
+	for (size_t i{}; i < samp.size(); ++i)
+		temp.push_back(samp[dd(mrand)]);                        // build return vector by selecting according to weights
+	return temp;
+}
+
 
 // Particle filter function - runs model in steps between each observed data point
 // before using weighted re - sampling of model state at each step to start next
@@ -138,25 +155,31 @@ tuple<int, int, int, int, double> modStepFnc(wpStruct wp, vector< tuple<int, int
 // @param resM True/False whether to output likelihood values or results of simulation for plotting figures
 // @param fxedParams fixed parameters - currently just accepting tr but may expand to include more than one parameter
 // @return if resM = F log likelihood value, if resM = T mean results of simulation
-vector<int> pFilt(int n,
+double pFilt(int n,
 	vector< tuple<int, int> > obsData,
 	modParms prms,
 	bool resM,
-	string rFclust,
+	int rFclust,
 	int fxdParams) {
 
 	//read times data
 	vector<int> times;
-	vector<int> ll; //vector of log likelihood values
+	vector<double> ll; //vector of log likelihood values
+	vector<double> lltemp;
 	vector<tuple<int, int, int, int, double>>  particles;
 	particles.reserve(n);
-	particles = iState(n,times.front(),prms,fxdParams);
-
-	for (auto i = begin(obsData); i != end(obsData); ++i) { //calculate discreet time steps for observed data
-		times.emplace_back(get<0>(*i));// prms.dt
+	for (auto i = begin(obsData); i != end(obsData); ++i) {
+		//calculate discreet time steps for observed data
+		times.emplace_back((get<0>(*i))/prms.dt);
 	};
 
-	for (auto i = 1; i != size(times) - 1; ++i) {
+	
+
+	particles = iState(n,times.front(),prms,fxdParams);
+
+	for (auto i = 0; i != times.size()- 1; ++i) {
+		int loc = 0;
+		int run = 0;
 
 		wpStruct wp;
 		wp.uoE = prms.uoE;
@@ -166,30 +189,32 @@ vector<int> pFilt(int n,
 		wp.sf = prms.sf;
 		wp.n = prms.n;
 		wp.w = prms.w;
+		wp.rFclust = prms.rF;
 		wp.fxdPrm = fxdParams;
+		wp.startTime = times.at(i);
+		wp.endTime = times.at(i+1);
+		
 
 		//run model in step and update particles - should be in parallel
-		for (auto i = begin(particles); i != end(particles); ++i) {
-			int loc;
-			wp.E0 = get<0>((*i));
-			wp.L0 = get<1>((*i));
-			wp.P0 = get<2>((*i));
-			wp.M0 = get<3>((*i));
-			particles.at(loc) = modStepFnc(wp, obsData);
+		lltemp.clear();
+		for (auto j = begin(particles); j != end(particles); ++j) {
+			wp.E0 = get<0>((*j));
+			wp.L0 = get<1>((*j));
+			wp.P0 = get<2>((*j));
+			wp.M0 = get<3>((*j));
+			int obsDatPoint = get<1>(obsData[i]);
+			particles.at(loc) = modStepFnc(wp, obsDatPoint);
+			lltemp.emplace_back(get<4>(particles.at(loc)));
 			loc++;
 		}
-
 		//re-sample particles
+		particles = rSamp(particles);
 
+		//take mean of likelihoods from particles
+		double llMean = (boost::accumulate(lltemp, 0.0))/ lltemp.size();
 
-
-
+		ll.emplace_back(llMean);
+	
 	}
-
-
-	//vector<tuple<int, int, int, int>> particles = iState(n, times.front, prms, fxdParams); //initial state
-
-
-	//particles = iState(n, t = times[1], prms = prms, fxdParams) #initial state
-
+return (boost::accumulate(ll, 0.0));
 }
