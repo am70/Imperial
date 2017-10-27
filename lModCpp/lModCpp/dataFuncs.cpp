@@ -11,7 +11,7 @@ vector<int> txtReader(string file) {
 		int value;
 		// read the elements in the file into a vector  
 		while (inputFile >> value) {
-			dat.push_back(value);
+			dat.emplace_back(value);
 		}
 	}
 	return (dat);

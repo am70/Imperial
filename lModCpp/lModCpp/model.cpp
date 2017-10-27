@@ -63,7 +63,7 @@ vector<tuple<int,int,int,int>> mPmod(modParms parmsx) {
 
 		t++;
 
-		r.push_back(make_tuple(E,L,P,M));
+		r.emplace_back(make_tuple(E,L,P,M));
 
 	}
 

@@ -10,8 +10,8 @@ modParms tParms;//parameter struct to store new param values
 // @param t starting time period for rainfall
 // @param prms model parameters
 // @fxdParams fixed parameter (currently just for n in mosParamsP) - maybe update for multiple fixed parameters
-// @return conditions for E, L, P and M
-vector<tuple<int, int, int, int>> iState(int N, t, modParms iParms, int fxdParm,) {
+// @return conditions for E, L, P and M, double is empty for addition of weight later. 
+vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParms, int fxdParm) {
 	int z = iParms.z;//fitted(E - L)
 	double dE = iParms.dE;
 	double dL = iParms.dL;
@@ -28,20 +28,20 @@ vector<tuple<int, int, int, int>> iState(int N, t, modParms iParms, int fxdParm,
 	double tr = iParms.tr / iParms.dt;
 	double B = iParms.B;
 	double K;
-	double a;
 	double uE;
 	double uL; 
 	int E;
 	int L;
 	int P;
 	int M;
-	int t = iParms.startTime;
+	double a;
+	//int t = iParms.startTime;
 	double trx = iParms.tr / iParms.dt;
 
-	int rFsum = std::accumulate(rF.begin() + (t - trx), rF.end() - t, 0);
+	int rFsum = std::accumulate(rF.begin() + (time - trx), rF.end() - time, 0);
 	K = (1 + (sf*((1 / trx)*rFsum)));
 
-	a = (1 / 2 * dL*dP) / (uM*(dP + uP));
+	a = (0.5 * dL*dP) / (uM*(dP + uP));
 
 	uE = UoE*exp(z / K);
 	uL = UoL*exp(y*z / K);
@@ -51,9 +51,9 @@ vector<tuple<int, int, int, int>> iState(int N, t, modParms iParms, int fxdParm,
 	L = (dE*z) / (dE + dL + uL);
 	M = (1 / 2 * dL*dP*L) / uM*(dP + uP);
 	P = 2 * uM*M / dP;
-
-	vector<tuple<int, int, int, int>> states = { { E, L, P, M } };
-	states.resize(N, { E, L, P, M });
+	
+	vector<tuple<int, int, int, int, double>> states = { { E, L, P, M ,0.0} };
+	states.resize(N, { E, L, P, M, 0.0 });
 	return states;
 }
 
@@ -101,16 +101,18 @@ double betaBinom(double k, double n, double p, double w) {
 
 //model step function
 //@param wp a structure containing start times and states for model step
-//@return tuple containing state ints for E, L, P & M at the end of 
+//@param obsData, observed data for calculating likelihood value
+//@return tuple containing state ints for E, L, P, M and likelihood (non-log), at the end of 
 //a model run with designated start and end times
-tuple<int, int, int, int> modStepFnc(wpStruct wp) {
+tuple<int, int, int, int, double> modStepFnc(wpStruct wp, vector< tuple<int, int> > obsData) {
 	vector<int> rFc;
 	vector<tuple<int, int, int, int>> modRun;
+	double weight;
+
 	if (wp.rFclust == 1)
 		rFc = rainfall1;
 	else
 		rFc = rainfall2;
-
 
 	tParms.E0 = wp.E0;
 	tParms.L0 = wp.L0;
@@ -121,27 +123,72 @@ tuple<int, int, int, int> modStepFnc(wpStruct wp) {
 	tParms.rF = rFc;
 
 	modRun = mPmod(tParms);
+	weight = betaBinom(get<1>(obsData[0]), get<3>(modRun.back()), 0.01, wp.w); //add weights to tuple
 
-	tuple<int,int,int,int> res = modRun.back();
+	tuple<int, int, int, int, double> res = {get<0>(modRun.back()),get<1>(modRun.back()),get<2>(modRun.back()),get<3>(modRun.back()), exp(weight)};
 	return res;
 }
 
-//particle filter
+// Particle filter function - runs model in steps between each observed data point
+// before using weighted re - sampling of model state at each step to start next
+// @param n number of particles 
+// @param iState function for calculating initial state of particles
+// @param obsData observed data to fit model to
+// @param prms model parameters
+// @param resM True/False whether to output likelihood values or results of simulation for plotting figures
+// @param fxedParams fixed parameters - currently just accepting tr but may expand to include more than one parameter
+// @return if resM = F log likelihood value, if resM = T mean results of simulation
 vector<int> pFilt(int n,
-	vector<int> iState,
 	vector< tuple<int, int> > obsData,
 	modParms prms,
-	string resM,
+	bool resM,
 	string rFclust,
 	int fxdParams) {
+
 	//read times data
 	vector<int> times;
-	vector<tuple<int,int,int,int>> particles = iState(n, times.front, prms, fxdParams) //initial state
+	vector<int> ll; //vector of log likelihood values
+	vector<tuple<int, int, int, int, double>>  particles;
+	particles.reserve(n);
+	particles = iState(n,times.front(),prms,fxdParams);
+
+	for (auto i = begin(obsData); i != end(obsData); ++i) { //calculate discreet time steps for observed data
+		times.emplace_back(get<0>(*i));// prms.dt
+	};
+
+	for (auto i = 1; i != size(times) - 1; ++i) {
+
+		wpStruct wp;
+		wp.uoE = prms.uoE;
+		wp.uoL = prms.uoL;
+		wp.uP = prms.uP;
+		wp.Y = prms.Y;
+		wp.sf = prms.sf;
+		wp.n = prms.n;
+		wp.w = prms.w;
+		wp.fxdPrm = fxdParams;
+
+		//run model in step and update particles - should be in parallel
+		for (auto i = begin(particles); i != end(particles); ++i) {
+			int loc;
+			wp.E0 = get<0>((*i));
+			wp.L0 = get<1>((*i));
+			wp.P0 = get<2>((*i));
+			wp.M0 = get<3>((*i));
+			particles.at(loc) = modStepFnc(wp, obsData);
+			loc++;
+		}
+
+		//re-sample particles
 
 
-	//for (auto i = begin(obsData); i != end(obsData); ++i) {
-	//	times.push_back << get<0>(*i) / delta;
-	//}
+
+
+	}
+
+
+	//vector<tuple<int, int, int, int>> particles = iState(n, times.front, prms, fxdParams); //initial state
+
 
 	//particles = iState(n, t = times[1], prms = prms, fxdParams) #initial state
 

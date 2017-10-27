@@ -28,9 +28,10 @@ vector<int> txtReader(string);
 //model parameters
 struct modParms {
 	double dE = 0.150; double dL=0.269; double dP=1.563; double uoE=0.034; double uoL=0.035; double uP=0.25; double uM=0.096; double Y=13.25; int S=3;
-	int tr = 14; double sf = 1000; double dt = 0.25; double n = 50; double Emax = 93.6; int E0 = 177; int L0 = 8; int P0 = 1; int M0 = 7; int z = 500; double B = 21.19;
-	int startTime; int endTime; vector<int> rF;
+	int tr = 7; double sf = 1000; double dt = 0.25; double n = 50; double Emax = 93.6; int E0 = 177; int L0 = 8; int P0 = 1; int M0 = 7; int z = 500; double B = 21.19;
+	int startTime = 500; int endTime = 1000; vector<int> rF; double w = 0.01;
 };
+
 
 
 //data structure for particles to be weighted
@@ -49,6 +50,7 @@ struct wpStruct {
 	int rFclust;
 	double n;
 	double fxdPrm;
+	double w;
 };
 
 //vector<int> txtReader(string file);
@@ -57,7 +59,16 @@ luint rpois(luint lambda);
 double lbeta(double a, double b);
 double betaBinom(double k, double n, double p, double w);
 vector<tuple<int, int, int, int>> mPmod(modParms);
-tuple<int, int, int, int> modStepFnc(wpStruct wp);
+tuple<int, int, int, int, double> modStepFnc(wpStruct wp, vector< tuple<int, int> > obsData);
 
+//pfilter
+vector<int> pFilt(int n,
+	vector< tuple<int, int> > obsData,
+	modParms prms,
+	bool resM,
+	string rFclust,
+	int fxdParams);
 
+//istate
+vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParms, int fxdParm);
 
