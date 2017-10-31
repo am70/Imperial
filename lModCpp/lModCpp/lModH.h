@@ -18,7 +18,7 @@
 #include<boost/math/special_functions/binomial.hpp>
 #include <boost/range/numeric.hpp>
 #include <functional>
-
+#include <boost/math/distributions/inverse_gaussian.hpp>
 #endif
 using namespace std;
 typedef long unsigned int luint;
@@ -75,3 +75,23 @@ double pFilt(int n,
 //istate
 vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParms, int fxdParm);
 
+
+
+//data structure for MMH output
+struct pMMHres {
+	double uoE;
+	double uoL;
+	double uP;
+	double Y;
+	double w;
+	double n;
+	double z1;
+	double z2;
+	double z3;
+	double z4;
+	double sf1;
+	double sf2;
+	double sf3;
+	double sf4;
+	double ll;
+};

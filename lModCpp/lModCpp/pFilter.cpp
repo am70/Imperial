@@ -134,7 +134,7 @@ tuple<int, int, int, int, double> modStepFnc(wpStruct wp, int obsData) {
 //rand sample function
 auto rSamp(std::vector<std::tuple<int, int, int, int, double>>& samp)
 {
-	std::vector<std::tuple<int,int,int,int, double>> temp;              // return value
+	std::vector<std::tuple<int,int,int,int, double>> temp;           
 	std::vector<double> v;                                  // weights
 	for (auto&& i : samp)
 		v.push_back(exp(std::get<4>(i)));                        // get exponential weights
@@ -162,7 +162,7 @@ double pFilt(int n,
 	int rFclust,
 	int fxdParams) {
 
-	//read times data
+	
 	vector<int> times;
 	vector<double> ll; //vector of log likelihood values
 	vector<double> lltemp;

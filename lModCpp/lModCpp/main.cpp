@@ -10,10 +10,13 @@ int main()
 {
 
 
+	boost::math::normal dist(0.0, 1.0);
+	double q = quantile(dist, 0.01);
+	cout << q;
+	cin.get();
 
-
-	vector<int> rainfall1 = txtReader("C:\\Imperial\\rf1.txt");
-	vector<int> rainfall2 = txtReader("C:\\Imperial\\rf2.txt");
+	vector<int> rainfall1 = txtReader("Q:\\Imperial\\rf1.txt");
+	vector<int> rainfall2 = txtReader("Q:\\Imperial\\rf2.txt");
 
 
 	modParms prms;
