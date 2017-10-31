@@ -63,7 +63,7 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 //@param p probability of success
 //@return number of successes
 int binom(int n, double p) {
-	boost::binomial_distribution<int> distribution(n, p);
+	static boost::binomial_distribution<int> distribution(n, p);
 	return  distribution(mrand);
 }
 
@@ -73,7 +73,7 @@ int binom(int n, double p) {
 luint rpois(luint lambda)
 {
 	if (lambda > 0) {
-		boost::poisson_distribution<luint> d(lambda);
+		static boost::poisson_distribution<luint> d(lambda);
 		return d(mrand);
 	}
 	else return (0);
@@ -159,7 +159,6 @@ double pFilt(int n,
 	vector< tuple<int, int> > obsData,
 	modParms prms,
 	bool resM,
-	int rFclust,
 	int fxdParams) {
 
 	

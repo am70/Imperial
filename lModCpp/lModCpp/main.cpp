@@ -12,16 +12,16 @@ int main()
 
 	boost::math::normal dist(0.0, 1.0);
 	double q = quantile(dist, 0.01);
-	cout << q;
+	cout << q<<endl;
+
+	cout << rn01()<<endl;
+	cout << rn01() << endl;
+	cout << rn01() << endl;
+	cout << rn01() << endl;
+
 	cin.get();
 
-	vector<int> rainfall1 = txtReader("Q:\\Imperial\\rf1.txt");
-	vector<int> rainfall2 = txtReader("Q:\\Imperial\\rf2.txt");
-
-
-	modParms prms;
-
-	prms.rF = rainfall1;
+	
 	//vector<int> rainfall1 = txtReader("C:\\Imperial\\rf1.txt");
 	//prms.rF = rainfall1;
 	vector<tuple<int, int>>garki101 = { { 353,1 },{ 368,18 },{ 382,3 },{ 396,3 },{ 410,7 },{ 424,24 },{ 440,40 },{ 454,1 },{ 468,2 },{ 482,0 },{ 496,0 },{ 510,0 },{ 524,0 },{ 538,0 },{ 552,0 } };
@@ -54,19 +54,7 @@ int main()
 
 	//cout << size(times);
 	//cin.get();
-	int t = 0;
-	int ff = 100;
-	while (t < ff) {
-		cout << pFilt(50,
-			garki101,//garki data
-			prms,//parameters
-			false,//full output or just likelihood
-			1,//rainfall cluster
-			7//fixed parameters
-		);
-		t++;
-	}
-		cin.get();
+
 	//wpStruct weights;
 	//weights.E0 = 1000;
 	//weights.L0 = 200;

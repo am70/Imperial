@@ -19,6 +19,9 @@
 #include <boost/range/numeric.hpp>
 #include <functional>
 #include <boost/math/distributions/inverse_gaussian.hpp>
+#include <boost/math/distributions/uniform.hpp>
+#include <boost/random/normal_distribution.hpp>
+#include <boost/random.hpp>
 #endif
 using namespace std;
 typedef long unsigned int luint;
@@ -31,11 +34,18 @@ vector<int> txtReader(string);
 //model parameters
 struct modParms {
 	double dE = 0.150; double dL=0.269; double dP=1.563; double uoE=0.034; double uoL=0.035; double uP=0.25; double uM=0.096; double Y=13.25; int S=3;
-	int tr = 7; double sf = 1000; double dt = 0.25; double n = 50; double Emax = 93.6; int E0 = 177; int L0 = 8; int P0 = 1; int M0 = 7; int z = 5000; double B = 21.19;
+	int tr = 7; double sf1 = 1000; double sf2 = 1000; double sf3 = 1000; double sf4 = 1000; double dt = 0.25; double n = 50; double Emax = 93.6; 
+	int E0 = 177; int L0 = 8; int P0 = 1; int M0 = 7; double z1 = 5000; double z2 = 5000; double z3 = 5000; double z4 = 5000; double B = 21.19;
 	int startTime = 500; int endTime = 1000; vector<int> rF; double w = 0.01;
 };
 
-
+//obs dat data struct
+struct obsDatX {
+	vector <tuple<int, int>> garki101;
+	vector <tuple<int, int>> garki104;
+	vector <tuple<int, int>> garki219;
+	vector <tuple<int, int>> garki220;
+};
 
 //data structure for particles to be weighted
 struct wpStruct {
@@ -69,13 +79,13 @@ double pFilt(int n,
 	vector< tuple<int, int> > obsData,
 	modParms prms,
 	bool resM,
-	int rFclust,
 	int fxdParams);
 
 //istate
 vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParms, int fxdParm);
 
-
+//rand 0-1 generator
+double rn01(void);
 
 //data structure for MMH output
 struct pMMHres {
