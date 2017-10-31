@@ -123,6 +123,7 @@
   <ItemGroup>
     <ClCompile Include="dataFuncs.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="metHastAlg.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="pFilter.cpp" />
   </ItemGroup>
