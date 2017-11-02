@@ -11,6 +11,7 @@ modParms tParms;//parameter struct to store new param values
 // @fxdParams fixed parameter (currently just for n in mosParamsP) - maybe update for multiple fixed parameters
 // @return conditions for E, L, P and M, double is empty for addition of weight later. 
 vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParms, int fxdParm) {
+
 	int z = iParms.z;//fitted(E - L)
 	double dE = iParms.dE;
 	double dL = iParms.dL;
@@ -37,7 +38,7 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 	//int t = iParms.startTime;
 	double trx = iParms.tr / iParms.dt;
 
-	
+
 
 	int rFsum = std::accumulate(rF.begin() + (time - trx), rF.begin() + time, 0);
 	K = (1 + (sf*((1 / trx)*rFsum)));
@@ -64,7 +65,8 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 //@return number of successes
 int binom(int n, double p) {
 	static boost::binomial_distribution<int> distribution(n, p);
-	return  distribution(mrand);
+	int res = distribution(mrand);
+	return  res;
 }
 
 //random poisson draw
@@ -123,7 +125,6 @@ tuple<int, int, int, int, double> modStepFnc(wpStruct wp, int obsData) {
 	modRun = mPmod(tParms);
 
 
-
 	weight = betaBinom(obsData, 1+get<3>(modRun.back()), 0.01, wp.w); //add weights to tuple
 	tuple<int, int, int, int, double> res = {get<0>(modRun.back()),get<1>(modRun.back()),get<2>(modRun.back()),get<3>(modRun.back()), weight};
 
@@ -161,7 +162,7 @@ double pFilt(int n,
 	bool resM,
 	int fxdParams) {
 
-	
+
 	vector<int> times;
 	vector<double> ll; //vector of log likelihood values
 	vector<double> lltemp;
@@ -175,8 +176,13 @@ double pFilt(int n,
 	
 
 	particles = iState(n,times.front(),prms,fxdParams);
-
+	
 	for (auto i = 0; i != times.size()- 1; ++i) {
+
+		if (i == 6) {
+			cin.get();
+		}
+
 		int loc = 0;
 		int run = 0;
 
@@ -193,6 +199,7 @@ double pFilt(int n,
 		wp.startTime = times.at(i);
 		wp.endTime = times.at(i+1);
 		
+		
 
 		//run model in step and update particles - should be in parallel
 		lltemp.clear();
@@ -202,6 +209,7 @@ double pFilt(int n,
 			wp.P0 = get<2>((*j));
 			wp.M0 = get<3>((*j));
 			int obsDatPoint = get<1>(obsData[i]);
+			cout << obsDatPoint;
 			particles.at(loc) = modStepFnc(wp, obsDatPoint);
 			lltemp.emplace_back(get<4>(particles.at(loc)));
 			loc++;
@@ -213,7 +221,9 @@ double pFilt(int n,
 		double llMean = (boost::accumulate(lltemp, 0.0))/ lltemp.size();
 
 		ll.emplace_back(llMean);
-	
+
 	}
+	
+
 return (boost::accumulate(ll, 0.0));
 }

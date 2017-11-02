@@ -26,7 +26,6 @@
 using namespace std;
 typedef long unsigned int luint;
 
-//vector<tuple<int, int>>garki101 = { { 353,1 },{ 368,18 },{ 382,3 },{ 396,3 },{ 410,7 },{ 424,24 },{ 440,40 },{ 454,1 },{ 468,2 },{ 482,0 },{ 496,0 },{ 510,0 },{ 524,0 },{ 538,0 },{ 552,0 } };
 
 vector<int> txtReader(string);
 
@@ -34,9 +33,9 @@ vector<int> txtReader(string);
 //model parameters
 struct modParms {
 	double dE = 0.150; double dL=0.269; double dP=1.563; double uoE=0.034; double uoL=0.035; double uP=0.25; double uM=0.096; double Y=13.25; int S=3;
-	int tr = 7; double sf1 = 1000; double sf2 = 1000; double sf3 = 1000; double sf4 = 1000; double dt = 0.25; double n = 50; double Emax = 93.6; 
+	int tr = 7; double sf1 = 20; double sf2 = 20; double sf3 = 20; double sf4 = 20; double dt = 0.25; double n = 50; double Emax = 93.6; 
 	int E0 = 177; int L0 = 8; int P0 = 1; int M0 = 7; double z1 = 5000; double z2 = 5000; double z3 = 5000; double z4 = 5000; double B = 21.19;
-	int startTime = 500; int endTime = 1000; vector<int> rF; double w = 0.01;
+	int startTime = 0; int endTime = 2000; vector<int> rF; double w = 0.01; double sf =20; double z =20;
 };
 
 //obs dat data struct
@@ -89,19 +88,35 @@ double rn01(void);
 
 //data structure for MMH output
 struct pMMHres {
-	double uoE;
-	double uoL;
-	double uP;
-	double Y;
-	double w;
-	double n;
-	double z1;
-	double z2;
-	double z3;
-	double z4;
-	double sf1;
-	double sf2;
-	double sf3;
-	double sf4;
-	double ll;
+	vector<double> uoE;
+	vector<double> uoL;
+	vector<double> uP;
+	vector<double> Y;
+	vector<double> w;
+	vector<double> n;
+	vector<double> z1;
+	vector<double> z2;
+	vector<double> z3;
+	vector<double> z4;
+	vector<double> sf1;
+	vector<double> sf2;
+	vector<double> sf3;
+	vector<double> sf4;
+	vector<double> ll;
 };
+
+//pMMH sampler 
+pMMHres pMMHSampler(
+	modParms initParams,
+	int fixedParam,
+	vector<double> sdProps,
+	vector<double> acptRs,
+	vector<tuple<string, double>> fitPrms,
+	vector<double> maxSdProps,
+	int niter,
+	int particles,
+	int nburn,
+	int monitoring,
+	int startAdapt,
+	int	tell,
+	obsDatX	oDat);

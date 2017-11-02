@@ -46,24 +46,33 @@ vector<tuple<int,int,int,int>> mPmod(modParms parmsx) {
 			K = (1 + (sf*((1 / trx)*rFsum)));
 		}
 
+		uE = uoE*exp((E + L) / (K));
+		uL = uoL*exp((Y*(E + L) / (K)));
 
-		uE = uoE*dt*(1 + (E + L) / (K));
-		uL = uoL*dt*(1 + (Y*(E + L) / (K)));
+		//cout << (E) << " " << (L) << " " << (P) << " " << (M) << " " << (Be) << " " << (Bl) << " " << (Bp) << " " << (Bm) << " " << (K) << " "<< uE<<" "<< (dE + uE)*dt<< endl;
+		
+		
+		//ONLY CALLS BINOM ONCE FOR SOME REASON!!!!
+		Be = binom(E, (dE + uE)*dt);
+		 Bl = binom(L, (dL + uL)*dt); 
 
+		 cout << (E) << " " << (dE + uE)*dt << " " << (Be) << endl;
 
-		if ((dE + uE)*dt<1) Be = binom(E, (dE + uE)*dt); else Be = binom(E, 1);
-		if ((dL + uL)*dt<1) Bl = binom(L, (dL + uL)*dt); else Bl = binom(L, 1);
 
 		Bp = binom(P, (dP + uP)*dt);
 		Bm = binom(M, uM*dt);
 		nt = binom(M, (dt / S));
 		E = E - Be + rpois(n*nt);
+
 		L = L - Bl + binom(Be, (dE / (uE + dE)));
+
 		P = P - Bp + binom(Bl, (dL / (uL + dL)));
+
 		M = M + (0.5*(binom(Bp, (dP / (uP + dP))))) - Bm;
 
 		t++;
 		r.emplace_back(make_tuple(E,L,P,M));
+
 	}
 	return r;
 

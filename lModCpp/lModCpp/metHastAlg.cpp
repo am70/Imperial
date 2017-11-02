@@ -1,7 +1,7 @@
 #include"lModH.h"
 
-vector<int> rainfall1 = txtReader("C:\\Imperial\\rf1.txt");
-vector<int> rainfall2 = txtReader("C:\\Imperial\\rf2.txt");
+vector<int> rainfall1 = txtReader("Q:\\Imperial\\rf1.txt");
+vector<int> rainfall2 = txtReader("Q:\\Imperial\\rf2.txt");
 
 // proposal sd tuning function
 // @param current s.d.
@@ -11,9 +11,9 @@ vector<int> rainfall2 = txtReader("C:\\Imperial\\rf2.txt");
 // @return tuned s.d.
 double tuner(double curSd, double acptR, double curAcptR, double maxSd) {
 	boost::math::normal dist(0.0, 1.0);
-	if (curAcptR == 1);
+	if (curAcptR == 1)
 	curAcptR = 0.99;
-	if (curAcptR == 0);
+	if (curAcptR == 0)
 	curAcptR = 0.01;
 	return (curSd *quantile(dist, (acptR / 2))) / quantile(dist, (curAcptR / 2));
 }
@@ -27,8 +27,9 @@ double rn01(void)
 	return zeroone();
 }
 
+
 //horrible structure updating function that can probably be better somehow...
-modParms parmUpdt(modParms prms, string prmName, int propPrm) {
+modParms parmUpdt(modParms prms, string prmName, double propPrm) {
 	if (prmName == "uoE")
 		prms.uoE = propPrm;
 	if (prmName == "uoL")
@@ -65,15 +66,32 @@ double llFunc(int particles, modParms prms, obsDatX obsDat) {
 	for (auto j = 0; j != 4; ++j) {
 		vector<tuple<int, int>> oDat;
 
-		if (j = 0)
+		if (j == 0) {
 			oDat = obsDat.garki101;
-		else if (j = 1)
+			prms.sf = prms.sf1;
+			prms.z = prms.z1;
+			prms.rF = rainfall1;
+		}
+		else if (j == 1) {
 			oDat = obsDat.garki104;
-		else if (j = 2)
+			prms.sf = prms.sf2;
+			prms.z = prms.z2;
+			prms.rF = rainfall1;
+		}
+		else if (j == 2) {
 			oDat = obsDat.garki219;
+			prms.sf = prms.sf3;
+			prms.z = prms.z3;
+			prms.rF = rainfall2;
+		}
 		else oDat = obsDat.garki220;
+		prms.sf = prms.sf4;
+		prms.z = prms.z4;
+		prms.rF = rainfall2;
 
-		pFilt(particles,
+	
+		//run particle filter
+		return pFilt(particles,
 			oDat,//garki data
 			prms,//parameters
 			false,//full output or just likelihood
@@ -92,41 +110,47 @@ double propPrmFunc(double sd, double parm) {
 }
 
 
-vector<pMMHres> mcmcSampler(
+pMMHres pMMHSampler(
 	modParms initParams,
 	int fixedParam,
 	vector<double> sdProps,
+	vector<double> acptRs,
 	vector<tuple<string,double>> fitPrms,
-	vector<double> maxSddProps,
+	vector<double> maxSdProps,
 	int niter,
 	int particles,
 	int nburn,
 	int monitoring,
 	int startAdapt,
-	int adptBurn,
 	int	tell,
 	obsDatX	oDat)
 {
-	int iter;
-	int parmNum = 0;
+	int iter = 0;
+	unsigned int parmNum = 0;
 	double llProp;//proposed ll
 	double llCur;//current ll
 	vector<double> llRes;
+
 	double llRatio; //ratio between proposed and current ll
 	modParms prms = initParams;
+
 	double propPrm; //proposed new parameter
 	llCur = llFunc(particles, prms, oDat); //get value for initial ll
 
-	while (iter < niter) {
+	vector<double> acptRcur = acptRs;
+	pMMHres results;
 
+	
+	while (iter < niter) {
 
 		propPrm = propPrmFunc(sdProps[parmNum], get<1>(fitPrms[parmNum]));//propose new parameter
 		prms = parmUpdt(prms, get<0>(fitPrms[parmNum]), propPrm);//update parameter struct
 
 		llProp = llFunc(particles,prms, oDat);//find log likelihood from particle filter
+
 		llRatio = llProp - llCur;//ratio between previous ll and proposed ll
 
-		if (llRatio >= 0 | rn01() <= exp(llRatio)) { 
+		if (llRatio >= 0 || rn01() <= exp(llRatio)) { 
 			llCur = llProp; //update current ll if ll is accepted
 		} 
 		else { 
@@ -135,19 +159,42 @@ vector<pMMHres> mcmcSampler(
 
 
 		if (iter > startAdapt) {
-			//start adapting with tuner
+			//start adapting with tuner 
+			sdProps[parmNum] = tuner(sdProps[parmNum], acptRs[parmNum], acptRcur[parmNum], maxSdProps[parmNum]);
 		}
 
-		if (iter > nburn) {
-			//start adding to obsDatX
+		if (iter > nburn) { //if passed burnin, start adding to results
+			results.uoE.emplace_back(prms.uoE);
+			results.uoL.emplace_back(prms.uoL);
+			results.uP.emplace_back(prms.uP);
+			results.Y.emplace_back(prms.Y);
+			results.w.emplace_back(prms.w);
+			results.n.emplace_back(prms.n);
+			results.z1.emplace_back(prms.z1);
+			results.z2.emplace_back(prms.z2);
+			results.z3.emplace_back(prms.z3);
+			results.z4.emplace_back(prms.z4);
+			results.sf1.emplace_back(prms.sf1);
+			results.sf2.emplace_back(prms.sf2);
+			results.sf3.emplace_back(prms.sf3);
+			results.sf4.emplace_back(prms.sf4);
+			results.ll.emplace_back(llCur);
 		}
 
 		parmNum++; //parameter number, if greater than number of parms, revert back to 0
-		if (parmNum > size(sdProps)) {
+		if (parmNum >= boost::size(sdProps)) {
 			parmNum = 0;
+		}
+		
+		acptRcur[parmNum] = (acptRcur[parmNum] / iter); //calc current acceptance ratio for parameter
+
+		if ((monitoring > 1 && iter % tell == 0)) {
+			cout << "iteration " << iter << endl;
+			cout << "current = " << llCur << endl;//print proposed ll
+			cout << "proposed = " << llProp << endl;//print proposed ll
 		}
 
 		iter++;//increase iteration
 	}
-
+	return results;
 }
