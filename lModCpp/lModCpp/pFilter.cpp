@@ -59,15 +59,17 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 	return states;
 }
 
+
 //binomial function
 //@param n number of trials
 //@param p probability of success
 //@return number of successes
 int binom(int n, double p) {
-	static boost::binomial_distribution<int> distribution(n, p);
+	boost::binomial_distribution<int> distribution(n, p);
 	int res = distribution(mrand);
 	return  res;
 }
+
 
 //random poisson draw
 //@param lambda
@@ -75,7 +77,7 @@ int binom(int n, double p) {
 luint rpois(luint lambda)
 {
 	if (lambda > 0) {
-		static boost::poisson_distribution<luint> d(lambda);
+		 boost::poisson_distribution<luint> d(lambda);
 		return d(mrand);
 	}
 	else return (0);
@@ -107,28 +109,15 @@ double betaBinom(double k, double n, double p, double w) {
 //@param obsData, observed data for calculating likelihood value
 //@return tuple containing state ints for E, L, P, M and likelihood (non-log), at the end of 
 //a model run with designated start and end times
-tuple<int, int, int, int, double> modStepFnc(wpStruct wp, int obsData) {
+tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData) {
 	vector<int> rFc;
 	vector<tuple<int, int, int, int>> modRun;
 	double weight;
 
-	rFc = wp.rFclust;
-
-	
-	tParms.E0 = wp.E0;
-	tParms.L0 = wp.L0;
-	tParms.P0 = wp.P0;
-	tParms.M0 = wp.M0;
-	tParms.startTime = wp.startTime;
-	tParms.endTime = wp.endTime;
-	tParms.rF = rFc;
-	modRun = mPmod(tParms);
-
-
-	weight = betaBinom(obsData, 1+get<3>(modRun.back()), 0.01, wp.w); //add weights to tuple
+	modRun = mPmod(wp);
+	double sim = 100 + get<3>(modRun.back());
+	weight = betaBinom(obsData, sim, 0.01, wp.w); //add weights to tuple
 	tuple<int, int, int, int, double> res = {get<0>(modRun.back()),get<1>(modRun.back()),get<2>(modRun.back()),get<3>(modRun.back()), weight};
-
-
 	return res;
 }
 
@@ -173,53 +162,56 @@ double pFilt(int n,
 		times.emplace_back((get<0>(*i))/prms.dt);
 	};
 
-	
+
 
 	particles = iState(n,times.front(),prms,fxdParams);
 	
 	for (auto i = 0; i != times.size()- 1; ++i) {
 
-		if (i == 6) {
-			cin.get();
-		}
+	
 
 		int loc = 0;
 		int run = 0;
 
-		wpStruct wp;
+		modParms wp;
 		wp.uoE = prms.uoE;
 		wp.uoL = prms.uoL;
 		wp.uP = prms.uP;
 		wp.Y = prms.Y;
 		wp.sf = prms.sf;
+		wp.z = prms.z;
 		wp.n = prms.n;
 		wp.w = prms.w;
-		wp.rFclust = prms.rF;
+		wp.rF = prms.rF;
 		wp.fxdPrm = fxdParams;
 		wp.startTime = times.at(i);
 		wp.endTime = times.at(i+1);
 		
-		
+
 
 		//run model in step and update particles - should be in parallel
 		lltemp.clear();
-		for (auto j = begin(particles); j != end(particles); ++j) {
-			wp.E0 = get<0>((*j));
-			wp.L0 = get<1>((*j));
-			wp.P0 = get<2>((*j));
-			wp.M0 = get<3>((*j));
-			int obsDatPoint = get<1>(obsData[i]);
-			cout << obsDatPoint;
+		int j;
+
+#pragma omp parallel
+#pragma omp for
+		for (j = 1; j<size(particles); j++) {
+			wp.E0 = get<0>(particles[loc]);
+			wp.L0 = get<1>(particles[loc]);
+			wp.P0 = get<2>(particles[loc]);
+			wp.M0 = get<3>(particles[loc]);
+			int obsDatPoint = get<1>(obsData[loc]);
 			particles.at(loc) = modStepFnc(wp, obsDatPoint);
 			lltemp.emplace_back(get<4>(particles.at(loc)));
 			loc++;
 		}
+
 		//re-sample particles
 		particles = rSamp(particles);
 
 		//take mean of likelihoods from particles
 		double llMean = (boost::accumulate(lltemp, 0.0))/ lltemp.size();
-
+		cout << llMean << endl;
 		ll.emplace_back(llMean);
 
 	}

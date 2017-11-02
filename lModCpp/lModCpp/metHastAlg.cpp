@@ -1,7 +1,13 @@
 #include"lModH.h"
 
-vector<int> rainfall1 = txtReader("Q:\\Imperial\\rf1.txt");
-vector<int> rainfall2 = txtReader("Q:\\Imperial\\rf2.txt");
+
+
+
+vector<int> rainfall1 = txtReader("C:\\Imperial\\rf1.txt");
+vector<int> rainfall2 = txtReader("C:\\Imperial\\rf2.txt");
+
+
+
 
 // proposal sd tuning function
 // @param current s.d.
@@ -63,7 +69,9 @@ modParms parmUpdt(modParms prms, string prmName, double propPrm) {
 
 
 double llFunc(int particles, modParms prms, obsDatX obsDat) {
-	for (auto j = 0; j != 4; ++j) {
+	vector<double> pfiltRes;
+
+	for(auto j = 0; j != 4; ++j) {
 		vector<tuple<int, int>> oDat;
 
 		if (j == 0) {
@@ -77,27 +85,36 @@ double llFunc(int particles, modParms prms, obsDatX obsDat) {
 			prms.sf = prms.sf2;
 			prms.z = prms.z2;
 			prms.rF = rainfall1;
+
+
 		}
 		else if (j == 2) {
-			oDat = obsDat.garki219;
-			prms.sf = prms.sf3;
-			prms.z = prms.z3;
-			prms.rF = rainfall2;
-		}
-		else oDat = obsDat.garki220;
-		prms.sf = prms.sf4;
-		prms.z = prms.z4;
-		prms.rF = rainfall2;
-
+			oDat = obsDat.garki220;
+			prms.sf = prms.sf1;
+			prms.z = prms.z1;
+			prms.rF = rainfall1;
 	
-		//run particle filter
-		return pFilt(particles,
+
+		}
+		else {
+			oDat = obsDat.garki220;
+			prms.sf = prms.sf2;
+			prms.z = prms.z2;
+			prms.rF = rainfall1;
+
+
+		}
+	
+
+		//run particle filter NEED TO SUM PFILT RESULTS
+		pfiltRes.emplace_back(pFilt(particles,
 			oDat,//garki data
 			prms,//parameters
 			false,//full output or just likelihood
 			7//fixed parameters
-		);
+		));
 	}
+	return boost::accumulate(pfiltRes, 0.0);
 }
 
 
@@ -106,7 +123,9 @@ double propPrmFunc(double sd, double parm) {
 	static boost::normal_distribution<> nd(0.0, sd);
 	boost::variate_generator<boost::mt19937&,
     boost::normal_distribution<> > var_nor(rng, nd);
-	return var_nor()+parm;
+	double prop = var_nor() + parm;
+	if (prop < 0) prop = 0.001;
+	return prop;
 }
 
 
@@ -140,13 +159,18 @@ pMMHres pMMHSampler(
 	vector<double> acptRcur = acptRs;
 	pMMHres results;
 
-	
-	while (iter < niter) {
+
+	for (auto iter =0; iter != niter; ++iter){
 
 		propPrm = propPrmFunc(sdProps[parmNum], get<1>(fitPrms[parmNum]));//propose new parameter
 		prms = parmUpdt(prms, get<0>(fitPrms[parmNum]), propPrm);//update parameter struct
 
 		llProp = llFunc(particles,prms, oDat);//find log likelihood from particle filter
+
+		if ((monitoring >= 1 && iter % tell == 0)) {
+			cout << "current = " << llCur << endl;//print proposed ll
+			cout << "proposed = " << llProp << endl;//print proposed ll
+		}
 
 		llRatio = llProp - llCur;//ratio between previous ll and proposed ll
 
@@ -160,6 +184,7 @@ pMMHres pMMHSampler(
 
 		if (iter > startAdapt) {
 			//start adapting with tuner 
+			acptRcur[parmNum] = (acptRcur[parmNum] / iter); //calc current acceptance ratio for parameter
 			sdProps[parmNum] = tuner(sdProps[parmNum], acptRs[parmNum], acptRcur[parmNum], maxSdProps[parmNum]);
 		}
 
@@ -180,21 +205,22 @@ pMMHres pMMHSampler(
 			results.sf4.emplace_back(prms.sf4);
 			results.ll.emplace_back(llCur);
 		}
-
+	
 		parmNum++; //parameter number, if greater than number of parms, revert back to 0
 		if (parmNum >= boost::size(sdProps)) {
 			parmNum = 0;
 		}
 		
-		acptRcur[parmNum] = (acptRcur[parmNum] / iter); //calc current acceptance ratio for parameter
 
-		if ((monitoring > 1 && iter % tell == 0)) {
+		if ((monitoring >= 1 && iter % tell == 0)) {
 			cout << "iteration " << iter << endl;
-			cout << "current = " << llCur << endl;//print proposed ll
-			cout << "proposed = " << llProp << endl;//print proposed ll
+			cout << " uoE = "<<prms.uoE << " uoL = " << prms.uoL << " uoP = " << prms.uP << " Y = " << prms.Y << " w = " << prms.w << " n = " << prms.n << " z1 = " << prms.z1<<endl
+				<< " z2 = " << prms.z2 << " z3 = " << prms.z3 << " z4 = " << prms.z4 << " sf1 = " << prms.sf1 << " sf2 = " << prms.sf2 << " sf3 = " << prms.sf3 << " sf4 = " << prms.sf4;
+			cout << "||-----------------------||" << endl;
 		}
 
 		iter++;//increase iteration
 	}
+
 	return results;
 }
