@@ -30,7 +30,6 @@
 using namespace std;
 typedef long unsigned int luint;
 
-
 vector<int> txtReader(string);
 
 

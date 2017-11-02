@@ -47,7 +47,7 @@ int main()
 
 	initParams.z = 1003;
 	initParams.sf = 8097;
-	vector<tuple<int, int, int, int>> modRu = mPmod(initParams);
+	//vector<tuple<int, int, int, int>> modRu = mPmod(initParams,mrand);
 //	cin.get();
 
 	vector<double> sdProps = { 0.01, 0.01, 0.1, 1, 1, 1, 1, 1, 0.1, 3, 3, 3, 3, 3 };
@@ -66,7 +66,7 @@ int main()
 		maxSdProps,
 		200,//iterations
 		50,//particles
-		20,//nburn
+		30,//nburn
 		1,//monitoring
 		150,//start adapt
 		20,//tell

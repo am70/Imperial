@@ -113,9 +113,8 @@ tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData) {
 	vector<int> rFc;
 	vector<tuple<int, int, int, int>> modRun;
 	double weight;
-
 	modRun = mPmod(wp);
-	double sim = 100 + get<3>(modRun.back());
+	double sim = 50 + get<3>(modRun.back());
 	weight = betaBinom(obsData, sim, 0.01, wp.w); //add weights to tuple
 	tuple<int, int, int, int, double> res = {get<0>(modRun.back()),get<1>(modRun.back()),get<2>(modRun.back()),get<3>(modRun.back()), weight};
 	return res;
@@ -192,26 +191,25 @@ double pFilt(int n,
 		//run model in step and update particles - should be in parallel
 		lltemp.clear();
 		int j;
+		//for (auto j = begin(particles); j != end(particles); ++j) {
 
-#pragma omp parallel
-#pragma omp for
+//#pragma omp parallel
+//#pragma omp parallel for
 		for (j = 1; j<size(particles); j++) {
 			wp.E0 = get<0>(particles[loc]);
 			wp.L0 = get<1>(particles[loc]);
 			wp.P0 = get<2>(particles[loc]);
 			wp.M0 = get<3>(particles[loc]);
-			int obsDatPoint = get<1>(obsData[loc]);
+			int obsDatPoint = get<1>(obsData[i]);
 			particles.at(loc) = modStepFnc(wp, obsDatPoint);
 			lltemp.emplace_back(get<4>(particles.at(loc)));
 			loc++;
 		}
-
 		//re-sample particles
 		particles = rSamp(particles);
-
 		//take mean of likelihoods from particles
 		double llMean = (boost::accumulate(lltemp, 0.0))/ lltemp.size();
-		cout << llMean << endl;
+
 		ll.emplace_back(llMean);
 
 	}
