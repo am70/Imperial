@@ -26,6 +26,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
+#include<boost/math/distributions/normal.hpp>
+
+
 #endif
 using namespace std;
 typedef long unsigned int luint;
@@ -35,8 +38,8 @@ vector<int> txtReader(string);
 
 //model parameters
 struct modParms {
-	double dE = 0.150; double dL=0.269; double dP=1.563; double uoE=0.034; double uoL=0.035; double uP=0.25; double uM=0.096; double Y=13.25; int S=3;
-	int tr = 7; double sf1 = 20; double sf2 = 20; double sf3 = 20; double sf4 = 20; double dt = 0.25; double n = 50; double Emax = 93.6; 
+	double dE = 0.150; double dL = 0.269; double dP = 1.563; double uoE = 0.034; double uoL = 0.035; double uP = 0.25; double uM = 0.096; double Y = 13.25; int S = 3;
+	int tr = 7; double sf1 = 20; double sf2 = 20; double sf3 = 20; double sf4 = 20; double dt = 0.25; double n = 50; double Emax = 93.6;
 	int E0 = 177; int L0 = 8; int P0 = 1; int M0 = 7; double z1 = 5000; double z2 = 5000; double z3 = 5000; double z4 = 5000; double B = 21.19;
 	int startTime = 0; int endTime = 2000; vector<int> rF; double w = 0.01; double sf = 20; double z = 20; int fxdPrm;
 };
@@ -49,32 +52,15 @@ struct obsDatX {
 	vector <tuple<int, int>> garki220;
 };
 
-//data structure for particles to be weighted
-struct wpStruct {
-	int E0;
-	int L0;
-	int P0;
-	int M0;
-	int startTime;
-	int endTime;
-	double uoE;
-	double uoL;
-	double uP;
-	double Y;
-	double sf;
-	vector<int> rFclust;
-	double n;
-	double fxdPrm;
-	double w;
-};
 
 //vector<int> txtReader(string file);
-int binom(int n, double p);
-luint rpois(luint lambda);
+int binom(int n, double p, boost::mt19937 rd);
+luint rpois(luint lambda, boost::mt19937 rd);
 double lbeta(double a, double b);
 double betaBinom(double k, double n, double p, double w);
-vector<tuple<int, int, int, int>> mPmod(modParms);
-tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData);
+vector<tuple<int, int, int, int>> mPmod(modParms, boost::mt19937 rd);
+tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt19937 rd);
+double llFunc(int particles, modParms prms, obsDatX obsDat, int fixedParam);
 
 //pfilter
 double pFilt(int n,

@@ -1,9 +1,7 @@
 #include "lModH.h"
-#include<iostream>
 
+vector<tuple<int, int, int, int>> mPmod(modParms parmsx, boost::mt19937 rd) {
 
-
-vector<tuple<int,int,int,int>> mPmod(modParms parmsx) {
 	int t = parmsx.startTime;
 	int time = parmsx.endTime;
 	int Be = 0;
@@ -32,15 +30,12 @@ vector<tuple<int,int,int,int>> mPmod(modParms parmsx) {
 	double uM = parmsx.uM;
 	double uE;
 	double uL;
+	int mRan;
 
 	vector<int> rF = parmsx.rF;
-
-
 	vector<tuple<int, int, int, int>> r;
 
 	while (t < time) {
-		//cout << "M = " << M << endl;
-
 
 		if (t <= trx) { K = (1 + (sf*((1 / trx)))); }
 		else {
@@ -51,32 +46,43 @@ vector<tuple<int,int,int,int>> mPmod(modParms parmsx) {
 		uE = uoE*exp((E + L) / (K));
 		uL = uoL*exp((Y*(E + L) / (K)));
 
-	//	cout << (E) << " " << (L) << " " << (P) << " " << (M) << " " << (Be) << " " << (Bl) << " " << (Bp) << " " << (sf) << " " << (K) << endl;
-		
-		
-		Be = binom(E, (dE + uE)*dt);
-		 Bl = binom(L, (dL + uL)*dt); 
+		boost::binomial_distribution<int> distributionBe(E, (dE + uE)*dt);
+		Be = distributionBe(rd);
 
-		// cout << (E) << " " << (dE + uE)*dt << " " << (Be) << endl;
+		boost::binomial_distribution<int> distributionBl(L, (dL + uL)*dt);
+		Bl = distributionBl(rd);
 
+		boost::binomial_distribution<int> distributionBp(P, (dP + uP)*dt);
+		Bp = distributionBp(rd);
 
-		Bp = binom(P, (dP + uP)*dt);
-		Bm = binom(M, uM*dt);
-		nt = binom(M, (dt / S));
-		E = E - Be + rpois(n*nt);
+		boost::binomial_distribution<int> distributionBm(M, uM*dt);
+		Bm = distributionBm(rd);
 
-		L = L - Bl + binom(Be, (dE / (uE + dE)));
+		boost::binomial_distribution<int> distributionNt(M, (dt / S));
+		nt = distributionNt(rd);
 
-		P = P - Bp + binom(Bl, (dL / (uL + dL)));
+		if (n*nt > 0) {
+			boost::poisson_distribution<long unsigned int> distributionRp(n*nt);
+			E = E - Be + distributionRp(rd);
+		}
+		else E = E - Be + 0;
 
-		if (M + (0.5*(binom(Bp, (dP / (uP + dP))))) - Bm > 0)
-			M = M + (0.5*(binom(Bp, (dP / (uP + dP))))) - Bm;
+		boost::binomial_distribution<int> distributionL(Be, (dE / (uE + dE)));
+		L = L - Bl + distributionL(rd);
+
+		boost::binomial_distribution<int> distributionP(Bl, (dL / (uL + dL)));
+		P = P - Bp + distributionP(rd);
+
+		boost::binomial_distribution<int> distributionM(Bp, (dP / (uP + dP)));
+		mRan = distributionM(rd);
+
+		if (M + mRan - Bm > 0)
+			M = M + mRan - Bm;
 		else M = 1;
 
 		t++;
-		r.emplace_back(make_tuple(E,L,P,M));
+		r.emplace_back(make_tuple(E, L, P, M));
 	}
 	return r;
-
 }
 

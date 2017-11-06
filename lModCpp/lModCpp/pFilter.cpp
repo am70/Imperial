@@ -1,8 +1,6 @@
 #include "lModH.h"
 boost::mt19937 mrand(std::time(0));
 
-modParms tParms;//parameter struct to store new param values
-
 
 // initial state sampler, samples random initial states # need to fit initial E and use this to inform L, P & M
 // @param N number of particles for particle filter
@@ -29,7 +27,7 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 	double B = iParms.B;
 	double K;
 	double uE;
-	double uL; 
+	double uL;
 	int E;
 	int L;
 	int P;
@@ -37,8 +35,6 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 	double a;
 	//int t = iParms.startTime;
 	double trx = iParms.tr / iParms.dt;
-
-
 
 	int rFsum = std::accumulate(rF.begin() + (time - trx), rF.begin() + time, 0);
 	K = (1 + (sf*((1 / trx)*rFsum)));
@@ -48,14 +44,13 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 	uE = UoE*exp(z / K);
 	uL = UoL*exp(y*z / K);
 
-
 	E = ((B*a)*z) / (dE + (B*a) + uE);
 	L = (dE*z) / (dE + dL + uL);
 	M = (1 / 2 * dL*dP*L) / uM*(dP + uP);
 	P = 2 * uM*M / dP;
-	
+
 	vector<tuple<int, int, int, int, double>> states = { { E, L, P, M ,0.0} };
-	states.resize(N, { E, L, P, M, 0.0 });
+	states.resize(N, { E, L, P, M, 0.0 });//return initial states, repeated to number of particles
 	return states;
 }
 
@@ -64,9 +59,9 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 //@param n number of trials
 //@param p probability of success
 //@return number of successes
-int binom(int n, double p) {
+int binom(int n, double p, boost::mt19937 rd) {
 	boost::binomial_distribution<int> distribution(n, p);
-	int res = distribution(mrand);
+	int res = distribution(rd);
 	return  res;
 }
 
@@ -74,11 +69,10 @@ int binom(int n, double p) {
 //random poisson draw
 //@param lambda
 //@return random poisson draw
-luint rpois(luint lambda)
-{
+luint rpois(luint lambda, boost::mt19937 rd){
 	if (lambda > 0) {
-		 boost::poisson_distribution<luint> d(lambda);
-		return d(mrand);
+		boost::poisson_distribution<luint> d(lambda);
+		return d(rd);
 	}
 	else return (0);
 }
@@ -88,7 +82,7 @@ luint rpois(luint lambda)
 //@param b
 //@return log beta
 double lbeta(double a, double b) {
-	return double(lgamma(a)+lgamma(b)) - lgamma(a + b);
+	return double(lgamma(a) + lgamma(b)) - lgamma(a + b);
 }
 
 // Beta binomial likelihood function
@@ -109,28 +103,28 @@ double betaBinom(double k, double n, double p, double w) {
 //@param obsData, observed data for calculating likelihood value
 //@return tuple containing state ints for E, L, P, M and likelihood (non-log), at the end of 
 //a model run with designated start and end times
-tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData) {
+tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt19937 rd) {
 	vector<int> rFc;
 	vector<tuple<int, int, int, int>> modRun;
 	double weight;
-	modRun = mPmod(wp);
+	modRun = mPmod(wp, rd);
 	double sim = 50 + get<3>(modRun.back());
 	weight = betaBinom(obsData, sim, 0.01, wp.w); //add weights to tuple
-	tuple<int, int, int, int, double> res = {get<0>(modRun.back()),get<1>(modRun.back()),get<2>(modRun.back()),get<3>(modRun.back()), weight};
+	tuple<int, int, int, int, double> res = { get<0>(modRun.back()),get<1>(modRun.back()),get<2>(modRun.back()),get<3>(modRun.back()), weight };
 	return res;
 }
 
-//rand sample function
-auto rSamp(std::vector<std::tuple<int, int, int, int, double>>& samp)
-{
-	std::vector<std::tuple<int,int,int,int, double>> temp;           
-	std::vector<double> v;                                  // weights
+//rand particle sample function
+//@param samp vector of tuples containing particles E,L,M,P
+//@return resamped particles
+auto rSamp(vector<std::tuple<int, int, int, int, double>>& samp){
+	std::vector<std::tuple<int, int, int, int, double>> temp;
+	std::vector<double> w;// weights
 	for (auto&& i : samp)
-		v.push_back(exp(std::get<4>(i)));                        // get exponential weights
-	std::discrete_distribution<int> dd{ v.begin(), v.end() }; // create distribution
-	//static std::random_device rd;
+		w.push_back(exp(std::get<4>(i))); // get exponential weights
+	std::discrete_distribution<int> dd{ w.begin(), w.end() }; // create distribution
 	for (size_t i{}; i < samp.size(); ++i)
-		temp.push_back(samp[dd(mrand)]);                        // build return vector by selecting according to weights
+		temp.push_back(samp[dd(mrand)]); // build return vector by selecting according to weights
 	return temp;
 }
 
@@ -150,28 +144,19 @@ double pFilt(int n,
 	bool resM,
 	int fxdParams) {
 
-
 	vector<int> times;
 	vector<double> ll; //vector of log likelihood values
-	vector<double> lltemp;
+	double lltemp;
 	vector<tuple<int, int, int, int, double>>  particles;
 	particles.reserve(n);
 	for (auto i = begin(obsData); i != end(obsData); ++i) {
 		//calculate discreet time steps for observed data
-		times.emplace_back((get<0>(*i))/prms.dt);
+		times.emplace_back((get<0>(*i)) / prms.dt);
 	};
+	//get initial state of particles
+	particles = iState(n, times.front(), prms, fxdParams);
 
-
-
-	particles = iState(n,times.front(),prms,fxdParams);
-	
-	for (auto i = 0; i != times.size()- 1; ++i) {
-
-	
-
-		int loc = 0;
-		int run = 0;
-
+	for (auto i = 0; i != times.size() - 1; ++i) {
 		modParms wp;
 		wp.uoE = prms.uoE;
 		wp.uoL = prms.uoL;
@@ -184,36 +169,27 @@ double pFilt(int n,
 		wp.rF = prms.rF;
 		wp.fxdPrm = fxdParams;
 		wp.startTime = times.at(i);
-		wp.endTime = times.at(i+1);
-		
+		wp.endTime = times.at(i + 1);
 
-
-		//run model in step and update particles - should be in parallel
-		lltemp.clear();
-		int j;
-		//for (auto j = begin(particles); j != end(particles); ++j) {
-
-//#pragma omp parallel
-//#pragma omp parallel for
-		for (j = 1; j<size(particles); j++) {
-			wp.E0 = get<0>(particles[loc]);
-			wp.L0 = get<1>(particles[loc]);
-			wp.P0 = get<2>(particles[loc]);
-			wp.M0 = get<3>(particles[loc]);
+		//run model in step and update particles in parallel
+		lltemp = 0;
+#pragma omp parallel for schedule(static) reduction(+:lltemp)//reduction needed due to problem with thread racing
+		for (int j = 1; j < size(particles); j++) {
+			wp.E0 = get<0>(particles[j]);
+			wp.L0 = get<1>(particles[j]);
+			wp.P0 = get<2>(particles[j]);
+			wp.M0 = get<3>(particles[j]);
 			int obsDatPoint = get<1>(obsData[i]);
-			particles.at(loc) = modStepFnc(wp, obsDatPoint);
-			lltemp.emplace_back(get<4>(particles.at(loc)));
-			loc++;
+			particles.at(j) = modStepFnc(wp, obsDatPoint, mrand);
+			lltemp = lltemp + get<4>(particles.at(j));
 		}
 		//re-sample particles
 		particles = rSamp(particles);
 		//take mean of likelihoods from particles
-		double llMean = (boost::accumulate(lltemp, 0.0))/ lltemp.size();
+		double llMean = lltemp / particles.size();
 
 		ll.emplace_back(llMean);
-
 	}
-	
 
-return (boost::accumulate(ll, 0.0));
+	return (boost::accumulate(ll, 0.0));
 }
