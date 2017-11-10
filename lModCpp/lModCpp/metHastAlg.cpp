@@ -4,8 +4,8 @@ boost::mt19937 rng(std::time(0));
 
 
 
-vector<int> rainfall1 = txtReader("C:\\Imperial\\rf1.txt");
-vector<int> rainfall2 = txtReader("C:\\Imperial\\rf2.txt");
+vector<int> rainfall1 = txtReader("Q:\\Imperial\\rf1.txt");
+vector<int> rainfall2 = txtReader("Q:\\Imperial\\rf2.txt");
 
 
 
@@ -89,17 +89,18 @@ double llFunc(int particles, modParms prms, obsDatX obsDat,int fixedParam) {
 			prms.rF = rainfall1;
 		}
 		else if (j == 2) {
-			oDat = obsDat.garki220;
-			prms.sf = prms.sf1;
-			prms.z = prms.z1;
-			prms.rF = rainfall1;
+			oDat = obsDat.garki219;
+			prms.sf = prms.sf3;
+			prms.z = prms.z3;
+			prms.rF = rainfall2;
 		}
 		else {
 			oDat = obsDat.garki220;
-			prms.sf = prms.sf2;
-			prms.z = prms.z2;
-			prms.rF = rainfall1;
+			prms.sf = prms.sf4;
+			prms.z = prms.z4;
+			prms.rF = rainfall2;
 		}
+
 		//run particle filter NEED TO SUM PFILT RESULTS
 		pfiltRes.emplace_back(pFilt(particles,
 			oDat,//garki data
@@ -126,42 +127,40 @@ double propPrmFunc(double sd, double parm) {
 //log prior function
 double lprior(modParms prms) {
 	double res = 0;
-	boost::math::normal_distribution<double> d1(0.035, 0.015);//uoE
+	boost::math::normal_distribution<double> d1(0.035, 0.009);//uoE
 	res = res + (log(pdf(d1, prms.uoE)));
 	boost::math::uniform_distribution<double> u1(0.001, 0.99);//uoE unif
 	res = res + (log(pdf(u1, prms.uoE)));
 
-	boost::math::normal_distribution<double> d2(0.035, 0.015);//uoL
+	boost::math::normal_distribution<double> d2(0.035, 0.009);//uoL
 	res = res + (log(pdf(d2, prms.uoL)));
 	boost::math::uniform_distribution<double> u2(0.001, 0.99);//uoL unif
 	res = res + (log(pdf(u2, prms.uoL)));
 
-	boost::math::normal_distribution<double> d3(0.25, 0.11);//uP
+	boost::math::normal_distribution<double> d3(0.25, 0.07);//uP
 	res = res + (log(pdf(d3, prms.uP)));
 	boost::math::uniform_distribution<double> u3(0.001, 0.99);//uP unif
 	res = res + (log(pdf(u3, prms.uP)));
 
-	boost::math::normal_distribution<double> d4(13.06, 4.53);//Y
+	boost::math::normal_distribution<double> d4(13.06, 8);//Y
 	res = res + (log(pdf(d4, prms.Y)));
-	boost::math::uniform_distribution<double> u4(1, 1e+5);//Y unif
-	res = res + (log(pdf(u4, prms.Y)));
 
-	boost::math::uniform_distribution<double> u5(1e-06, 1);//w unif
+	boost::math::uniform_distribution<double> u5(0.0001, 1);//w unif
 	res = res + (log(pdf(u5, prms.w)));
-
-	boost::math::uniform_distribution<double> u6(0.01, 100000);//z1:4 unif
+	
+	boost::math::uniform_distribution<double> u6(0.01, 1e+10);//z1:4 unif
 	res = res + (log(pdf(u6, prms.z1)));
 	res = res + (log(pdf(u6, prms.z2)));
 	res = res + (log(pdf(u6, prms.z3)));
 	res = res + (log(pdf(u6, prms.z4)));
 
-	boost::math::uniform_distribution<double> u7(0.01, 100000);//sf1:4 unif
+	boost::math::uniform_distribution<double> u7(0.01, 1e+20);//sf1:4 unif
 	res = res + (log(pdf(u7, prms.sf1)));
 	res = res + (log(pdf(u7, prms.sf2)));
 	res = res + (log(pdf(u7, prms.sf3)));
 	res = res + (log(pdf(u7, prms.sf4)));
 
-	boost::math::uniform_distribution<double> u8(1, 93.6);//n unif
+	boost::math::uniform_distribution<double> u8(10, 93.6);//n unif
 	res = res + (log(pdf(u8, prms.n)));
 
 	return(res / 18);
@@ -265,7 +264,6 @@ pMMHres pMMHSampler(
 
 
 		parmIter[parmNum]++;
-		iter++;//increase iteration
 	}
 
 	return results;

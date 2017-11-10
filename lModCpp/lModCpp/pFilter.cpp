@@ -1,5 +1,6 @@
 #include "lModH.h"
 boost::mt19937 mrand(std::time(0));
+double inf = std::numeric_limits<double>::infinity();
 
 
 // initial state sampler, samples random initial states # need to fit initial E and use this to inform L, P & M
@@ -23,7 +24,7 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 	vector<int> rF = iParms.rF;
 	double uM = iParms.uM;
 	double uP = iParms.uP;
-	double tr = iParms.tr / iParms.dt;
+	double tr = fxdParm / iParms.dt;
 	double B = iParms.B;
 	double K;
 	double uE;
@@ -46,7 +47,7 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 
 	E = ((B*a)*z) / (dE + (B*a) + uE);
 	L = (dE*z) / (dE + dL + uL);
-	M = (1 / 2 * dL*dP*L) / uM*(dP + uP);
+	M = (0.5 * dL*dP*L) / uM*(dP + uP);
 	P = 2 * uM*M / dP;
 
 	vector<tuple<int, int, int, int, double>> states = { { E, L, P, M ,0.0} };
@@ -108,6 +109,7 @@ tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt
 	vector<tuple<int, int, int, int>> modRun;
 	double weight;
 	modRun = mPmod(wp, rd);
+	//cout << "sim = " << get<3>(modRun.back()) << " obs = " << obsData << " w = "<< wp.w<<endl;
 	double sim = 50 + get<3>(modRun.back());
 	weight = betaBinom(obsData, sim, 0.01, wp.w); //add weights to tuple
 	tuple<int, int, int, int, double> res = { get<0>(modRun.back()),get<1>(modRun.back()),get<2>(modRun.back()),get<3>(modRun.back()), weight };
@@ -121,7 +123,7 @@ auto rSamp(vector<std::tuple<int, int, int, int, double>>& samp){
 	std::vector<std::tuple<int, int, int, int, double>> temp;
 	std::vector<double> w;// weights
 	for (auto&& i : samp)
-		w.push_back(exp(std::get<4>(i))); // get exponential weights
+		w.push_back(std::get<4>(i)); // get weights
 	std::discrete_distribution<int> dd{ w.begin(), w.end() }; // create distribution
 	for (size_t i{}; i < samp.size(); ++i)
 		temp.push_back(samp[dd(mrand)]); // build return vector by selecting according to weights
@@ -143,7 +145,6 @@ double pFilt(int n,
 	modParms prms,
 	bool resM,
 	int fxdParams) {
-
 	vector<int> times;
 	vector<double> ll; //vector of log likelihood values
 	double lltemp;
@@ -154,7 +155,11 @@ double pFilt(int n,
 		times.emplace_back((get<0>(*i)) / prms.dt);
 	};
 	//get initial state of particles
+	modParms wp;
 	particles = iState(n, times.front(), prms, fxdParams);
+	if (get<1>(obsData[0]) < get<3>(particles[0])) {
+		ll.emplace_back(betaBinom(get<1>(obsData[0]), get<3>(particles[0]), 0.01, prms.w));
+	} else ll.emplace_back(-inf);
 
 	for (auto i = 0; i != times.size() - 1; ++i) {
 		modParms wp;
@@ -173,23 +178,25 @@ double pFilt(int n,
 
 		//run model in step and update particles in parallel
 		lltemp = 0;
-#pragma omp parallel for schedule(static) reduction(+:lltemp)//reduction needed due to problem with thread racing
-		for (int j = 1; j < size(particles); j++) {
+#pragma omp parallel for schedule(static) reduction(+:lltemp) //reduction needed due to problem with thread racing
+		for (int j = 0; j < size(particles); j++) {
+			boost::mt19937 mrandThread(std::random_device{}());
 			wp.E0 = get<0>(particles[j]);
 			wp.L0 = get<1>(particles[j]);
 			wp.P0 = get<2>(particles[j]);
 			wp.M0 = get<3>(particles[j]);
 			int obsDatPoint = get<1>(obsData[i]);
-			particles.at(j) = modStepFnc(wp, obsDatPoint, mrand);
+			particles.at(j) = modStepFnc(wp, obsDatPoint, mrandThread);
 			lltemp = lltemp + get<4>(particles.at(j));
+			//if (std::isnan(get<4>(particles.at(j))) == 0)  get<4>(particles.at(j)) = 0;
 		}
+
 		//re-sample particles
 		particles = rSamp(particles);
 		//take mean of likelihoods from particles
 		double llMean = lltemp / particles.size();
 
-		ll.emplace_back(llMean);
+		ll.emplace_back(llMean);//add start val for frst obs point
 	}
-
 	return (boost::accumulate(ll, 0.0));
 }

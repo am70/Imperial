@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include <windows.h>
 #include<boost/math/distributions/normal.hpp>
-
+#include<thread>
 
 #endif
 using namespace std;
