@@ -13,7 +13,7 @@ vector<tuple<int, int, int, int>> mPmod(modParms parmsx, boost::mt19937 rd) {
 	int L = parmsx.L0;
 	int P = parmsx.P0;
 	int M = parmsx.M0;
-	int K = 100;
+	double K = 100;
 	double trx = parmsx.tr / parmsx.dt;
 	double dt = parmsx.dt;
 	int rFsum;
@@ -78,7 +78,7 @@ vector<tuple<int, int, int, int>> mPmod(modParms parmsx, boost::mt19937 rd) {
 
 		if (M + mRan - Bm > 0)
 			M = M + mRan - Bm;
-		else M = 1;
+		else M = 0;
 
 		t++;
 		r.emplace_back(make_tuple(E, L, P, M));
