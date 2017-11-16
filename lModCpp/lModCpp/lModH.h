@@ -39,8 +39,8 @@ vector<int> txtReader(string);
 //model parameters
 struct modParms {
 	double dE = 0.150; double dL = 0.269; double dP = 1.563; double uoE = 0.034; double uoL = 0.035; double uP = 0.25; double uM = 0.096; double Y = 13.25; int S = 3;
-	int tr = 7; double sf1 = 20; double sf2 = 20; double sf3 = 20; double sf4 = 20; double sf5 = 20; double sf6 = 20; double dt = 0.25; double n = 50; double Emax = 93.6;
-	int E0 = 177; int L0 = 8; int P0 = 1; int M0 = 7; double z1 = 5000; double z2 = 5000; double z3 = 5000; double z4 = 5000; double z5 = 5000; double z6 = 5000; double B = 21.19;
+	int tr = 7; double sf1 = 20; double sf2 = 20; double sf3 = 20; double sf4 = 20; double dt = 0.25; double n = 50; double Emax = 93.6;
+	int E0 = 177; int L0 = 8; int P0 = 1; int M0 = 7; double z1 = 5000; double z2 = 5000; double z3 = 5000; double z4 = 5000; double B = 21.19;
 	int startTime = 0; int endTime = 2000; vector<int> rF; double w = 0.01; double sf = 20; double z = 20; int fxdPrm;
 };
 
@@ -89,14 +89,12 @@ struct pMMHres {
 	vector<double> z2;
 	vector<double> z3;
 	vector<double> z4;
-	vector<double> z5;
-	vector<double> z6;
+
 	vector<double> sf1;
 	vector<double> sf2;
 	vector<double> sf3;
 	vector<double> sf4;
-	vector<double> sf5;
-	vector<double> sf6;
+
 	vector<double> ll;
 };
 

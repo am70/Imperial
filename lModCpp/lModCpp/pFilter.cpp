@@ -11,7 +11,7 @@ double inf = std::numeric_limits<double>::infinity();
 // @return conditions for E, L, P and M, double is empty for addition of weight later. 
 vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParms, int fxdParm) {
 
-	int z = iParms.z;//fitted(E - L)
+	double z = iParms.z;//fitted(E - L)
 	double dE = iParms.dE;
 	double dL = iParms.dL;
 	double dP = iParms.dP;
@@ -29,17 +29,16 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 	double K;
 	double uE;
 	double uL;
-	int E;
-	int L;
-	int P;
-	int M;
+	double E;
+	double L;
+	double P;
+	double M;
 	double a;
 	//int t = iParms.startTime;
 	double trx = iParms.tr / iParms.dt;
 
-	int rFsum = std::accumulate(rF.begin() + (time - trx), rF.begin() + time, 0);
+	int rFsum = std::accumulate(rF.begin() + (time - trx), rF.begin() + time-1, 0);
 	K = (1 + (sf*((1 / trx)*rFsum)));
-
 	a = (0.5 * dL*dP) / (uM*(dP + uP));
 
 	uE = UoE*exp(z / K);
@@ -50,7 +49,7 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 	M = (0.5 * dL*dP*L) / uM*(dP + uP);
 	P = 2 * uM*M / dP;
 
-	vector<tuple<int, int, int, int, double>> states = { { E, L, P, M ,0.0} };
+	vector<tuple<int, int, int, int, double>> states = { { rint(E), rint(L), rint(P), rint(M) ,0.0} };
 	states.resize(N, { E, L, P, M, 0.0 });//return initial states, repeated to number of particles
 	return states;
 }
@@ -93,9 +92,12 @@ double lbeta(double a, double b) {
 // @param w overdisperion parameter
 // @return log likelihood
 double betaBinom(double k, double n, double p, double w) {
-	double a = p * ((1 / w) - 1);
-	double b = (1 - p) * ((1 / w) - 1);
-	return lbeta(k + a, n - k + b) - lbeta(a, b) + log(boost::math::binomial_coefficient<double>(n, k));
+	 if (n > k) {
+		double a = p * ((1 / w) - 1);
+		double b = (1 - p) * ((1 / w) - 1);
+		return lbeta(k + a, n - k + b) - lbeta(a, b) + log(boost::math::binomial_coefficient<double>(n, k));
+	} else
+		 return -inf;
 }
 
 
@@ -109,8 +111,7 @@ tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt
 	modRun.reserve(wp.endTime - wp.startTime);
 	double weight;
 	modRun = mPmod(wp, rd);
-	//cout << "sim = " << get<3>(modRun.back()) << " obs = " << obsData << " w = "<< wp.w<<endl;
-	double sim = 50 + get<3>(modRun.back());
+	double sim = 10 + get<3>(modRun.back());
 	weight = betaBinom(obsData, sim, 0.01, wp.w); //add weights to tuple
 	tuple<int, int, int, int, double> res = { get<0>(modRun.back()),get<1>(modRun.back()),get<2>(modRun.back()),get<3>(modRun.back()), weight };
 	return res;
@@ -137,7 +138,6 @@ vector<tuple<int, int, int, int, double>> normalise(vector<tuple<int, int, int, 
 	const auto pComp = [](const auto& lhs, const auto& rhs)
 	{ return get<4>(lhs) < get<4>(rhs); };
 	const double maxVal = get<4>(*std::max_element(particles.begin(), particles.end(), pComp));
-
 	int sum = 0;
 	for (int i = 0; i != boost::size(particles); i++) {
 		get<4>(particles[i]) = (get<4>(particles[i])) - maxVal;
@@ -177,10 +177,9 @@ double pFilt(int n,
 
 	//get initial state of particles
 	particles = iState(n, times.front(), prms, fxdParams);
-	if (get<1>(obsData[0]) < get<3>(particles[0])) {
 		ll = (betaBinom(get<1>(obsData[0]), get<3>(particles[0]), 0.01, prms.w));
-	} else ll = (-inf);
-	for (auto i = 0; i != times.size() - 1; ++i) {
+
+		for (auto i = 0; i != times.size() - 1; ++i) {
 		modParms wp;
 		wp.uoE = prms.uoE;
 		wp.uoL = prms.uoL;
@@ -194,6 +193,8 @@ double pFilt(int n,
 		wp.fxdPrm = fxdParams;
 		wp.startTime = times.at(i);
 		wp.endTime = times.at(i + 1);
+
+
 		//run model in step and update particles in parallel
 		double lltemp = 0;
 #pragma omp parallel for schedule(static) reduction(+:lltemp) //reduction needed due to problem with thread racing
