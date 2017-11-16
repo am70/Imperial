@@ -92,6 +92,7 @@ double lbeta(double a, double b) {
 // @param w overdisperion parameter
 // @return log likelihood
 double betaBinom(double k, double n, double p, double w) {
+
 	 if (n > k) {
 		double a = p * ((1 / w) - 1);
 		double b = (1 - p) * ((1 / w) - 1);
@@ -111,7 +112,7 @@ tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt
 	modRun.reserve(wp.endTime - wp.startTime);
 	double weight;
 	modRun = mPmod(wp, rd);
-	double sim = 10 + get<3>(modRun.back());
+	double sim = 50 + get<3>(modRun.back());
 	weight = betaBinom(obsData, sim, 0.01, wp.w); //add weights to tuple
 	tuple<int, int, int, int, double> res = { get<0>(modRun.back()),get<1>(modRun.back()),get<2>(modRun.back()),get<3>(modRun.back()), weight };
 	return res;
