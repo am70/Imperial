@@ -50,8 +50,7 @@ struct obsDatX {
 	vector <tuple<int, int>> garki104;
 	vector <tuple<int, int>> garki219;
 	vector <tuple<int, int>> garki220;
-	vector <tuple<int, int>> garki781;
-	vector <tuple<int, int>> garki783;
+
 };
 
 
@@ -89,14 +88,12 @@ struct pMMHres {
 	vector<double> z2;
 	vector<double> z3;
 	vector<double> z4;
-	vector<double> z5;
-	vector<double> z6;
+
 	vector<double> sf1;
 	vector<double> sf2;
 	vector<double> sf3;
 	vector<double> sf4;
-	vector<double> sf5;
-	vector<double> sf6;
+
 	vector<double> ll;
 };
 

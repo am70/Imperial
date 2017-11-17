@@ -24,9 +24,6 @@ int main()
 	garkiDat.garki219 = { { 346,5 },{ 361,8 },{ 375,18 },{ 389,8 },{ 403,7 },{ 417,9 },{ 433,35 },{ 447,18 },{ 461,2 },{ 475,0 },{ 489,0 },{ 503,0 },{ 517,0 },{ 531,0 },{ 545,0 } };
 	garkiDat.garki220 = { { 346,1 },{ 361,3 },{ 375,26 },{ 389,27 },{ 403,6 },{ 417,14 },{ 433,20 },{ 447,17 },{ 461,3 },{ 475,0 },{ 489,0 },{ 503,0 },{ 517,0 },{ 531,0 },{ 545,0 } };
 
-	garkiDat.garki781 = { { 1109,1 },{ 1123,0 },{ 1137,0 },{ 1152,0 },{ 1165,17 },{ 1179,7 },{ 1195,4 },{ 1206,2 },{ 1221,0 },{ 1235,5 },{ 1249,0 },{ 1263,1 },{ 1279,0 } };
-	garkiDat.garki783 = { { 1109,0 },{ 1123,0 },{ 1137,3 },{ 1152,39 },{ 1165,34 },{ 1179,8 },{ 1195,2 },{ 1206,6 },{ 1221,3 },{ 1235,3 },{ 1249,0 },{ 1263,2 },{ 1279,0 } };
-
 
 
 
@@ -40,36 +37,34 @@ int main()
 	initParams.z2 = 3;
 	initParams.z3 = 3;
 	initParams.z4 = 3;
-	initParams.z5 = 3;
-	initParams.z6 = 3;
+
 	initParams.w = 0.01;
 	initParams.sf1 = 50000;
 	initParams.sf2 = 40000;
 	initParams.sf3 = 40000;
 	initParams.sf4 = 50000;
-	initParams.sf5 = 50000;
-	initParams.sf6 = 50000;
+
 	initParams.n = 10;
 	initParams.rF = txtReader("Q:\\Imperial\\rf2.txt");
 
-	vector<double> sdProps = { 0.01, 0.01, 0.1, 1, 0.001, 1, 1, 1,1,1,1,1, 10, 10, 10, 10, 10, 10 };
-	vector<double> maxSdProps = { 0.1, 0.1, 0.1, 20, 0.1, 60, 1, 1, 1, 1,1,1, 1e+5, 1e+5, 1e+5, 1e+5,1e+5, 1e+5 };
-	vector<double> acptRs = { 0.3,0.3,0.3,0.3,0.3,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.6,0.6,0.6,0.6,0.6,0.6 };
+	vector<double> sdProps = { 0.01, 0.01, 0.1, 1, 0.001, 1, 1, 1,1,1, 10, 10, 10, 10 };
+	vector<double> maxSdProps = { 0.1, 0.1, 0.1, 20, 0.1, 60, 1, 1, 1, 1, 1e+5, 1e+5, 1e+5, 1e+5 };
+	vector<double> acptRs = { 0.3,0.3,0.3,0.3,0.3,0.5,0.5,0.5,0.5,0.5,0.6,0.6,0.6,0.6 };
 	vector<tuple<string, double>> fitPrms = { { "uoE", initParams.uoE },{ "uoL", initParams.uoL },{ "uP", initParams.uP },{ "Y", initParams.Y },
-	{ "w", initParams.w },{ "n", initParams.n },{ "z1", initParams.z1 },{ "z2", initParams.z2 },{ "z3", initParams.z3 },{ "z4", initParams.z4 },{ "z5", initParams.z4 },{ "z6", initParams.z4 },
-	{ "sf1", initParams.sf1 } ,{ "sf2", initParams.sf2 } ,{ "sf3", initParams.sf3 } ,{ "sf4", initParams.sf4 } ,{ "sf5", initParams.sf5 }  ,{ "sf6", initParams.sf6 } };
+	{ "w", initParams.w },{ "n", initParams.n },{ "z1", initParams.z1 },{ "z2", initParams.z2 },{ "z3", initParams.z3 },{ "z4", initParams.z4 },
+	{ "sf1", initParams.sf1 } ,{ "sf2", initParams.sf2 } ,{ "sf3", initParams.sf3 } ,{ "sf4", initParams.sf4 }  };
 
 
 
 	pMMHres results = pMMHSampler(
 		initParams,//initial parameters
-		7,//fixed parameter for days of rainfall
+		4,//fixed parameter for days of rainfall
 		sdProps,//initial sf for param proposals
 		acptRs,//acceptance ratios
 		fitPrms,//tuple of initial parm values plus names - needed as no reflection - maybe can be coded better
 		maxSdProps,//max sd for each parameter proposal in tuner
 		50000,//iterations
-		40,//particles
+		75,//particles
 		5000,//nburn 
 		1,//monitoring
 		500,//start adapt
@@ -84,8 +79,8 @@ int main()
 	myfile.open("Q:\\Imperial\\50kTest.txt");
 	for (auto iter = 0; iter != size(results.ll); ++iter) {
 		myfile << results.uoE.at(iter) << " " << results.uoL.at(iter) << " " << results.uP.at(iter) << " " << results.Y.at(iter) << " " << results.w.at(iter)
-			<< " " << results.n.at(iter) << " " << results.z1.at(iter) << " " << results.z2.at(iter) << " " << results.z3.at(iter) << " " << results.z4.at(iter) << " " << results.z5.at(iter) << " " << results.z6.at(iter)
-			<< " " << results.sf1.at(iter) << " " << results.sf2.at(iter) << " " << results.sf3.at(iter) << " " << results.sf4.at(iter) << " " << results.sf5.at(iter) << " " << results.sf6.at(iter) << " " << results.ll.at(iter) << std::endl;
+			<< " " << results.n.at(iter) << " " << results.z1.at(iter) << " " << results.z2.at(iter) << " " << results.z3.at(iter) << " " << results.z4.at(iter) 
+			<< " " << results.sf1.at(iter) << " " << results.sf2.at(iter) << " " << results.sf3.at(iter) << " " << results.sf4.at(iter) <<  " " << results.ll.at(iter) << std::endl;
 	}
 	cout << "end";
 	cin.get();

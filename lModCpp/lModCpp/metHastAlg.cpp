@@ -87,7 +87,7 @@ modParms parmUpdt(modParms prms, string prmName, double propPrm) {
 double llFunc(int particles, modParms prms, obsDatX obsDat,int fixedParam) {
 	vector<double> pfiltRes;
 
-	for (auto j = 0; j != 6; ++j) {
+	for (auto j = 0; j != 4; ++j) {
 		vector<tuple<int, int>> oDat;
 		if (j == 0) {
 			oDat = obsDat.garki101;
@@ -112,18 +112,6 @@ double llFunc(int particles, modParms prms, obsDatX obsDat,int fixedParam) {
 			prms.sf = prms.sf4;
 			prms.z = pow(10, prms.z4);
 			prms.rF = rainfall2;
-		}
-		else if (j == 4) {
-			oDat = obsDat.garki781;
-			prms.sf = prms.sf5;
-			prms.z = pow(10, prms.z5);
-			prms.rF = rainfall3;
-		}
-		else  {
-			oDat = obsDat.garki783;
-			prms.sf = prms.sf6;
-			prms.z = pow(10, prms.z6);
-			prms.rF = rainfall3;
 		}
 
 		//run particle filter
@@ -180,8 +168,7 @@ double lprior(modParms prms) {
 	res = res + (log(pdf(u6, prms.z2)));
 	res = res + (log(pdf(u6, prms.z3)));
 	res = res + (log(pdf(u6, prms.z4)));
-	res = res + (log(pdf(u6, prms.z5)));
-	res = res + (log(pdf(u6, prms.z6)));
+
 
 
 	boost::math::uniform_distribution<double> u7(1, 1e+7);//sf1:4 unif
@@ -189,8 +176,6 @@ double lprior(modParms prms) {
 	res = res + (log(pdf(u7, prms.sf2)));
 	res = res + (log(pdf(u7, prms.sf3)));
 	res = res + (log(pdf(u7, prms.sf4)));
-	res = res + (log(pdf(u7, prms.sf5)));
-	res = res + (log(pdf(u7, prms.sf6)));
 
 
 	boost::math::uniform_distribution<double> u8(5, 93.6);//n unif
@@ -254,18 +239,16 @@ pMMHres pMMHSampler(
 			cout << "proposed = " << llProp << endl;
 			cout << "iteration " << iter << " of " << niter << endl;
 			cout << " uoE = " << prms.uoE << " uoL = " << prms.uoL << " uoP = " << prms.uP << " Y = " << prms.Y << " w = " << prms.w << " n = " << prms.n << " z1 = " << prms.z1 << endl
-				<< " z2 = " << prms.z2 << " z3 = " << prms.z3 << " z4 = " << prms.z4 << " z5 = " << prms.z5 << " z6 = " << prms.z6 << " sf1 = " << prms.sf1 << " sf2 = " << prms.sf2 << " sf3 = " << prms.sf3 << " sf4 = " << prms.sf4 << " sf5 = " << prms.sf5 << " sf6 = " << prms.sf6 << endl;
+				<< " z2 = " << prms.z2 << " z3 = " << prms.z3 << " z4 = " << prms.z4 << " sf1 = " << prms.sf1 << " sf2 = " << prms.sf2 << " sf3 = " << prms.sf3 << " sf4 = " << prms.sf4 << endl;
 			cout << "||---------aratio--------||" << endl;
 			cout << " uoE = " << acptRcur[0] << " uoL = " << acptRcur[1] << " uoP = " << acptRcur[2] << " Y = " << acptRcur[3] << " w = " << acptRcur[4] << " n = " << acptRcur[5] << " z1 = " << acptRcur[6] << endl
-				<< " z2 = " << acptRcur[7] << " z3 = " << acptRcur[8] << " z4 = " << acptRcur[9] << " z5 = " << acptRcur[10] << " z6 = " << acptRcur[11] << " sf1 = " << acptRcur[12] << " sf2 = " << acptRcur[13] << " sf3 = " << acptRcur[14] << " sf4 = " << acptRcur[15] << " sf5 = " << acptRcur[16] << " sf6 = " << acptRcur[17] << endl;
+				<< " z2 = " << acptRcur[7] << " z3 = " << acptRcur[8] << " z4 = " << acptRcur[9] << " sf1 = " << acptRcur[10] << " sf2 = " << acptRcur[11] << " sf3 = " << acptRcur[12] << " sf4 = " << acptRcur[13] << endl;
 			cout << "||---------aNum--------||" << endl;
 			cout << " uoE = " << acpts[0] << " uoL = " << acpts[1] << " uoP = " << acpts[2] << " Y = " << acpts[3] << " w = " << acpts[4] << " n = " << acpts[5] << " z1 = " << acpts[6] << endl
-				<< " z2 = " << acpts[7] << " z3 = " << acpts[8] << " z4 = " << acpts[9] << " z5 = " << acpts[10] << " z6 = " << acpts[11] << " sf1 = " << acpts[12] << " sf2 = " << acpts[13] << " sf3 = " << acpts[14] << " sf4 = " << acpts[15] << " sf5 = " << acpts[16] << " sf6 = " << acpts[17] << endl;
+				<< " z2 = " << acpts[7] << " z3 = " << acpts[8] << " z4 = " << acpts[9] << " sf1 = " << acpts[10] << " sf2 = " << acpts[11] << " sf3 = " << acpts[12] << " sf4 = " << acpts[13] << endl;
 			cout << "||---------sd--------||" << endl;
-			
 			cout << " uoE = " << sdProps[0] << " uoL = " << sdProps[1] << " uoP = " << sdProps[2] << " Y = " << sdProps[3] << " w = " << sdProps[4] << " n = " << sdProps[5] << " z1 = " << sdProps[6] << endl
-				<< " z2 = " << sdProps[7] << " z3 = " << sdProps[8] << " z4 = " << sdProps[9] <<" z5 = " << sdProps[10] << " z6 = " << sdProps[11] << " sf1 = " << sdProps[12] << " sf2 = " << sdProps[13] << " sf3 = " << sdProps[14] << " sf4 = " << sdProps[15] << " sf5 = " << sdProps[16] << " sf6 = " << sdProps[17] << endl;
-			cout << "||-----------------------||" << endl;
+				<< " z2 = " << sdProps[7] << " z3 = " << sdProps[8] << " z4 = " << sdProps[9] << " sf1 = " << sdProps[10] << " sf2 = " << sdProps[11] << " sf3 = " << sdProps[12] << " sf4 = " << sdProps[13] << endl;
 			cout << "||-----------------------||" << endl;
 		}
 
@@ -298,14 +281,12 @@ pMMHres pMMHSampler(
 			results.z2.emplace_back(prms.z2);
 			results.z3.emplace_back(prms.z3);
 			results.z4.emplace_back(prms.z4);
-			results.z5.emplace_back(prms.z5);
-			results.z6.emplace_back(prms.z6);
+
 			results.sf1.emplace_back(prms.sf1);
 			results.sf2.emplace_back(prms.sf2);
 			results.sf3.emplace_back(prms.sf3);
 			results.sf4.emplace_back(prms.sf4);
-			results.sf5.emplace_back(prms.sf5);
-			results.sf6.emplace_back(prms.sf6);
+
 			results.ll.emplace_back(llCur);
 		}
 
