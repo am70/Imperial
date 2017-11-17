@@ -51,7 +51,7 @@ vector<tuple<int, int, int, int>> mPmod(modParms parmsx, boost::mt19937 rd) {
 			Be = distributionBe(rd);
 		}
 		else {
-			boost::binomial_distribution<int> distributionBe(E,1);
+			boost::binomial_distribution<int> distributionBe(E, 1);
 			Be = distributionBe(rd);
 		}
 
@@ -75,26 +75,25 @@ vector<tuple<int, int, int, int>> mPmod(modParms parmsx, boost::mt19937 rd) {
 
 		if (n*nt > 0) {
 			boost::poisson_distribution<long unsigned int> distributionRp(n*nt);
-			E = E - Be + distributionRp(rd);
+			E = rint(E - Be + distributionRp(rd));
 		}
-		else E = E - Be;
+		else E = rint(E - Be);
 
 		boost::binomial_distribution<int> distributionL(Be, (dE / (uE + dE)));
-		L = L - Bl + distributionL(rd);
+		L = rint(L - Bl + distributionL(rd));
 
 		boost::binomial_distribution<int> distributionP(Bl, (dL / (uL + dL)));
-		P = P - Bp + distributionP(rd);
+		P = rint(P - Bp + distributionP(rd));
 
 		boost::binomial_distribution<int> distributionM(Bp, (dP / (uP + dP)));
 		mRan = distributionM(rd);
 
 
 		if (M + mRan - Bm > 0)
-			M = M + mRan - Bm;
+			M = rint(M + mRan - Bm);
 		else M = 0;
-
 		t++;
-		r.emplace_back(make_tuple(rint(E), rint(L), rint(P), rint(M)));
+		r.emplace_back(make_tuple(E, L, P, M));
 	}
 	return r;
 }

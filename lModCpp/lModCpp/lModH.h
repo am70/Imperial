@@ -50,7 +50,7 @@ struct obsDatX {
 	vector <tuple<int, int>> garki104;
 	vector <tuple<int, int>> garki219;
 	vector <tuple<int, int>> garki220;
-	vector <tuple<int, int>> garki782;
+	vector <tuple<int, int>> garki781;
 	vector <tuple<int, int>> garki783;
 };
 

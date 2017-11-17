@@ -114,7 +114,7 @@ double llFunc(int particles, modParms prms, obsDatX obsDat,int fixedParam) {
 			prms.rF = rainfall2;
 		}
 		else if (j == 4) {
-			oDat = obsDat.garki782;
+			oDat = obsDat.garki781;
 			prms.sf = prms.sf5;
 			prms.z = pow(10, prms.z5);
 			prms.rF = rainfall3;
@@ -154,25 +154,25 @@ double propPrmFunc(double sd, double parm) {
 //@return sum loglikelihood for each parameter
 double lprior(modParms prms) {
 	double res = 0;
-	boost::math::normal_distribution<double> d1(0.035, 0.009);//uoE
+	boost::math::normal_distribution<double> d1(0.035, 0.015);//uoE
 	res = res + (log(pdf(d1, prms.uoE)));
 	boost::math::uniform_distribution<double> u1(0.001, 0.99);//uoE unif
 	res = res + (log(pdf(u1, prms.uoE)));
 
-	boost::math::normal_distribution<double> d2(0.035, 0.009);//uoL
+	boost::math::normal_distribution<double> d2(0.035, 0.015);//uoL
 	res = res + (log(pdf(d2, prms.uoL)));
 	boost::math::uniform_distribution<double> u2(0.001, 0.99);//uoL unif
 	res = res + (log(pdf(u2, prms.uoL)));
 
-	boost::math::normal_distribution<double> d3(0.25, 0.07);//uP
+	boost::math::normal_distribution<double> d3(0.25, 0.1);//uP
 	res = res + (log(pdf(d3, prms.uP)));
 	boost::math::uniform_distribution<double> u3(0.001, 0.99);//uP unif
 	res = res + (log(pdf(u3, prms.uP)));
 
-	boost::math::normal_distribution<double> d4(13.06, 5);//Y
+	boost::math::normal_distribution<double> d4(13.06, 7);//Y
 	res = res + (log(pdf(d4, prms.Y)));
 
-	boost::math::uniform_distribution<double> u5(0.00001, 1);//w unif
+	boost::math::uniform_distribution<double> u5(0.01, 1);//w unif
 	res = res + (log(pdf(u5, prms.w)));
 	
 	boost::math::uniform_distribution<double> u6(1, 7);//z1:4 unif
@@ -193,7 +193,7 @@ double lprior(modParms prms) {
 	res = res + (log(pdf(u7, prms.sf6)));
 
 
-	boost::math::uniform_distribution<double> u8(1, 93.6);//n unif
+	boost::math::uniform_distribution<double> u8(5, 93.6);//n unif
 	res = res + (log(pdf(u8, prms.n)));
 
 	return(res);
