@@ -11,12 +11,12 @@ vector<int> rainfall3 = txtReader("Q:\\Imperial\\rf3.txt");
 
 
 
-// proposal sd tuning function
-// @param current s.d.
-// @param target acceptance ratio
-// @param current acceptance ratio
-// @param maximum proposal s.d.
-// @return tuned s.d.
+/* proposal sd tuning function
+@param current s.d.
+@param target acceptance ratio
+@param current acceptance ratio
+@param maximum proposal s.d.
+@return tuned s.d.*/
 double tuner(double curSd, double acptR, double curAcptR, double maxSd) {
 	boost::math::normal dist(0.0, 1.0);
 	if (curAcptR == 1)
@@ -75,15 +75,21 @@ modParms parmUpdt(modParms prms, string prmName, double propPrm) {
 		prms.sf6 = propPrm;
 	if (prmName == "n")
 		prms.n = propPrm;
+	if (prmName == "dE")
+		prms.dE = propPrm;
+	if (prmName == "dL")
+		prms.dL = propPrm;
+	if (prmName == "dP")
+		prms.dP = propPrm;
 	return prms;
 }
 
-//log likelihood function 
-//@param particles number of particles in pMMH
-//@param prms current parameters
-//@param obsDatX observed data
-//@param fixedParam fixed parameters
-//@return log likelihood value
+/*log likelihood function 
+@param particles number of particles in pMMH
+@param prms current parameters
+@param obsDatX observed data
+@param fixedParam fixed parameters
+@return log likelihood value*/
 double llFunc(int particles, modParms prms, obsDatX obsDat,int fixedParam) {
 	vector<double> pfiltRes;
 
@@ -125,10 +131,10 @@ double llFunc(int particles, modParms prms, obsDatX obsDat,int fixedParam) {
 	return boost::accumulate(pfiltRes, 0.0);
 }
 
-//Parameter proposal function
-//@param sd parameter standard deviation
-//@param parameter
-//@return proposed parameter
+/*Parameter proposal function
+@param sd parameter standard deviation
+@param parameter
+@return proposed parameter*/
 double propPrmFunc(double sd, double parm) {
 	boost::normal_distribution<> nd(0.0, sd);
 	double ran = nd(rng);
@@ -137,68 +143,85 @@ double propPrmFunc(double sd, double parm) {
 	return prop;
 }
 
-//log prior function
-//@param current parameters
-//@return sum loglikelihood for each parameter
+/*log prior function
+@param current parameters
+@return sum loglikelihood for each parameter*/
 double lprior(modParms prms) {
 	double res = 0;
-	boost::math::normal_distribution<double> d1(0.035, 0.015);//uoE
+	boost::math::normal_distribution<double> d1(0.035, 0.0068);//uoE
 	res = res + (log(pdf(d1, prms.uoE)));
 	boost::math::uniform_distribution<double> u1(0.001, 0.99);//uoE unif
 	res = res + (log(pdf(u1, prms.uoE)));
 
-	boost::math::normal_distribution<double> d2(0.035, 0.015);//uoL
+	boost::math::normal_distribution<double> d2(0.035, 0.0068);//uoL
 	res = res + (log(pdf(d2, prms.uoL)));
 	boost::math::uniform_distribution<double> u2(0.001, 0.99);//uoL unif
 	res = res + (log(pdf(u2, prms.uoL)));
 
-	boost::math::normal_distribution<double> d3(0.25, 0.1);//uP
+	boost::math::normal_distribution<double> d3(0.25, 0.0557);//uP
 	res = res + (log(pdf(d3, prms.uP)));
 	boost::math::uniform_distribution<double> u3(0.001, 0.99);//uP unif
 	res = res + (log(pdf(u3, prms.uP)));
 
-	boost::math::normal_distribution<double> d4(13.06, 7);//Y
+	boost::math::normal_distribution<double> d4(13.06, 10);//Y
 	res = res + (log(pdf(d4, prms.Y)));
 
-	boost::math::uniform_distribution<double> u5(0.01, 1);//w unif
+	boost::math::uniform_distribution<double> u5(0.001, 1);//w unif
 	res = res + (log(pdf(u5, prms.w)));
 	
-	boost::math::uniform_distribution<double> u6(1, 7);//z1:4 unif
-	res = res + (log(pdf(u6, prms.z1)));
-	res = res + (log(pdf(u6, prms.z2)));
-	res = res + (log(pdf(u6, prms.z3)));
-	res = res + (log(pdf(u6, prms.z4)));
+	boost::math::uniform_distribution<double> u61(1, 3);//z1:4 unif
+	boost::math::uniform_distribution<double> u62(1, 3);//z1:4 unif
+	boost::math::uniform_distribution<double> u63(1, 4);//z1:4 unif
+	boost::math::uniform_distribution<double> u64(1, 3);//z1:4 unif
+
+	res = res + (log(pdf(u61, prms.z1)));
+	res = res + (log(pdf(u62, prms.z2)));
+	res = res + (log(pdf(u63, prms.z3)));
+	res = res + (log(pdf(u64, prms.z4)));
 
 
 
-	boost::math::uniform_distribution<double> u7(1, 1e+7);//sf1:4 unif
-	res = res + (log(pdf(u7, prms.sf1)));
-	res = res + (log(pdf(u7, prms.sf2)));
-	res = res + (log(pdf(u7, prms.sf3)));
-	res = res + (log(pdf(u7, prms.sf4)));
+	boost::math::uniform_distribution<double> u71(1, 100000);//sf1:4 unif
+	boost::math::uniform_distribution<double> u72(1, 100000);//sf1:4 unif
+	boost::math::uniform_distribution<double> u73(1, 100000);//sf1:4 unif
+	boost::math::uniform_distribution<double> u74(1, 100000);//sf1:4 unif
 
+	res = res + (log(pdf(u71, prms.sf1)));
+	res = res + (log(pdf(u72, prms.sf2)));
+	res = res + (log(pdf(u73, prms.sf3)));
+	res = res + (log(pdf(u74, prms.sf4)));
 
-	boost::math::uniform_distribution<double> u8(5, 93.6);//n unif
+	//dE = 0.15, dL = 0.269, dP = 1.563
+
+	boost::math::uniform_distribution<double> u8(2, 90);//n unif
 	res = res + (log(pdf(u8, prms.n)));
+
+	boost::math::normal_distribution<double> d5(0.150602, 0.028);//dE
+	res = res + (log(pdf(d5, prms.dE)));
+
+	boost::math::normal_distribution<double> d6(0.268812, 0.04);//dL
+	res = res + (log(pdf(d6, prms.dL)));
+
+	boost::math::normal_distribution<double> d7(1.563, 0.2);//dP
+	res = res + (log(pdf(d7, prms.dP)));
 
 	return(res);
 }
 
 
-//pMMH sampler function
-//@param initParams initial parameter values
-//@param fixedParam fixed parameter(s)
-//@param sdProps starting s.d. for proposals for each parameter
-//@param acptRs target acceptance ratios for each parameter
-//@param fitPrms tuple containing name and values for each parameter 
-//@param maxSdProps maximum s.d. for each parameter proposal to stop it going too high during tuning
-//@param niter number of iterations in MMH algorithm
-//@param nburn number of iterations to automatically burn
-//@param monitoring if true print output every x number of iterations according to @param tell
-//@param startAdapt when to start adapting proposal s.d.'s
-//@param tell how often to print outputs
-//@param oDat struct containing observed data
-//@return struct containing results of pMMH
+/*pMMH sampler function
+@param initParams initial parameter values
+@param fixedParam fixed parameter(s)
+@param sdProps starting s.d. for proposals for each parameter
+@param acptRs target acceptance ratios for each parameter
+@param fitPrms tuple containing name and values for each parameter 
+@param maxSdProps maximum s.d. for each parameter proposal to stop it going too high during tuning
+@param niter number of iterations in MMH algorithm
+@param nburn number of iterations to automatically burn
+@param monitoring if true print output every x number of iterations according to @param tell
+@param startAdapt when to start adapting proposal s.d.'s
+@param tell how often to print outputs
+@param oDat struct containing observed data@return struct containing results of pMMH*/
 pMMHres pMMHSampler(
 	modParms initParams,
 	int fixedParam,
@@ -239,16 +262,16 @@ pMMHres pMMHSampler(
 			cout << "proposed = " << llProp << endl;
 			cout << "iteration " << iter << " of " << niter << endl;
 			cout << " uoE = " << prms.uoE << " uoL = " << prms.uoL << " uoP = " << prms.uP << " Y = " << prms.Y << " w = " << prms.w << " n = " << prms.n << " z1 = " << prms.z1 << endl
-				<< " z2 = " << prms.z2 << " z3 = " << prms.z3 << " z4 = " << prms.z4 << " sf1 = " << prms.sf1 << " sf2 = " << prms.sf2 << " sf3 = " << prms.sf3 << " sf4 = " << prms.sf4 << endl;
+				<< " z2 = " << prms.z2 << " z3 = " << prms.z3 << " z4 = " << prms.z4 << " sf1 = " << prms.sf1 << " sf2 = " << prms.sf2 << " sf3 = " << prms.sf3 << " sf4 = " << prms.sf4 <<  "dE = " << prms.dE << " dL = " << prms.dL << " dP = " << prms.dP << endl;;
 			cout << "||---------aratio--------||" << endl;
 			cout << " uoE = " << acptRcur[0] << " uoL = " << acptRcur[1] << " uoP = " << acptRcur[2] << " Y = " << acptRcur[3] << " w = " << acptRcur[4] << " n = " << acptRcur[5] << " z1 = " << acptRcur[6] << endl
-				<< " z2 = " << acptRcur[7] << " z3 = " << acptRcur[8] << " z4 = " << acptRcur[9] << " sf1 = " << acptRcur[10] << " sf2 = " << acptRcur[11] << " sf3 = " << acptRcur[12] << " sf4 = " << acptRcur[13] << endl;
+				<< " z2 = " << acptRcur[7] << " z3 = " << acptRcur[8] << " z4 = " << acptRcur[9] << " sf1 = " << acptRcur[10] << " sf2 = " << acptRcur[11] << " sf3 = " << acptRcur[12] << " sf4 = " << acptRcur[13]<< "dE = " << acptRcur[14] << " dL = " << acptRcur[15] << " dP = " << acptRcur[16] << endl;
 			cout << "||---------aNum--------||" << endl;
 			cout << " uoE = " << acpts[0] << " uoL = " << acpts[1] << " uoP = " << acpts[2] << " Y = " << acpts[3] << " w = " << acpts[4] << " n = " << acpts[5] << " z1 = " << acpts[6] << endl
-				<< " z2 = " << acpts[7] << " z3 = " << acpts[8] << " z4 = " << acpts[9] << " sf1 = " << acpts[10] << " sf2 = " << acpts[11] << " sf3 = " << acpts[12] << " sf4 = " << acpts[13] << endl;
+				<< " z2 = " << acpts[7] << " z3 = " << acpts[8] << " z4 = " << acpts[9] << " sf1 = " << acpts[10] << " sf2 = " << acpts[11] << " sf3 = " << acpts[12] << " sf4 = " << acpts[13] <<  "dE = " << acpts[14] << " dL = " << acpts[15] << " dP = " << acpts[16] <<endl;
 			cout << "||---------sd--------||" << endl;
 			cout << " uoE = " << sdProps[0] << " uoL = " << sdProps[1] << " uoP = " << sdProps[2] << " Y = " << sdProps[3] << " w = " << sdProps[4] << " n = " << sdProps[5] << " z1 = " << sdProps[6] << endl
-				<< " z2 = " << sdProps[7] << " z3 = " << sdProps[8] << " z4 = " << sdProps[9] << " sf1 = " << sdProps[10] << " sf2 = " << sdProps[11] << " sf3 = " << sdProps[12] << " sf4 = " << sdProps[13] << endl;
+				<< " z2 = " << sdProps[7] << " z3 = " << sdProps[8] << " z4 = " << sdProps[9] << " sf1 = " << sdProps[10] << " sf2 = " << sdProps[11] << " sf3 = " << sdProps[12] << " sf4 = " << sdProps[13] << "dE = " << sdProps[14] << " dL = " << sdProps[15] << " dP = " << sdProps[16] << endl;
 			cout << "||-----------------------||" << endl;
 		}
 
@@ -286,6 +309,10 @@ pMMHres pMMHSampler(
 			results.sf2.emplace_back(prms.sf2);
 			results.sf3.emplace_back(prms.sf3);
 			results.sf4.emplace_back(prms.sf4);
+
+			results.dE.emplace_back(prms.dE);
+			results.dL.emplace_back(prms.dL);
+			results.dP.emplace_back(prms.dP);
 
 			results.ll.emplace_back(llCur);
 		}

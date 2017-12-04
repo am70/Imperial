@@ -3,12 +3,12 @@ boost::mt19937 mrand(std::time(0));
 double inf = std::numeric_limits<double>::infinity();
 
 
-// initial state sampler, samples random initial states # need to fit initial E and use this to inform L, P & M
-// @param N number of particles for particle filter
-// @param t starting time period for rainfall
-// @param prms model parameters
-// @fxdParams fixed parameter (currently just for n in mosParamsP) - maybe update for multiple fixed parameters
-// @return conditions for E, L, P and M, double is empty for addition of weight later. 
+/* initial state sampler, samples random initial states # need to fit initial E and use this to inform L, P & M
+@param N number of particles for particle filter
+@param t starting time period for rainfall
+@param prms model parameters
+@fxdParams fixed parameter (currently just for n in mosParamsP) - maybe update for multiple fixed parameters
+@return conditions for E, L, P and M, double is empty for addition of weight later. */
 vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParms, int fxdParm) {
 
 	int z = iParms.z;//fitted(E - L)
@@ -56,10 +56,10 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 }
 
 
-//binomial function
-//@param n number of trials
-//@param p probability of success
-//@return number of successes
+/*binomial function
+@param n number of trials
+@param p probability of success
+return number of successes*/
 int binom(int n, double p, boost::mt19937 rd) {
 	boost::binomial_distribution<int> distribution(n, p);
 	int res = distribution(rd);
@@ -67,9 +67,9 @@ int binom(int n, double p, boost::mt19937 rd) {
 }
 
 
-//random poisson draw
-//@param lambda
-//@return random poisson draw
+/*random poisson draw
+@param lambda
+@return random poisson draw*/
 luint rpois(luint lambda, boost::mt19937 rd) {
 	if (lambda > 0) {
 		boost::poisson_distribution<luint> d(lambda);
@@ -78,23 +78,22 @@ luint rpois(luint lambda, boost::mt19937 rd) {
 	else return (0);
 }
 
-//lbeta function
-//@param a
-//@param b
-//@return log beta
+/*lbeta function
+@param a
+@param b
+@return log beta*/
 double lbeta(double a, double b) {
 	return double(lgamma(a) + lgamma(b)) - lgamma(a + b);
 }
 
-// Beta binomial likelihood function
-// @param k Observed data point
-// @param n Simulated data point
-// @param p fraction of population
-// @param w overdisperion parameter
-// @return log likelihood
+/* Beta binomial likelihood function
+@param k Observed data point
+@param n Simulated data point
+@param p fraction of population
+@param w overdisperion parameter
+@return log likelihood*/
 double betaBinom(double k, double n, double p, double w) {
-
-	if (n > k) {
+	if (n >= k) {
 		double a = p * ((1 / w) - 1);
 		double b = (1 - p) * ((1 / w) - 1);
 		return lbeta(k + a, n - k + b) - lbeta(a, b) + log(boost::math::binomial_coefficient<double>(n, k));
@@ -104,26 +103,26 @@ double betaBinom(double k, double n, double p, double w) {
 }
 
 
-//model step function
-//@param wp a structure containing start times and states for model step
-//@param obsData, observed data for calculating likelihood value
-//@return tuple containing state ints for E, L, P, M and likelihood (non-log), at the end of 
-//a model run with designated start and end times
+/*model step function
+@param wp a structure containing start times and states for model step
+@param obsData, observed data for calculating likelihood value
+@return tuple containing state ints for E, L, P, M and likelihood (non-log), at the end of 
+a model run with designated start and end times*/
 tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt19937 rd) {
 	vector<tuple<int, int, int, int>> modRun;
 	modRun.reserve(wp.endTime - wp.startTime);
 	double weight;
 	modRun = mPmod(wp, rd);
 	//cout << "sim = " << get<3>(modRun.back()) << " obs = " << obsData << " w = "<< wp.w<<endl;
-	double sim = 10 + get<3>(modRun.back());
+	double sim = get<3>(modRun.back());
 	weight = betaBinom(obsData, sim, 0.01, wp.w); //add weights to tuple
 	tuple<int, int, int, int, double> res = { get<0>(modRun.back()),get<1>(modRun.back()),get<2>(modRun.back()),get<3>(modRun.back()), weight };
 	return res;
 }
 
-//rand particle sample function
-//@param samp vector of tuples containing particles E,L,M,P
-//@return resamped particles
+/*rand particle sample function
+@param samp vector of tuples containing particles E,L,M,P
+@return resamped particles*/
 auto rSamp(vector<std::tuple<int, int, int, int, double>>& samp) {
 	vector<std::tuple<int, int, int, int, double>> temp;
 	vector<double> w;// weights
@@ -135,9 +134,9 @@ auto rSamp(vector<std::tuple<int, int, int, int, double>>& samp) {
 	return temp;
 }
 
-//normalise weights
-//@param particles vector of tuples for particles
-//@param llsum current sum of log likelihoods in particles
+/*normalise weights
+@param particles vector of tuples for particles
+@param llsum current sum of log likelihoods in particles*/
 vector<tuple<int, int, int, int, double>> normalise(vector<tuple<int, int, int, int, double>> particles, double llSum) {
 	const auto pComp = [](const auto& lhs, const auto& rhs)
 	{ return get<4>(lhs) < get<4>(rhs); };
@@ -155,15 +154,15 @@ vector<tuple<int, int, int, int, double>> normalise(vector<tuple<int, int, int, 
 	return particles;
 }
 
-// Particle filter function - runs model in steps between each observed data point
-// before using weighted re - sampling of model state at each step to start next
-// @param n number of particles 
-// @param iState function for calculating initial state of particles
-// @param obsData observed data to fit model to
-// @param prms model parameters
-// @param resM True/False whether to output likelihood values or results of simulation for plotting figures - not currently implemented
-// @param fxedParams fixed parameters - currently just accepting tr but may expand to include more than one parameter
-// @return log likelihood value
+/* Particle filter function - runs model in steps between each observed data point
+before using weighted re - sampling of model state at each step to start next
+@param n number of particles 
+@param iState function for calculating initial state of particles
+@param obsData observed data to fit model to
+@param prms model parameters
+@param resM True/False whether to output likelihood values or results of simulation for plotting figures - not currently implemented
+@param fxedParams fixed parameters - currently just accepting tr but may expand to include more than one parameter
+@return log likelihood value*/
 double pFilt(int n,
 	vector< tuple<int, int> > obsData,
 	modParms prms,
@@ -182,12 +181,16 @@ double pFilt(int n,
 
 	//get initial state of particles
 	particles = iState(n, times.front(), prms, fxdParams);
-	if (get<1>(obsData[0]) < get<3>(particles[0])) {
+	if (get<1>(obsData[0]) <= get<3>(particles[0])) {
 		ll = (betaBinom(get<1>(obsData[0]), get<3>(particles[0]), 0.01, prms.w));
 	}
 	else ll = (-inf);
 	for (auto i = 0; i != times.size() - 1; ++i) {
 		modParms wp;
+		wp.dE = prms.dE;
+		wp.dL = prms.dL;
+		wp.dP = prms.dP;
+
 		wp.uoE = prms.uoE;
 		wp.uoL = prms.uoL;
 		wp.uP = prms.uP;

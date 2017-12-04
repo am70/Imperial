@@ -94,6 +94,10 @@ struct pMMHres {
 	vector<double> sf3;
 	vector<double> sf4;
 
+	vector<double> dE;
+	vector<double> dL;
+	vector<double> dP;
+
 	vector<double> ll;
 };
 
