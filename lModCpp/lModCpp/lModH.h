@@ -46,12 +46,12 @@ struct modParms {
 
 //obs dat data struct
 struct obsDatX {
-	vector <tuple<int, int>> garki408;
-	vector <tuple<int, int>> garki202;
 	vector <tuple<int, int>> garki154;
-	vector <tuple<int, int>> garki155;
 	vector <tuple<int, int>> garki218;
 	vector <tuple<int, int>> garki304;
+	vector <tuple<int, int>> garki202;
+	vector <tuple<int, int>> garki553;
+	vector <tuple<int, int>> garki802;
 };
 
 

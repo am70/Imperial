@@ -4,12 +4,12 @@ boost::mt19937 rng(std::time(0));
 
 
 
-vector<int> rainfall_03 = txtReader("Q:\\Imperial\\rf03.txt");
-vector<int> rainfall_04 = txtReader("Q:\\Imperial\\rf04.txt");
-vector<int> rainfall_05 = txtReader("Q:\\Imperial\\rf05.txt");
-vector<int> rainfall_07 = txtReader("Q:\\Imperial\\rf07.txt");
-vector<int> rainfall_08 = txtReader("Q:\\Imperial\\rf08.txt");
-
+vector<int> rainfall_05 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf05.txt");
+vector<int> rainfall_07 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf07.txt");
+vector<int> rainfall_08 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf08.txt");
+vector<int> rainfall_04 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf04.txt");
+vector<int> rainfall_02 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf02.txt");
+vector<int> rainfall_01 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf01.txt");
 
 
 
@@ -98,10 +98,10 @@ double llFunc(int particles, modParms prms, obsDatX obsDat,int fixedParam) {
 	for (auto j = 0; j != 6; ++j) {
 		vector<tuple<int, int>> oDat;
 		if (j == 0) {
-			oDat = obsDat.garki408;
+			oDat = obsDat.garki154;
 			prms.sf = prms.sf1;
 			prms.z = pow(10,prms.z1);
-			prms.rF = rainfall_03;
+			prms.rF = rainfall_05;
 		}
 		else if (j == 1) {
 			oDat = obsDat.garki202;
@@ -110,28 +110,28 @@ double llFunc(int particles, modParms prms, obsDatX obsDat,int fixedParam) {
 			prms.rF = rainfall_04;
 		}
 		else if (j == 2) {
-			oDat = obsDat.garki154;
+			oDat = obsDat.garki218;
 			prms.sf =  prms.sf3;
 			prms.z = pow(10, prms.z3);
-			prms.rF = rainfall_05;
-		}
-		else if (j==3) {
-			oDat = obsDat.garki155;
-			prms.sf = prms.sf4;
-			prms.z = pow(10, prms.z4);
-			prms.rF = rainfall_05;
-		}
-		else if (j == 4) {
-			oDat = obsDat.garki218;
-			prms.sf = prms.sf5;
-			prms.z = pow(10, prms.z5);
 			prms.rF = rainfall_07;
 		}
-		else if (j == 5) {
+		else if (j==3) {
 			oDat = obsDat.garki304;
+			prms.sf = prms.sf4;
+			prms.z = pow(10, prms.z4);
+			prms.rF = rainfall_08;
+		}
+		else if (j == 4) {
+			oDat = obsDat.garki553;
+			prms.sf = prms.sf5;
+			prms.z = pow(10, prms.z5);
+			prms.rF = rainfall_02;
+		}
+		else if (j == 5) {
+			oDat = obsDat.garki802;
 			prms.sf = prms.sf6;
 			prms.z = pow(10, prms.z6);
-			prms.rF = rainfall_08;
+			prms.rF = rainfall_01;
 		}
 
 
@@ -143,6 +143,7 @@ double llFunc(int particles, modParms prms, obsDatX obsDat,int fixedParam) {
 			fixedParam//fixed parameters
 		));
 	}
+
 	return boost::accumulate(pfiltRes, 0.0);
 }
 
@@ -178,18 +179,18 @@ double lprior(modParms prms) {
 	boost::math::uniform_distribution<double> u3(0.001, 0.99);//uP unif
 	res = res + (log(pdf(u3, prms.uP)));
 
-	boost::math::normal_distribution<double> d4(13.06, 10);//Y
+	boost::math::normal_distribution<double> d4(13.06, 2);//Y
 	res = res + (log(pdf(d4, prms.Y)));
 
 	boost::math::uniform_distribution<double> u5(0.001, 1);//w unif
 	res = res + (log(pdf(u5, prms.w)));
 	
-	boost::math::uniform_distribution<double> u61(1, 3);//z1:4 unif
-	boost::math::uniform_distribution<double> u62(1, 3);//z1:4 unif
-	boost::math::uniform_distribution<double> u63(1, 4);//z1:4 unif
-	boost::math::uniform_distribution<double> u64(1, 3);//z1:4 unif
-	boost::math::uniform_distribution<double> u65(1, 5);//z1:4 unif
-	boost::math::uniform_distribution<double> u66(1, 5);//z1:4 unif
+	boost::math::uniform_distribution<double> u61(1, 6);//z1:4 unif
+	boost::math::uniform_distribution<double> u62(1, 6);//z1:4 unif
+	boost::math::uniform_distribution<double> u63(1, 6);//z1:4 unif
+	boost::math::uniform_distribution<double> u64(1, 6);//z1:4 unif
+	boost::math::uniform_distribution<double> u65(1, 7);//z1:4 unif
+	boost::math::uniform_distribution<double> u66(1, 7);//z1:4 unif
 
 	res = res + (log(pdf(u61, prms.z1)));
 	res = res + (log(pdf(u62, prms.z2)));
@@ -200,12 +201,12 @@ double lprior(modParms prms) {
 
 
 
-	boost::math::uniform_distribution<double> u71(1, 100000);//sf1:4 unif
-	boost::math::uniform_distribution<double> u72(1, 100000);//sf1:4 unif
-	boost::math::uniform_distribution<double> u73(1, 100000);//sf1:4 unif
-	boost::math::uniform_distribution<double> u74(1, 100000);//sf1:4 unif
-	boost::math::uniform_distribution<double> u75(1, 100000);//sf1:4 unif
-	boost::math::uniform_distribution<double> u76(1, 100000);//sf1:4 unif
+	boost::math::uniform_distribution<double> u71(1, 10000000);//sf1:4 unif
+	boost::math::uniform_distribution<double> u72(1, 10000000);//sf1:4 unif
+	boost::math::uniform_distribution<double> u73(1, 10000000);//sf1:4 unif
+	boost::math::uniform_distribution<double> u74(1, 10000000);//sf1:4 unif
+	boost::math::uniform_distribution<double> u75(1, 10000000);//sf1:4 unif
+	boost::math::uniform_distribution<double> u76(1, 10000000);//sf1:4 unif
 
 	res = res + (log(pdf(u71, prms.sf1)));
 	res = res + (log(pdf(u72, prms.sf2)));
@@ -273,6 +274,7 @@ pMMHres pMMHSampler(
 	vector<int> parmIter(acptRs.size(), 0);//iteration number for specific parameters
 	pMMHres results;
 
+	
 
 	for (auto iter = 0; iter != niter; ++iter) {
 		propPrm = propPrmFunc(sdProps[parmNum], get<1>(fitPrms[parmNum]));//propose new parameter

@@ -1,6 +1,7 @@
 #include "lModH.h"
 boost::mt19937 mrand(std::time(0));
 double inf = std::numeric_limits<double>::infinity();
+double m_pi = 3.14159265358979323846;
 
 
 /* initial state sampler, samples random initial states # need to fit initial E and use this to inform L, P & M
@@ -49,7 +50,6 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 	L = rint((dE*z) / (dE + dL + uL));
 	M = rint((0.5 * dL*dP*L) / uM*(dP + uP));
 	P = rint(2 * uM*M / dP);
-
 	vector<tuple<int, int, int, int, double>> states = { { E, L, P, M ,0.0 } };
 	states.resize(N, { E, L, P, M, 0.0 });//return initial states, repeated to number of particles
 	return states;
@@ -86,6 +86,17 @@ double lbeta(double a, double b) {
 	return double(lgamma(a) + lgamma(b)) - lgamma(a + b);
 }
 
+//double lchoose(double n, double k) {
+//	double 	nk = log(n - k);
+//	double ln = log(n);
+//	double lk = log(k);
+//	double res = boost::math::tgamma<double>(1+ln) - boost::math::tgamma<double>(1+lk)- boost::math::tgamma<double>(1 + nk);
+//	cout << res <<endl;
+//	return res;
+//}
+
+
+
 /* Beta binomial likelihood function
 @param k Observed data point
 @param n Simulated data point
@@ -94,9 +105,15 @@ double lbeta(double a, double b) {
 @return log likelihood*/
 double betaBinom(double k, double n, double p, double w) {
 	if (n >= k) {
+		if (k <= 0) k = 1;
+		if (k == n) n = n + 1;
 		double a = p * ((1 / w) - 1);
 		double b = (1 - p) * ((1 / w) - 1);
-		return lbeta(k + a, n - k + b) - lbeta(a, b) + log(boost::math::binomial_coefficient<double>(n, k));
+		double logn = log(n);
+		double logk = log(k);
+		double lognk = log(n - k);
+
+		return lbeta(k + a, n - k + b) - lbeta(a, b) + (n *logn - k*logk - (n - k)* lognk + 0.5*(logn - logk - lognk - log(2 * m_pi)));//using stirling approximation for bionomial coefficient
 	}
 	else
 		return -inf;
@@ -178,13 +195,10 @@ double pFilt(int n,
 	for (auto i = begin(obsData); i != end(obsData); ++i) {
 		times.emplace_back((get<0>(*i)) / prms.dt);
 	};
-
 	//get initial state of particles
 	particles = iState(n, times.front(), prms, fxdParams);
-	if (get<1>(obsData[0]) <= get<3>(particles[0])) {
 		ll = (betaBinom(get<1>(obsData[0]), get<3>(particles[0]), 0.01, prms.w));
-	}
-	else ll = (-inf);
+	
 	for (auto i = 0; i != times.size() - 1; ++i) {
 		modParms wp;
 		wp.dE = prms.dE;
@@ -217,15 +231,14 @@ double pFilt(int n,
 			lltemp = lltemp + get<4>(particles.at(j));
 			//if (std::isnan(get<4>(particles.at(j))) == 0)  get<4>(particles.at(j)) = 0;
 		}
-
 		//normalise particle probabilities
 		particles = normalise(particles, lltemp);
 		//re-sample particles
 		particles = rSamp(particles);
 		//take mean of likelihoods from particles
 		double llMean = lltemp / boost::size(particles);
-
 		ll = ll + llMean;//add start val for frst obs point
 	}
+
 	return ll;
 }

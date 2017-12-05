@@ -16,3 +16,4 @@ vector<int> txtReader(string file) {
 	}
 	return (dat);
 }
+

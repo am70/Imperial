@@ -91,7 +91,7 @@ vector<tuple<int, int, int, int>> mPmod(modParms parmsx, boost::mt19937 rd) {
 
 		if (M + mRan - Bm > 0)
 			M = rint(M + mRan - Bm);
-		else M = 0;
+		else M = 1;
 		t++;
 		r.emplace_back(make_tuple(E, L, P, M));
 	}
