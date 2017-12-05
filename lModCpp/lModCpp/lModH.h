@@ -46,11 +46,12 @@ struct modParms {
 
 //obs dat data struct
 struct obsDatX {
-	vector <tuple<int, int>> garki101;
-	vector <tuple<int, int>> garki104;
-	vector <tuple<int, int>> garki219;
-	vector <tuple<int, int>> garki220;
-
+	vector <tuple<int, int>> garki408;
+	vector <tuple<int, int>> garki202;
+	vector <tuple<int, int>> garki154;
+	vector <tuple<int, int>> garki155;
+	vector <tuple<int, int>> garki218;
+	vector <tuple<int, int>> garki304;
 };
 
 
@@ -88,11 +89,15 @@ struct pMMHres {
 	vector<double> z2;
 	vector<double> z3;
 	vector<double> z4;
+	vector<double> z5;
+	vector<double> z6;
 
 	vector<double> sf1;
 	vector<double> sf2;
 	vector<double> sf3;
 	vector<double> sf4;
+	vector<double> sf5;
+	vector<double> sf6;
 
 	vector<double> dE;
 	vector<double> dL;

@@ -19,10 +19,12 @@ int main()
 	modParms initParams;
 	// read in garki village data
 	obsDatX garkiDat;
-	garkiDat.garki101 = { { 353,1 },{ 368,18 },{ 382,3 },{ 396,3 },{ 410,7 },{ 424,24 },{ 440,40 },{ 454,1 },{ 468,2 },{ 482,0 },{ 496,0 },{ 510,0 },{ 524,0 },{ 538,0 },{ 552,0 } };
-	garkiDat.garki104 = { { 353,0 },{ 368,20 },{ 382,0 },{ 396,11 },{ 410,4 },{ 424,3 },{ 440,6 },{ 454,3 },{ 468,1 },{ 482,1 },{ 496,0 },{ 510,0 },{ 524,0 },{ 538,0 },{ 552,0 } };
-	garkiDat.garki219 = { { 346,5 },{ 361,8 },{ 375,18 },{ 389,8 },{ 403,7 },{ 417,9 },{ 433,35 },{ 447,18 },{ 461,2 },{ 475,0 },{ 489,0 },{ 503,0 },{ 517,0 },{ 531,0 },{ 545,0 } };
-	garkiDat.garki220 = { { 346,1 },{ 361,3 },{ 375,26 },{ 389,27 },{ 403,6 },{ 417,14 },{ 433,20 },{ 447,17 },{ 461,3 },{ 475,0 },{ 489,0 },{ 503,0 },{ 517,0 },{ 531,0 },{ 545,0 } };
+	garkiDat.garki154 = { { 353,1 },{ 368,18 },{ 382,3 },{ 396,3 },{ 410,7 },{ 424,24 },{ 440,40 },{ 454,1 },{ 468,2 },{ 482,0 },{ 496,0 },{ 510,0 },{ 524,0 },{ 538,0 },{ 552,0 } };
+	garkiDat.garki155 = { { 353,0 },{ 368,20 },{ 382,0 },{ 396,11 },{ 410,4 },{ 424,3 },{ 440,6 },{ 454,3 },{ 468,1 },{ 482,1 },{ 496,0 },{ 510,0 },{ 524,0 },{ 538,0 },{ 552,0 } };
+	garkiDat.garki202 = { { 346,5 },{ 361,8 },{ 375,18 },{ 389,8 },{ 403,7 },{ 417,9 },{ 433,35 },{ 447,18 },{ 461,2 },{ 475,0 },{ 489,0 },{ 503,0 },{ 517,0 },{ 531,0 },{ 545,0 } };
+	garkiDat.garki218 = { { 346,1 },{ 361,3 },{ 375,26 },{ 389,27 },{ 403,6 },{ 417,14 },{ 433,20 },{ 447,17 },{ 461,3 },{ 475,0 },{ 489,0 },{ 503,0 },{ 517,0 },{ 531,0 },{ 545,0 } };
+	garkiDat.garki304 = { { 346,1 },{ 361,3 },{ 375,26 },{ 389,27 },{ 403,6 },{ 417,14 },{ 433,20 },{ 447,17 },{ 461,3 },{ 475,0 },{ 489,0 },{ 503,0 },{ 517,0 },{ 531,0 },{ 545,0 } };
+	garkiDat.garki408 = { { 346,1 },{ 361,3 },{ 375,26 },{ 389,27 },{ 403,6 },{ 417,14 },{ 433,20 },{ 447,17 },{ 461,3 },{ 475,0 },{ 489,0 },{ 503,0 },{ 517,0 },{ 531,0 },{ 545,0 } };
 
 
 
@@ -58,26 +60,6 @@ int main()
 	boost::mt19937 mrandThread(std::random_device{}());
 
 
-	cout << "start" << endl;
-	vector<tuple<int, int, int, int>> test2 = mPmod(prms, mrandThread);
-
-
-	ofstream myfile1;
-	myfile1.open("Q:\\Imperial\\test.txt");
-	for (auto iter = 0; iter != prms.endTime - prms.startTime; ++iter) {
-		myfile1 << get<3>(test2[iter]) << endl;
-	}
-
-
-	double test = pFilt(1,
-		garkiDat.garki101,
-		prms,
-		false,
-		7);
-	cout << test;
-	//cin.get();
-
-
 
 	//modParms initParams;
 	initParams.uoE = 0.035;
@@ -88,12 +70,17 @@ int main()
 	initParams.z2 = 3;
 	initParams.z3 = 3;
 	initParams.z4 = 3;
+	initParams.z5 = 3;
+	initParams.z6 = 3;
 
 	initParams.w = 0.08;
 	initParams.sf1 = 20000;
 	initParams.sf2 = 20000;
 	initParams.sf3 = 20000;
 	initParams.sf4 = 20000;
+	initParams.sf5 = 20000;
+	initParams.sf6 = 20000;
+
 
 	initParams.dE = 0.15;
 	initParams.dL = 0.2;
@@ -103,12 +90,13 @@ int main()
 	initParams.n = 20;
 	initParams.rF = txtReader("Q:\\Imperial\\rf2.txt");
 
-	vector<double> sdProps = { 0.01, 0.01, 0.1, 1, 0.001, 1, 1, 1,1,1, 10, 10, 10, 10,0.05,0.05,0.1 };
-	vector<double> maxSdProps = { 0.1, 0.1, 0.1, 20, 0.1, 5, 1, 1, 1, 1, 1e+5, 1e+5, 1e+5, 1e+5,0.1,0.1,2 };
-	vector<double> acptRs = { 0.3,0.3,0.3,0.3,0.3,0.5,0.5,0.5,0.5,0.5,0.6,0.6,0.6,0.6,0.5,0.5,0.5, };
+	vector<double> sdProps = { 0.01, 0.01, 0.1, 1, 0.001, 1, 1, 1,1,1,1,1, 10, 10, 10, 10,10,10,0.05,0.05,0.1 };
+	vector<double> maxSdProps = { 0.1, 0.1, 0.1, 20, 0.1, 5, 1, 1, 1, 1,1,1, 1e+5, 1e+5, 1e+5, 1e+5,1e+5,1e+5,0.1,0.1,2 };
+	vector<double> acptRs = { 0.3,0.3,0.3,0.3,0.3,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.6,0.6,0.6,0.6,0.6,0.6,0.5,0.5,0.5, };
 	vector<tuple<string, double>> fitPrms = { { "uoE", initParams.uoE },{ "uoL", initParams.uoL },{ "uP", initParams.uP },{ "Y", initParams.Y },
-	{ "w", initParams.w },{ "n", initParams.n },{ "z1", initParams.z1 },{ "z2", initParams.z2 },{ "z3", initParams.z3 },{ "z4", initParams.z4 },
-	{ "sf1", initParams.sf1 } ,{ "sf2", initParams.sf2 } ,{ "sf3", initParams.sf3 } ,{ "sf4", initParams.sf4 } ,{ "dE", initParams.dE },{ "dL", initParams.dL } ,{ "dP", initParams.dP } };
+	{ "w", initParams.w },{ "n", initParams.n },{ "z1", initParams.z1 },{ "z2", initParams.z2 },{ "z3", initParams.z3 },{ "z4", initParams.z4 },{ "z5", initParams.z5 },{ "z6", initParams.z6 },
+	{ "sf1", initParams.sf1 } ,{ "sf2", initParams.sf2 } ,{ "sf3", initParams.sf3 } ,{ "sf4", initParams.sf4 } ,{ "sf5", initParams.sf5 } ,{ "sf6", initParams.sf6 } 
+	,{ "dE", initParams.dE },{ "dL", initParams.dL } ,{ "dP", initParams.dP } };
 
 
 
@@ -135,9 +123,9 @@ int main()
 	myfile.open("Q:\\Imperial\\1milTestTr7.txt");
 	for (auto iter = 0; iter != size(results.ll); ++iter) {
 		myfile << results.uoE.at(iter) << " " << results.uoL.at(iter) << " " << results.uP.at(iter) << " " << results.Y.at(iter) << " " << results.w.at(iter)
-			<< " " << results.n.at(iter) << " " << results.z1.at(iter) << " " << results.z2.at(iter) << " " << results.z3.at(iter) << " " << results.z4.at(iter) 
-			<< " " << results.sf1.at(iter) << " " << results.sf2.at(iter) << " " << results.sf3.at(iter) << " " << results.sf4.at(iter) << " " << results.dE.at(iter) 
-			<< " " << results.dL.at(iter) << " " << results.dP.at(iter) << " " << results.ll.at(iter) << std::endl;
+			<< " " << results.n.at(iter) << " " << results.z1.at(iter) << " " << results.z2.at(iter) << " " << results.z3.at(iter) << " " << results.z4.at(iter) << " " << results.z5.at(iter) << " " << results.z6.at(iter)
+			<< " " << results.sf1.at(iter) << " " << results.sf2.at(iter) << " " << results.sf3.at(iter) << " " << results.sf4.at(iter) << " " << results.sf5.at(iter) << " " << results.sf6.at(iter) << 
+			" " << results.dE.at(iter) << " " << results.dL.at(iter) << " " << results.dP.at(iter) << " " << results.ll.at(iter) << std::endl;
 	}
 	cout << "end";
 	cin.get();
