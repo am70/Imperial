@@ -116,7 +116,7 @@ double betaBinom(double k, double n, double p, double w) {
 		return lbeta(k + a, n - k + b) - lbeta(a, b) + (n *logn - k*logk - (n - k)* lognk + 0.5*(logn - logk - lognk - log(2 * m_pi)));//using stirling approximation for bionomial coefficient
 	}
 	else
-		return -inf;
+		return -5000;
 }
 
 

@@ -43,8 +43,8 @@ vector<tuple<int, int, int, int>> mPmod(modParms parmsx, boost::mt19937 rd) {
 			K = (1 + (sf*((1 / trx)*rFsum)));
 		}
 
-		uE = uoE*exp((E + L) / (K));
-		uL = uoL*exp((Y*(E + L) / (K)));
+		uE = uoE*((E + L) / (K));
+		uL = uoL*((Y*(E + L) / (K)));
 
 		if ((dE + uE)*dt < 1) {
 			boost::binomial_distribution<int> distributionBe(E, (dE + uE)*dt);
