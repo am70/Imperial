@@ -22,10 +22,9 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 	double n = iParms.n;
 	double UoE = iParms.uoE;
 	double UoL = iParms.uoL;
-	vector<int> rF = iParms.rF;
+	vector<double> rF = iParms.rF;
 	double uM = iParms.uM;
 	double uP = iParms.uP;
-	double tr = fxdParm / iParms.dt;
 	double B = iParms.B;
 	double K;
 	double uE;
@@ -34,22 +33,39 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 	int L;
 	int P;
 	int M;
+	double t = iParms.startTime;
 	double a;
 	//int t = iParms.startTime;
 	double trx = iParms.tr / iParms.dt;
+	double rFsum;
 
-	int rFsum = std::accumulate(rF.begin() + (time - trx), rF.begin() + time-1, 0);
-	K = (1 + (sf*((1 / trx)*rFsum)));
+	if (t<= trx) {
+		rFsum = std::accumulate(rF.begin(), rF.begin() + t, 0);
+		K = ((sf*((1 / t)*rFsum)));
+	}
+	else {
+		rFsum = std::accumulate(rF.begin() + (t - trx), rF.begin() + t, 0);
+		K = ((sf*((1 / trx)*rFsum)));
+	}
 
 	a = (0.5 * dL*dP) / (uM*(dP + uP));
 
 	uE = UoE*exp(z / K);
 	uL = UoL*exp(y*z / K);
 
-	E = rint(((B*a)*z) / (dE + (B*a) + uE));
-	L = rint((dE*z) / (dE + dL + uL));
-	M = rint((0.5 * dL*dP*L) / uM*(dP + uP));
-	P = rint(2 * uM*M / dP);
+	//min start values
+	//double Ms=350
+	//double Ls = (2 * uM*Ms*(dP + uP)) / (dL*dP)
+ //   double Es
+
+	E = rint(((B*a)*z) / ((dE + (B*a) + uE)));
+	L = rint((dE*z) / ((dE + dL + uL)));
+	M = rint((0.5 * dL*dP*L) / (uM*(dP + uP)));
+	P = rint((2 * uM*M) / dP);
+
+
+	if (M < 20) M = 20;
+
 	vector<tuple<int, int, int, int, double>> states = { { E, L, P, M ,0.0 } };
 	states.resize(N, { E, L, P, M, 0.0 });//return initial states, repeated to number of particles
 	return states;
@@ -104,6 +120,8 @@ double lbeta(double a, double b) {
 @param w overdisperion parameter
 @return log likelihood*/
 double betaBinom(double k, double n, double p, double w) {
+	//n = n + 100;
+	//if (n <= k) cout << "n = " << n << " k = " << k << endl;
 	if (n >= k) {
 		if (k <= 0) k = 1;
 		if (k == n) n = n + 1;
@@ -112,11 +130,10 @@ double betaBinom(double k, double n, double p, double w) {
 		double logn = log(n);
 		double logk = log(k);
 		double lognk = log(n - k);
-
 		return lbeta(k + a, n - k + b) - lbeta(a, b) + (n *logn - k*logk - (n - k)* lognk + 0.5*(logn - logk - lognk - log(2 * m_pi)));//using stirling approximation for bionomial coefficient
 	}
 	else
-		return -5000;
+		return -1000;
 }
 
 
@@ -128,9 +145,12 @@ a model run with designated start and end times*/
 tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt19937 rd) {
 	vector<tuple<int, int, int, int>> modRun;
 	modRun.reserve(wp.endTime - wp.startTime);
-	double weight;
-	modRun = mPmod(wp, rd);
-	//cout << "sim = " << get<3>(modRun.back()) << " obs = " << obsData << " w = "<< wp.w<<endl;
+	double weight; 
+	try
+	{
+		modRun = mPmod(wp, rd);
+	}
+	catch (...) { cout << "mod run exception"; }
 	double sim = get<3>(modRun.back());
 	weight = betaBinom(obsData, sim, 0.01, wp.w); //add weights to tuple
 	tuple<int, int, int, int, double> res = { get<0>(modRun.back()),get<1>(modRun.back()),get<2>(modRun.back()),get<3>(modRun.back()), weight };
@@ -195,10 +215,12 @@ double pFilt(int n,
 	for (auto i = begin(obsData); i != end(obsData); ++i) {
 		times.emplace_back((get<0>(*i)) / prms.dt);
 	};
+	prms.startTime = times.at(0);
 	//get initial state of particles
 	particles = iState(n, times.front(), prms, fxdParams);
+
 		ll = (betaBinom(get<1>(obsData[0]), get<3>(particles[0]), 0.01, prms.w));
-	
+
 	for (auto i = 0; i != times.size() - 1; ++i) {
 		modParms wp;
 		wp.dE = prms.dE;
@@ -219,7 +241,8 @@ double pFilt(int n,
 		wp.endTime = times.at(i + 1);
 		//run model in step and update particles in parallel
 		double lltemp = 0;
-#pragma omp parallel for schedule(static) reduction(+:lltemp) //reduction needed due to problem with thread racing
+
+#pragma omp parallel for schedule(static) reduction(+:lltemp)  //reduction needed due to problem with thread racing
 		for (int j = 0; j < boost::size(particles); j++) {
 			boost::mt19937 mrandThread(std::random_device{}());
 			wp.E0 = get<0>(particles[j]);
@@ -231,6 +254,7 @@ double pFilt(int n,
 			lltemp = lltemp + get<4>(particles.at(j));
 			//if (std::isnan(get<4>(particles.at(j))) == 0)  get<4>(particles.at(j)) = 0;
 		}
+
 		//normalise particle probabilities
 		particles = normalise(particles, lltemp);
 		//re-sample particles
@@ -239,6 +263,5 @@ double pFilt(int n,
 		double llMean = lltemp / boost::size(particles);
 		ll = ll + llMean;//add start val for frst obs point
 	}
-
 	return ll;
 }

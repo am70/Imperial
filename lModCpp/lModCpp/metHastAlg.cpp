@@ -4,12 +4,12 @@ boost::mt19937 rng(std::time(0));
 
 
 
-vector<int> rainfall_05 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf05.txt");
-vector<int> rainfall_07 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf07.txt");
-vector<int> rainfall_08 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf08.txt");
-vector<int> rainfall_04 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf04.txt");
-vector<int> rainfall_02 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf02.txt");
-vector<int> rainfall_01 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf01.txt");
+vector<double> rainfall_05 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf05.txt", 0.25);
+vector<double> rainfall_07 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf07.txt", 0.25);
+vector<double> rainfall_08 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf08.txt", 0.25);
+vector<double> rainfall_04 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf04.txt", 0.25);
+vector<double> rainfall_02 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf02.txt", 0.25);
+vector<double> rainfall_01 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf01.txt", 0.25);
 
 
 
@@ -83,24 +83,26 @@ modParms parmUpdt(modParms prms, string prmName, double propPrm) {
 		prms.dL = propPrm;
 	if (prmName == "dP")
 		prms.dP = propPrm;
+	if (prmName == "o")
+		prms.o = propPrm;
 	return prms;
 }
 
-/*log likelihood function 
+/*log likelihood function
 @param particles number of particles in pMMH
 @param prms current parameters
 @param obsDatX observed data
 @param fixedParam fixed parameters
 @return log likelihood value*/
-double llFunc(int particles, modParms prms, obsDatX obsDat,int fixedParam) {
+double llFunc(int particles, modParms prms, obsDatX obsDat, int fixedParam) {
 	vector<double> pfiltRes;
 
 	for (auto j = 0; j != 6; ++j) {
 		vector<tuple<int, int>> oDat;
 		if (j == 0) {
 			oDat = obsDat.garki154;
-			prms.sf = pow(10,prms.sf1);
-			prms.z = pow(10,prms.z1);
+			prms.sf = pow(10, prms.sf1);
+			prms.z = pow(10, prms.z1);
 			prms.rF = rainfall_05;
 		}
 		else if (j == 1) {
@@ -115,7 +117,7 @@ double llFunc(int particles, modParms prms, obsDatX obsDat,int fixedParam) {
 			prms.z = pow(10, prms.z3);
 			prms.rF = rainfall_07;
 		}
-		else if (j==3) {
+		else if (j == 3) {
 			oDat = obsDat.garki304;
 			prms.sf = pow(10, prms.sf4);
 			prms.z = pow(10, prms.z4);
@@ -164,22 +166,22 @@ double propPrmFunc(double sd, double parm) {
 @return sum loglikelihood for each parameter*/
 double lprior(modParms prms) {
 	double res = 0;
-	boost::math::normal_distribution<double> d1(0.035, 0.0048);//uoE
+	boost::math::normal_distribution<double> d1(0.035, 0.01);//uoE
 	res = res + (log(pdf(d1, prms.uoE)));
 	boost::math::uniform_distribution<double> u1(0.001, 0.99);//uoE unif
 	res = res + (log(pdf(u1, prms.uoE)));
 
-	boost::math::normal_distribution<double> d2(0.035, 0.0048);//uoL
+	boost::math::normal_distribution<double> d2(0.035, 0.01);//uoL
 	res = res + (log(pdf(d2, prms.uoL)));
 	boost::math::uniform_distribution<double> u2(0.001, 0.99);//uoL unif
 	res = res + (log(pdf(u2, prms.uoL)));
 
-	boost::math::normal_distribution<double> d3(0.25, 0.0457);//uP
+	boost::math::normal_distribution<double> d3(0.25, 0.0957);//uP
 	res = res + (log(pdf(d3, prms.uP)));
 	boost::math::uniform_distribution<double> u3(0.001, 0.99);//uP unif
 	res = res + (log(pdf(u3, prms.uP)));
 
-	boost::math::normal_distribution<double> d4(13.06, 7);//Y
+	boost::math::normal_distribution<double> d4(13.06, 4);//Y
 	res = res + (log(pdf(d4, prms.Y)));
 
 	boost::math::uniform_distribution<double> d4x(3, 70);//Y
@@ -188,12 +190,12 @@ double lprior(modParms prms) {
 	boost::math::uniform_distribution<double> u5(0.001, 1);//w unif
 	res = res + (log(pdf(u5, prms.w)));
 	
-	boost::math::uniform_distribution<double> u61(1, 6);//z1 unif
-	boost::math::uniform_distribution<double> u62(1, 6);//z2 unif
-	boost::math::uniform_distribution<double> u63(1, 6);//z3 unif
-	boost::math::uniform_distribution<double> u64(1, 6);//z4 unif
-	boost::math::uniform_distribution<double> u65(1, 6);//z5 unif
-	boost::math::uniform_distribution<double> u66(1, 6);//z6 unif
+	boost::math::uniform_distribution<double> u61(1, 8);//z1 unif
+	boost::math::uniform_distribution<double> u62(1, 8);//z2 unif
+	boost::math::uniform_distribution<double> u63(1, 5);//z3 unif
+	boost::math::uniform_distribution<double> u64(1, 8);//z4 unif
+	boost::math::uniform_distribution<double> u65(1, 5.5);//z5 unif
+	boost::math::uniform_distribution<double> u66(1, 5);//z6 unif
 
 	res = res + (log(pdf(u61, prms.z1)));
 	res = res + (log(pdf(u62, prms.z2)));
@@ -204,12 +206,12 @@ double lprior(modParms prms) {
 
 
 
-	boost::math::uniform_distribution<double> u71(1, 6);//sf1 unif
-	boost::math::uniform_distribution<double> u72(1, 6);//sf2 unif
-	boost::math::uniform_distribution<double> u73(1, 6);//sf3 unif
-	boost::math::uniform_distribution<double> u74(1, 6);//sf4 unif
-	boost::math::uniform_distribution<double> u75(1, 6);//sf5 unif
-	boost::math::uniform_distribution<double> u76(1, 6);//sf6 unif
+	boost::math::uniform_distribution<double> u71(1, 8);//sf1 unif
+	boost::math::uniform_distribution<double> u72(1, 8);//sf2 unif
+	boost::math::uniform_distribution<double> u73(1, 8);//sf3 unif
+	boost::math::uniform_distribution<double> u74(1, 8);//sf4 unif
+	boost::math::uniform_distribution<double> u75(1, 8);//sf5 unif
+	boost::math::uniform_distribution<double> u76(1, 8);//sf6 unif
 
 	res = res + (log(pdf(u71, prms.sf1)));
 	res = res + (log(pdf(u72, prms.sf2)));
@@ -220,17 +222,20 @@ double lprior(modParms prms) {
 
 	//dE = 0.15, dL = 0.269, dP = 1.563
 
-	boost::math::uniform_distribution<double> u8(5, 93);//n unif
+	boost::math::uniform_distribution<double> u8(0, (93/prms.dt));//n unif
 	res = res + (log(pdf(u8, prms.n)));
 
 	boost::math::normal_distribution<double> d5(0.150602, 0.015);//dE
 	res = res + (log(pdf(d5, prms.dE)));
 
 	boost::math::normal_distribution<double> d6(0.268812, 0.04);//dL
+	boost::math::uniform_distribution<double> d6_1(0.2, 0.5);//dL
+	res = res + (log(pdf(d6_1, prms.dL)));
 	res = res + (log(pdf(d6, prms.dL)));
 
 	boost::math::normal_distribution<double> d7(1.563, 0.2);//dP
 	res = res + (log(pdf(d7, prms.dP)));
+
 
 	return(res);
 }
@@ -281,22 +286,20 @@ pMMHres pMMHSampler(
 
 	for (auto iter = 0; iter != niter; ++iter) {
 		propPrm = propPrmFunc(sdProps[parmNum], get<1>(fitPrms[parmNum]));//propose new parameter
-		prms = parmUpdt(prms, get<0>(fitPrms[parmNum]), propPrm);//update parameter struct
-		llProp = llFunc(particles, prms, oDat, fixedParam) + lprior(prms);//find log likelihood from particle filter
 
-		//print outputs
+		prms = parmUpdt(prms, get<0>(fitPrms[parmNum]), propPrm);//update parameter struct
+
 		if ((monitoring = true && iter % tell == 0)) {
-			cout << "current = " << llCur << endl;
-			cout << "proposed = " << llProp << endl;
+
 			cout << "iteration " << iter << " of " << niter << endl;
 			cout << " uoE = " << prms.uoE << " uoL = " << prms.uoL << " uoP = " << prms.uP << " Y = " << prms.Y << " w = " << prms.w << " n = " << prms.n << " z1 = " << prms.z1 << endl
 				<< " z2 = " << prms.z2 << " z3 = " << prms.z3 << " z4 = " << prms.z4 << " z5 = " << prms.z5 << " z6 = " << prms.z6 << " sf1 = " << prms.sf1 << " sf2 = " << prms.sf2 << " sf3 = " << prms.sf3 << " sf4 = " << prms.sf4 << " sf5 = " << prms.sf5 << " sf6 = " << prms.sf6
-				<<  "dE = " << prms.dE << " dL = " << prms.dL << " dP = " << prms.dP << endl;;
-		
+				<< "dE = " << prms.dE << " dL = " << prms.dL << " dP = " << prms.dP << endl;;
+
 			cout << "||---------aratio--------||" << endl;
 			cout << " uoE = " << acptRcur[0] << " uoL = " << acptRcur[1] << " uoP = " << acptRcur[2] << " Y = " << acptRcur[3] << " w = " << acptRcur[4] << " n = " << acptRcur[5] << " z1 = " << acptRcur[6] << endl
 				<< " z2 = " << acptRcur[7] << " z3 = " << acptRcur[8] << " z4 = " << acptRcur[9] << " z5 = " << acptRcur[10] << " z6 = " << acptRcur[11] << " sf1 = " << acptRcur[12] << " sf2 = " << acptRcur[13]
-				<< " sf3 = " << acptRcur[14] << " sf4 = " << acptRcur[15] << " sf5 = " << acptRcur[16] << " sf6 = " << acptRcur[17] << "dE = " << acptRcur[18] << " dL = " << acptRcur[19] << " dP = " << acptRcur[20] << endl;
+				<< " sf3 = " << acptRcur[14] << " sf4 = " << acptRcur[15] << " sf5 = " << acptRcur[16] << " sf6 = " << acptRcur[17] << "dE = " << acptRcur[18] << " dL = " << acptRcur[19] << " dP = " << acptRcur[20]  << endl;
 			cout << "||---------aNum--------||" << endl;
 			cout << " uoE = " << acpts[0] << " uoL = " << acpts[1] << " uoP = " << acpts[2] << " Y = " << acpts[3] << " w = " << acpts[4] << " n = " << acpts[5] << " z1 = " << acpts[6] << endl
 				<< " z2 = " << acpts[7] << " z3 = " << acpts[8] << " z4 = " << acpts[9] << " z5 = " << acpts[10] << " z6 = " << acpts[11] << " sf1 = " << acpts[12] << " sf2 = " << acpts[13]
@@ -309,6 +312,14 @@ pMMHres pMMHSampler(
 			cout << "||-----------------------||" << endl;
 		}
 
+		llProp = llFunc(particles, prms, oDat, fixedParam) + lprior(prms);//find log likelihood from particle filter
+
+		//print outputs
+		if ((monitoring = true && iter % tell == 0)) {
+			cout << "current = " << llCur << endl;
+			cout << "proposed = " << llProp << endl;
+		}
+				
 		llRatio = llProp - llCur;//ratio between previous ll and proposed ll
 
 		if (llRatio >= 0 || rn01() <= exp(llRatio)) {
@@ -352,6 +363,7 @@ pMMHres pMMHSampler(
 			results.dE.emplace_back(prms.dE);
 			results.dL.emplace_back(prms.dL);
 			results.dP.emplace_back(prms.dP);
+
 
 			results.ll.emplace_back(llCur);
 		}

@@ -22,7 +22,7 @@ vector<tuple<int, int, int, int>> mPmod(modParms parmsx, boost::mt19937 rd) {
 	double  Y = parmsx.Y;
 	double  n = parmsx.n;
 	double sf = parmsx.sf;
-	double dP = parmsx.dP;
+	double o = parmsx.o;
 	double uP = parmsx.uP;
 	double S = parmsx.S;
 	double dE = parmsx.dE;
@@ -30,22 +30,29 @@ vector<tuple<int, int, int, int>> mPmod(modParms parmsx, boost::mt19937 rd) {
 	double uM = parmsx.uM;
 	double uE;
 	double uL;
-	double mRan;
+	double uN;
+	//double uoN =0.25;
 
-	vector<int> rF = parmsx.rF;
+	double mRan;
+	double dP = parmsx.dP;
+
+	vector<double> rF = parmsx.rF;
 	vector<tuple<int, int, int, int>> r;
 
 	while (t < time) {
 
-		if (t <= trx) { K = (1 + (sf*((1 / trx)))); }
+		if (t <= trx) {
+			rFsum = std::accumulate(rF.begin(), rF.begin() + t, 0);
+			K = ((sf*((1 / t)*rFsum)));
+		}
 		else {
 			rFsum = std::accumulate(rF.begin() + (t - trx), rF.begin() + t, 0);
-			K = (1 + (sf*((1 / trx)*rFsum)));
+			K =  ((sf*((1 / trx)*rFsum)));
 		}
 
-		uE = uoE*((E + L) / (K));
-		uL = uoL*((Y*(E + L) / (K)));
-
+		uE = uoE*exp((E + L) / (K));
+		uL = uoL*exp(Y*(E + L) / (K));
+		//uN = uoN*exp(1 + (Yn*(E + L) / (K)));
 		if ((dE + uE)*dt < 1) {
 			boost::binomial_distribution<int> distributionBe(E, (dE + uE)*dt);
 			Be = distributionBe(rd);
@@ -89,11 +96,12 @@ vector<tuple<int, int, int, int>> mPmod(modParms parmsx, boost::mt19937 rd) {
 		mRan = distributionM(rd);
 
 
-		if (M + mRan - Bm > 0)
+		if (M + mRan - Bm > 20)
 			M = rint(M + mRan - Bm);
-		else M = 1;
+		else M = 20;
 		t++;
 		r.emplace_back(make_tuple(E, L, P, M));
+		//cout << "M = " << M << endl;
 	}
 	return r;
 }

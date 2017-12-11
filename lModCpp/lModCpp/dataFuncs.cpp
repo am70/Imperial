@@ -3,15 +3,18 @@
 //text file reader
 //@param file text file location
 //@return vector of ints from text file
-vector<int> txtReader(string file) {
-	vector<int>dat;
+vector<double> txtReader(string file, float dt) {
+	vector<double>dat;
 	// open file    
 	ifstream inputFile(file);
 	if (inputFile) {
-		int value;
+		double value;
 		// read the elements in the file into a vector  
 		while (inputFile >> value) {
-			dat.emplace_back(value);
+			for (int j = 0; j < (1 / dt); j++) {
+				dat.emplace_back(value*dt);
+				
+			}
 		}
 	}
 	return (dat);

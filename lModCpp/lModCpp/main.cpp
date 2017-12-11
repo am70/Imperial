@@ -10,10 +10,6 @@
 int main()
 {
 
-
-
-
-
 	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
 
@@ -42,60 +38,61 @@ int main()
 
 
 	//modParms initParams;
-	initParams.uoE = 0.0287;
-	initParams.uoL = 0.03;
-	initParams.uP = 0.2830;
-	initParams.Y = 3.636;
-	initParams.z1 = 2.20;
-	initParams.z2 = 3.17446;
-	initParams.z3 = 5.287;
-	initParams.z4 = 2.5828;
-	initParams.z5 = 4.597;
-	initParams.z6 = 3.050;
+	initParams.uoE = 0.04016;
+	initParams.uoL = 0.03639;
+	initParams.uP = 0.2244;
+	initParams.Y = 6.499;
+	initParams.z1 = 4.08083;
+	initParams.z2 = 4.54498;
+	initParams.z3 = 4.689;
+	initParams.z4 = 4.24595;
+	initParams.z5 = 4.65455;
+	initParams.z6 = 4.085;
 
-	initParams.w = 0.039;
-	initParams.sf1 = 1.994;
-	initParams.sf2 = 3.105;
-	initParams.sf3 = 3.684;
-	initParams.sf4 = 2.63;
-	initParams.sf5 = 3.866;
-	initParams.sf6 = 3.646;
-
-
-	initParams.dE = 0.20;
-	initParams.dL = 0.411;
-	initParams.dP = 1.91;
+	initParams.w = 0.0111628;
+	initParams.sf1 = 4.5349;
+	initParams.sf2 = 4.8285;
+	initParams.sf3 = 4.458;
+	initParams.sf4 = 4.009;
+	initParams.sf5 = 4.277;
+	initParams.sf6 = 4.053;
 
 
-	initParams.n = 11.1075;
-	initParams.rF = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf05.txt");
+	initParams.dE = 0.14381;
+	initParams.dL = 0.2509;
+	initParams.dP = 1.5;
+	initParams.o = 5;
 
-	vector<double> sdProps = { 0.01, 0.01, 0.1, 1, 0.1, 0.1, 0.1, 0.1,0.1,0.1,0.1,0.1, 0.1, 0.1, 0.1, 0.1,0.1,0.1,0.05,0.05,0.1 };
-	vector<double> maxSdProps = { 0.1, 0.1, 0.1, 20, 0.1, 5, 1, 1, 1, 1,1,1, 1, 1, 1, 1,1,1,0.1,0.1,2 };
-	vector<double> acptRs = { 0.5,0.5,0.5,0.5,0.5,0.5,
-		0.5,0.5,0.5,0.5,0.5,0.5,
-		0.5,0.5,0.5,0.5,0.5,0.5,
-		0.5,0.5,0.5};
+
+	initParams.n = 30;
+	initParams.rF = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf05.txt",0.25);
+
+	vector<double> sdProps = { 0.1, 0.1, 0.1, 1, 0.1, 10, 2, 2,2,2,2,2, 2, 2, 2, 2,2,2,0.1,0.1,0.1 };
+	vector<double> maxSdProps = { 0.1, 0.1, 0.1, 50, 0.1, 20, 1, 1, 1, 1,1,1, 1, 1, 1, 1,1,1,0.1,0.1,0.1};
+	vector<double> acptRs = { 0.3,0.3,0.3,0.3,0.5,0.4,
+		0.45,0.45,0.45,0.45,0.45,0.45,
+		0.45,0.45,0.45,0.45,0.45,0.45,
+		0.4,0.4,0.4};
 	vector<tuple<string, double>> fitPrms = { { "uoE", initParams.uoE },{ "uoL", initParams.uoL },{ "uP", initParams.uP },{ "Y", initParams.Y },
 	{ "w", initParams.w },{ "n", initParams.n },{ "z1", initParams.z1 },{ "z2", initParams.z2 },{ "z3", initParams.z3 },{ "z4", initParams.z4 },{ "z5", initParams.z5 },{ "z6", initParams.z6 },
 	{ "sf1", initParams.sf1 } ,{ "sf2", initParams.sf2 } ,{ "sf3", initParams.sf3 } ,{ "sf4", initParams.sf4 } ,{ "sf5", initParams.sf5 } ,{ "sf6", initParams.sf6 } 
-	,{ "dE", initParams.dE },{ "dL", initParams.dL } ,{ "dP", initParams.dP }};
+	,{ "dE", initParams.dE },{ "dL", initParams.dL } ,{ "dP", initParams.dP } };
 
 
 
 	pMMHres results = pMMHSampler(
 		initParams,//initial parameters
-		7,//fixed parameter for days of rainfall   
+		4,//fixed parameter for days of rainfall   
 		sdProps,//initial sf for param proposals
 		acptRs,//acceptance ratios
 		fitPrms,//tuple of initial parm values plus names - needed as no reflection - maybe can be coded better
 		maxSdProps,//max sd for each parameter proposal in tuner
-		250000,//iterations
-		50,//particles
+		50000,//iterations
+		60,//particles
 		2000,//nburn 
 		1,//monitoring
-		1000,//start adapt
-		100,//tell
+		600,//start adapt
+		25,//tell
 		garkiDatGam//observed data
 	);
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
@@ -103,12 +100,12 @@ int main()
 
 	//write results to csv
 	ofstream myfile;
-	myfile.open("Q:\\Imperial\\1milTestTr7.txt");
+	myfile.open("Q:\\Imperial\\1milTestTr7_M_1.txt");
 	for (auto iter = 0; iter != size(results.ll); ++iter) {
 		myfile << results.uoE.at(iter) << " " << results.uoL.at(iter) << " " << results.uP.at(iter) << " " << results.Y.at(iter) << " " << results.w.at(iter)
 			<< " " << results.n.at(iter) << " " << results.z1.at(iter) << " " << results.z2.at(iter) << " " << results.z3.at(iter) << " " << results.z4.at(iter) << " " << results.z5.at(iter) << " " << results.z6.at(iter)
 			<< " " << results.sf1.at(iter) << " " << results.sf2.at(iter) << " " << results.sf3.at(iter) << " " << results.sf4.at(iter) << " " << results.sf5.at(iter) << " " << results.sf6.at(iter) << 
-			" " << results.dE.at(iter) << " " << results.dL.at(iter) << " " << results.dP.at(iter) << " " << results.ll.at(iter) << std::endl;
+			" " << results.dE.at(iter) << " " << results.dL.at(iter) << " " << results.dP.at(iter) << " "  << results.ll.at(iter) << std::endl;
 	}
 	cout << "end";
 	cin.get();
