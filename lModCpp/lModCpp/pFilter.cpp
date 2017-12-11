@@ -121,7 +121,6 @@ double lbeta(double a, double b) {
 @return log likelihood*/
 double betaBinom(double k, double n, double p, double w) {
 	//n = n + 100;
-	//if (n <= k) cout << "n = " << n << " k = " << k << endl;
 	if (n >= k) {
 		if (k <= 0) k = 1;
 		if (k == n) n = n + 1;
@@ -156,6 +155,33 @@ tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt
 	tuple<int, int, int, int, double> res = { get<0>(modRun.back()),get<1>(modRun.back()),get<2>(modRun.back()),get<3>(modRun.back()), weight };
 	return res;
 }
+
+/*model step function for plotting
+@param wp a structure containing start times and states for model step
+@param obsData, observed data for calculating likelihood value
+@return tuple containing state ints for E, L, P, M and likelihood (non-log), at the end of
+a model run with designated start and end times*/
+vector<tuple<int, int, int, int, double>> modStepFncPlot(modParms wp, int obsData, boost::mt19937 rd) {
+	vector<tuple<int, int, int, int>> modRun;
+	modRun.reserve(wp.endTime - wp.startTime);
+	double weight;
+	try
+	{
+		modRun = mPmod(wp, rd);
+	}
+	catch (...) { cout << "mod run exception"; }
+
+	double sim = get<3>(modRun.back());
+	weight = betaBinom(obsData, sim, 0.01, wp.w); //add weights to tuple
+	tuple<int, int, int, int, double> res;
+	vector<tuple<int, int, int, int, double>> res2;
+	for (int j = 0; j < boost::size(modRun); j++) {
+		res = { get<0>(modRun[j]),get<1>(modRun[j]),get<2>(modRun[j]),get<3>(modRun[j]), weight };
+		res2.emplace_back(res);
+	}
+	return res2;
+}
+
 
 /*rand particle sample function
 @param samp vector of tuples containing particles E,L,M,P
@@ -210,6 +236,10 @@ double pFilt(int n,
 	modParms wp;
 	vector<tuple<int, int, int, int, double>>  particles;
 	particles.reserve(n);
+	vector<double> modPlotRes;
+	vector<double> modPlot;
+	vector<double> plotResTemp;
+
 
 	//calculate discreet time steps for observed data
 	for (auto i = begin(obsData); i != end(obsData); ++i) {
@@ -220,48 +250,92 @@ double pFilt(int n,
 	particles = iState(n, times.front(), prms, fxdParams);
 
 		ll = (betaBinom(get<1>(obsData[0]), get<3>(particles[0]), 0.01, prms.w));
+		
 
-	for (auto i = 0; i != times.size() - 1; ++i) {
-		modParms wp;
-		wp.dE = prms.dE;
-		wp.dL = prms.dL;
-		wp.dP = prms.dP;
+		for (auto i = 0; i != times.size() - 1; ++i) {
+			modParms wp;
+			wp.dE = prms.dE;
+			wp.dL = prms.dL;
+			wp.dP = prms.dP;
 
-		wp.uoE = prms.uoE;
-		wp.uoL = prms.uoL;
-		wp.uP = prms.uP;
-		wp.Y = prms.Y;
-		wp.sf = prms.sf;
-		wp.z = prms.z;
-		wp.n = prms.n;
-		wp.w = prms.w;
-		wp.rF = prms.rF;
-		wp.fxdPrm = fxdParams;
-		wp.startTime = times.at(i);
-		wp.endTime = times.at(i + 1);
-		//run model in step and update particles in parallel
-		double lltemp = 0;
+			wp.uoE = prms.uoE;
+			wp.uoL = prms.uoL;
+			wp.uP = prms.uP;
+			wp.Y = prms.Y;
+			wp.sf = prms.sf;
+			wp.z = prms.z;
+			wp.n = prms.n;
+			wp.w = prms.w;
+			wp.rF = prms.rF;
+			wp.fxdPrm = fxdParams;
+			wp.startTime = times.at(i);
+			wp.endTime = times.at(i + 1);
+			//run model in step and update particles in parallel
+			double lltemp = 0;
 
+			if (resM == false) {
 #pragma omp parallel for schedule(static) reduction(+:lltemp)  //reduction needed due to problem with thread racing
-		for (int j = 0; j < boost::size(particles); j++) {
-			boost::mt19937 mrandThread(std::random_device{}());
-			wp.E0 = get<0>(particles[j]);
-			wp.L0 = get<1>(particles[j]);
-			wp.P0 = get<2>(particles[j]);
-			wp.M0 = get<3>(particles[j]);
-			int obsDatPoint = get<1>(obsData[i]);
-			particles.at(j) = modStepFnc(wp, obsDatPoint, mrandThread);
-			lltemp = lltemp + get<4>(particles.at(j));
-			//if (std::isnan(get<4>(particles.at(j))) == 0)  get<4>(particles.at(j)) = 0;
-		}
+				for (int j = 0; j < boost::size(particles); j++) {
+					boost::mt19937 mrandThread(std::random_device{}());
+					wp.E0 = get<0>(particles[j]);
+					wp.L0 = get<1>(particles[j]);
+					wp.P0 = get<2>(particles[j]);
+					wp.M0 = get<3>(particles[j]);
+					int obsDatPoint = get<1>(obsData[i]);
+					particles.at(j) = modStepFnc(wp, obsDatPoint, mrandThread);
+					lltemp = lltemp + get<4>(particles.at(j));
+					//if (std::isnan(get<4>(particles.at(j))) == 0)  get<4>(particles.at(j)) = 0;
+				}
+				//normalise particle probabilities
+				particles = normalise(particles, lltemp);
+				//re-sample particles
+				particles = rSamp(particles);
+				//take mean of likelihoods from particles
+				double llMean = lltemp / boost::size(particles);
+				ll = ll + llMean;//add start val for frst obs point
+			}
 
-		//normalise particle probabilities
-		particles = normalise(particles, lltemp);
-		//re-sample particles
-		particles = rSamp(particles);
-		//take mean of likelihoods from particles
-		double llMean = lltemp / boost::size(particles);
-		ll = ll + llMean;//add start val for frst obs point
+			//alternative loop for getting plot outputs from particle filter - could be coded better...
+			if (resM == true) {
+				vector < tuple<int, int, int, int, double>> plotRes;
+				plotResTemp.clear();
+				plotResTemp.resize(wp.endTime - wp.startTime);
+				for (int j = 0; j < boost::size(particles); j++) {
+					boost::mt19937 mrandThread(std::random_device{}());
+					wp.E0 = get<0>(particles[j]);
+					wp.L0 = get<1>(particles[j]);
+					wp.P0 = get<2>(particles[j]);
+					wp.M0 = get<3>(particles[j]);
+					int obsDatPoint = get<1>(obsData[i]);
+					plotRes = modStepFncPlot(wp, obsDatPoint, mrandThread);
+					for (int x = 0; x < boost::size(plotRes); x++) {
+						plotResTemp.at(x)= plotResTemp.at(x)+(get<3>(plotRes[x]));
+					}
+					particles.at(j) = { get<0>(plotRes.back()),get<1>(plotRes.back()),get<2>(plotRes.back()),get<3>(plotRes.back()), get<4>(plotRes.back()) };;
+					lltemp = lltemp + get<4>(particles.at(j));
+					//if (std::isnan(get<4>(particles.at(j))) == 0)  get<4>(particles.at(j)) = 0;
+				}
+				for (int g = 0; g < boost::size(plotResTemp); g++) {
+					modPlot.emplace_back(plotResTemp.at(g) / boost::size(particles));
+				}
+				//normalise particle probabilities
+				particles = normalise(particles, lltemp);
+				//re-sample particles
+				particles = rSamp(particles);
+				//take mean of likelihoods from particles
+				double llMean = lltemp / boost::size(particles);
+				ll = ll + llMean;//add start val for frst obs point
+
+			}
+
+	
 	}
+		if (resM == true) {
+
+			for (int j = 0; j < boost::size(modPlot); j++) {
+				cout << modPlot.at(j) << ",";
+			}
+				cin.get();
+		}
 	return ll;
 }
