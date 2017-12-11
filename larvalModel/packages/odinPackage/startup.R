@@ -16,79 +16,81 @@ library(rmutil)
 #                                                     load in data                                                                      #
 #                                                                                                                                       #
 #########################################################################################################################################
+
 delta <- 0.25#discrete time period
+rainfall<-read.csv("Q:\\Imperial\\lModCpp\\Data\\rfall.csv")
+rainfall$Date<-as.Date(rainfall$Date)
+rainfall <-subset(rainfall,Date >= "1970-01-01" & Date <= "1975-04-27")
+rainfall1<-read.csv("Q:\\Imperial\\lModCpp\\Data\\rf01.txt",head=F)
+rainfall1$time <- (1:nrow(rainfall1))
+rFx1 <- rainfall1[rep(seq_len(nrow(rainfall1)), each = 1 / delta), ]
+rFx1$V1<-rFx1$V1*delta
+rFx1 <- rFx1[, 1]
 
-#simDat<-read.csv("Q:\\simDat.csv",sep=" ")
-##load in Garki rainfall data NOT YET VILLAGE SPECIFIC
-rainfall <-
-  read.csv("Q:\\Imperial\\larvalModel\\Data\\meteoFUP1.csv", head = F)
-colnames(rainfall) <- c("rainfall", "date")
-rainfall$date <- dmy(rainfall$date)
-#limit data to one year
-rainfall <-
-  subset(rainfall,
-         date >= as.Date("1971-01-01") & date <= as.Date("1973-04-27"))
-rainfall$time <- (1:nrow(rainfall))
-rFx <- rainfall[rep(seq_len(nrow(rainfall)), each = 1 / delta), ]
-rFx <- rFx[, 1]
-
-rainfall2 <-
-  read.csv("Q:\\Imperial\\larvalModel\\Data\\meteoFUP2.csv", head = F)
-colnames(rainfall2) <- c("rainfall", "date")
-rainfall2$date <- dmy(rainfall2$date)
-#limit data to one year
-rainfall2 <-
-  subset(rainfall2,
-         date >= as.Date("1971-01-01") & date <= as.Date("1973-04-27"))
-rainfall2$time <- (1:nrow(rainfall2))
-rFx2 <- rainfall2[rep(seq_len(nrow(rainfall2)), each = 1 / delta), ]
-rFx2 <- rFx2[, 1]
+rainfall1<-read.csv("Q:\\Imperial\\lModCpp\\Data\\rf02.txt",head=F)
+rainfall1$time <- (1:nrow(rainfall1))
+rFx1 <- rainfall1[rep(seq_len(nrow(rainfall1)), each = 1 / delta), ]
+rFx1$V1<-rFx1$V1*delta
+rFx2 <- rFx1[, 1]
+rainfall1<-read.csv("Q:\\Imperial\\lModCpp\\Data\\rf03.txt",head=F)
+rainfall1$time <- (1:nrow(rainfall1))
+rFx1 <- rainfall1[rep(seq_len(nrow(rainfall1)), each = 1 / delta), ]
+rFx1$V1<-rFx1$V1*delta
+rFx3 <- rFx1[, 1]
+rainfall1<-read.csv("Q:\\Imperial\\lModCpp\\Data\\rf04.txt",head=F)
+rainfall1$time <- (1:nrow(rainfall1))
+rFx1 <- rainfall1[rep(seq_len(nrow(rainfall1)), each = 1 / delta), ]
+rFx1$V1<-rFx1$V1*delta
+rFx4 <- rFx1[, 1]
+rainfall1<-read.csv("Q:\\Imperial\\lModCpp\\Data\\rf05.txt",head=F)
+rainfall1$time <- (1:nrow(rainfall1))
+rFx1 <- rainfall1[rep(seq_len(nrow(rainfall1)), each = 1 / delta), ]
+rFx1$V1<-rFx1$V1*delta
+rFx5 <- rFx1[, 1]
+rainfall1<-read.csv("Q:\\Imperial\\lModCpp\\Data\\rf06.txt",head=F)
+rainfall1$time <- (1:nrow(rainfall1))
+rFx1 <- rainfall1[rep(seq_len(nrow(rainfall1)), each = 1 / delta), ]
+rFx1$V1<-rFx1$V1*delta
+rFx6 <- rFx1[, 1]
+rainfall1<-read.csv("Q:\\Imperial\\lModCpp\\Data\\rf07.txt",head=F)
+rainfall1$time <- (1:nrow(rainfall1))
+rFx1 <- rainfall1[rep(seq_len(nrow(rainfall1)), each = 1 / delta), ]
+rFx1$V1<-rFx1$V1*delta
+rFx7 <- rFx1[, 1]
+rainfall1<-read.csv("Q:\\Imperial\\lModCpp\\Data\\rf08.txt",head=F)
+rainfall1$time <- (1:nrow(rainfall1))
+rFx1 <- rainfall1[rep(seq_len(nrow(rainfall1)), each = 1 / delta), ]
+rFx1$V1<-rFx1$V1*delta
+rFx8 <- rFx1[, 1]
 
 #load in mosquito data
-garki <-
-  read.table(
-    "Q:\\Imperial\\larvalModel\\Data\\spraycollect.csv",
-    sep = ",",
-    head = T
-  )
-garki$ag_sum <-
-  rowSums(garki[, c(9:16)])#create sum of A.gambiae spray samples
-garki$Date <- as.Date(garki$Date)
-garki72 <-
-  subset(garki,#1972-05-27
-         Date >= as.Date("1972-05-30") & Date <= as.Date("1973-01-01"))
-for (i in c(101  ,   104   ,  219,  220)) {
-  print(i)
-  if (i < 200)
-    rainTemp <- rainfall
-  else
-    rainTemp <- rainfall2
-  garki72_101 <- subset(garki72, E_Station %in% i) ##subset by village
-  garki72_101 <-
-    merge(
-      garki72_101,
-      rainfall,
-      by.x = "Date",
-      by.y = "date",
-      all = T
-    ) 
-  #merge rainfall and mosquito data
-  garkiObs <- garki72_101[, c(39, 37)]
-  colnames(garkiObs) <- c("time", "M")
-  garkiObs <- subset(garkiObs, M >= 0)
-  garkiObs <- round(aggregate(M ~ time, data = garkiObs, FUN = mean), 0)
-  #garkiObs<-rbind(data.frame(time = 0, M = 0), garkiObs)
-  plot(garkiObs$time, garkiObs$M, main = i)
+garki <-read.table("Q:\\Imperial\\lModCpp\\Data\\anophTable.csv",sep = ",",head = T)
+villageEstation <-read.table("Q:\\Imperial\\lModCpp\\Data\\villageEstation.csv",sep = ",",head = T)
+colnames(villageEstation)<-c("E_station","village")
+villClust <-read.table("Q:\\Imperial\\lModCpp\\Data\\villClust.csv",sep = ",",head = T)
+garki<-merge(garki,villageEstation,by.x="E_Station",by.y="E_station")
+garki$Date<-as.Date(garki$Date)
+garki<-merge(garki,villClust,by.x="village",by.y="Village")
+garki<-subset(garki,Date >= "1970-05-28" & Date <= "1972-01-01")
+for (i in c(154,   202,  218,  304,553,802)) {
+  garkiTemp<-subset(garki,village==i)
+  rainfallTemp<-subset(rainfall,fup==head(garkiTemp$Fup,1))
+  rainfallTemp$time<-c(1:nrow(rainfallTemp))
+  garkiTemp<-aggregate(sumGamFem ~ Date, garkiTemp, sum)
+  garkiTemp<-merge(garkiTemp,rainfallTemp,by.x="Date",by.y="Date")
+  print(garkiTemp)
+  garkiObs<-cbind(garkiTemp$time,garkiTemp$sumGamFem)
   colnames(garkiObs) <- c("time", i)
+  plot(garkiObs)
   assign(paste0("garkiObs", i), garkiObs)
 }
+
 garkiObsX <-
   Reduce(
     function(...)
       merge(..., all = TRUE),
-    list(garkiObs101, garkiObs104, garkiObs219, garkiObs220)
+    list(garkiObs154, garkiObs202, garkiObs218, garkiObs304,garkiObs553,garkiObs802)
   )
-
 
 #########################################################################################################################################
 #                                                                                                                                       #
@@ -108,7 +110,7 @@ clusterEvalQ(cl, library("odinPackage"))
 clusterEvalQ(cl, library("lhs"))
 clusterEvalQ(cl, library("VGAM"))
 clusterEvalQ(cl, library("deSolve"))
-clusterExport(cl, c("rFx", "rFx2", "delta", "garkiObs", "nBgP"), envir =
+clusterExport(cl, c("rFx", "rFx2", "rFx3","delta", "garkiObs", "nBgP"), envir =
                 environment())
 
 
@@ -135,10 +137,9 @@ lprior <- function(parms) {
              +dnorm(parms[3], mean = 0.25, sd = 0.11, log = T)
              +dunif(parms[3], min = 0.001, max = 0.99, log = T)
              +dnorm(parms[4], mean = 13.06, sd = 4.53, log = T)
-             +dunif(parms[5], min = 1, max = 1e+5, log = T)
             # +dnorm(parms[5], mean = 75, sd = 10, log = T)
              +dunif(parms[6], min = 1e-06, max = 1, log = T)
-             +dunif(parms[5], min = 0.01, max = 100000, log = T)
+             +dunif(parms[5], min = 0.01, max = 1e+10, log = T)
              +dunif(parms[7], min = 1, max = 1e+20, log = T)
              +dunif(parms[8],min=1,max=93.6,log=T)
   )
@@ -156,14 +157,14 @@ system.time(runX200z6x3uoE0.1 <-  mcmcSampler(initParams = c(uoE=0.03,uoL=0.0315
                                               ,sdProps=c(0.01,0.01,0.1,1,1,1,1,1,0.1,3,3,3,3,3)
                                               ,maxSddProps=c(0.1,0.1,0.1,Inf,Inf,Inf,Inf,Inf,0.1,1500000,1500000,1500000,1500000,Inf)
                                               , randInit = F
-                                              ,fixedParam=7
+                                              ,fixedParam=4
                                               ,adaptiveMCMC = T
                                               ,proposerType = 'seq'
                                               , startAdapt = 150
                                               ,tell = 1
-                                              , particles=50
-                                              ,acceptanceRate =c(0.3,0.3,0.3,0.5,0.5,0.5,0.5,0.5,0.5,0.6,0.45,0.6,0.6,0.5)
-                                              , niter = 30000
+                                              , particles=2
+                                              ,acceptanceRate =c(0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.5,0.5,0.6,0.45,0.6,0.6,0.4)
+                                              , niter = 20
                                               ,cluster = F
                                               ,oDat=garkiObsX
                                               ,priorFunc=lprior))
@@ -175,11 +176,11 @@ write.table(runX200z4$results,"Q:\\Imperial\\res2.csv")
 
 
 #test just particle filter
-testParams  = c(3.000000e-02, 3.156214e-02 ,2.499843e-01 ,1.150120e+01 ,3.513033e+01, 1.000000e-02 ,7.827497e+00 ,3.771100e+05, 5.000000e+01)
+testParams  =  c(uoE=0.03,uoL=0.03156214,uP=0.2499843,Y=11.5012,z1=5000,w=0.01,
+                 sf=64342,n=50)
 res4<-NULL
 system.time(for (i in 1:100){
-  ss<-pFilt(50,iState,modStep3,dataLikFunc,garkiObs101,pr = testParams,rFclust = 1,fxdParams = 7,resM = F, cluster = F)#+ lprior(testParams)
-  res4<-rbind(ss,res4)
+  ss<-pFilt(50,iState,modStep3,dataLikFunc,garkiObs101,pr = testParams,rFclust = 1,fxdParams = 7,resM = F, cluster = F) #+ lprior(testParams)
   print(ss)
 })
 
@@ -222,9 +223,9 @@ ctx <- context::context_save(root,
                              package_source=provisionr::package_sources(
                              local="Q:\\Imperial\\larvalModel\\packages\\odinPackage"),
                              sources=sources,
-                             packages = c("lhs","deSolve","lubridate","odinPackage","dde","buildr","coda","parallel","snow","mnormt","rmutil"))
+                             packages = c("lhs","deSolve","lubridate","odinPackage","dde","buildr","coda","parallel","snow","mnormt","rmutil","Rcpp"))
 
-obj <- didehpc::queue_didehpc(ctx,didehpc::didehpc_config(cluster="didemrchnb",home="//fi--san02/homes/alm210",cores=32,parallel = T))
+obj <- didehpc::queue_didehpc(ctx,didehpc::didehpc_config(cluster="mrc",home="//fi--san02/homes/alm210",cores=64,parallel = T))
 
 
 #########################################################################################################################################
@@ -232,11 +233,6 @@ obj <- didehpc::queue_didehpc(ctx,didehpc::didehpc_config(cluster="didemrchnb",h
 #                                                     run pMMH on cluster                                                               #
 #                                                                                                                                       #
 #########################################################################################################################################
-
-minSpd=c(0.001,0.001,0.003,0.001,0.001,0.001,0.001,0.00001,0.03)
-
-
-
 
 
 ## Log-Prior function - specific to this model
@@ -250,11 +246,10 @@ lprior <- function(parms) {
              +dunif(parms[2], min = 0.001, max = 0.99, log = T)
              +dnorm(parms[3], mean = 0.25, sd = 0.11, log = T)
              +dunif(parms[3], min = 0.001, max = 0.99, log = T)
-             +dnorm(parms[4], mean = 13.06, sd = 4.53, log = T)
-             +dunif(parms[5], min = 1, max = 1e+5, log = T)
+             +dnorm(parms[4], mean = 13.06, sd = 10, log = T)
           #   +dnorm(parms[5], mean = 75, sd = 10, log = T)
              +dunif(parms[6], min = 1e-06, max = 1, log = T)
-             +dunif(parms[5], min = 0.01, max = 100000, log = T)
+             +dunif(parms[5], min = 0.01, max = 1e+10, log = T)
              +dunif(parms[7], min = 1, max = 1e+20, log = T)
              +dunif(parms[8],min=1,max=93.6,log=T)
   )
@@ -262,7 +257,7 @@ lprior <- function(parms) {
 }
 
 
-runXTrn50<- obj$enqueue( mcmcSampler(initParams = c(uoE=0.03,uoL=0.03156214,uP=0.2499843,Y=11.5012,z1=75,z2=75,z3=75,z4=75,w=0.01
+runXTrn<- obj$enqueue( mcmcSampler(initParams = c(uoE=0.03,uoL=0.03156214,uP=0.2499843,Y=11.5012,z1=75,z2=75,z3=75,z4=75,w=0.01
                                                     ,sf1=57110,sf2=12660,sf3=8097,sf4=64342,n=50)
                                      ,nburn=5000
                                      ,monitoring=2
@@ -270,17 +265,17 @@ runXTrn50<- obj$enqueue( mcmcSampler(initParams = c(uoE=0.03,uoL=0.03156214,uP=0
                                      ,sdProps=c(0.01,0.01,0.1,1,1,1,1,1,0.1,3,3,3,3,3)
                                      ,maxSddProps=c(0.1,0.1,0.1,Inf,Inf,Inf,Inf,Inf,0.1,1500000,1500000,1500000,1500000,Inf)
                                      , randInit = F
-                                     ,fixedParam=7
+                                     ,fixedParam=4
                                      ,adaptiveMCMC = T
                                      ,proposerType = 'seq'
                                      , startAdapt = 150
                                      ,tell = 20
-                                     , particles=50
-                                     ,acceptanceRate =c(0.3,0.3,0.3,0.5,0.5,0.5,0.5,0.5,0.5,0.6,0.45,0.6,0.6,0.5)
-                                     , niter = 50000
+                                     , particles=75
+                                     ,acceptanceRate =c(0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.5,0.5,0.6,0.45,0.6,0.6,0.4)
+                                     , niter = 250000
                                      ,cluster = T
                                      ,oDat=garkiObsX
-                                     ,priorFunc=lprior),name="pMMH Z_Inf uoE0.015 50k tr7")
+                                     ,priorFunc=lprior),name="pMMH Z_Infy9 uoE0.015 250k zMax tr4 64")
 
 
 
