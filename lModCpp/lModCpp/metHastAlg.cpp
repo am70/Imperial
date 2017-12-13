@@ -4,13 +4,12 @@ boost::mt19937 rng(std::time(0));
 
 
 
-vector<double> rainfall_05 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf05.txt", 0.25);
-vector<double> rainfall_07 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf07.txt", 0.25);
-vector<double> rainfall_08 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf08.txt", 0.25);
-vector<double> rainfall_04 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf04.txt", 0.25);
-vector<double> rainfall_02 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf02.txt", 0.25);
-vector<double> rainfall_01 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf01.txt", 0.25);
-
+vector<double> rainfall_05 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf05.txt", 0.25);
+vector<double> rainfall_07 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf07.txt", 0.25);
+vector<double> rainfall_08 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf08.txt", 0.25);
+vector<double> rainfall_04 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf04.txt", 0.25);
+vector<double> rainfall_02 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf02.txt", 0.25);
+vector<double> rainfall_01 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf01.txt", 0.25);
 
 
 /* proposal sd tuning function
@@ -181,21 +180,21 @@ double lprior(modParms prms) {
 	boost::math::uniform_distribution<double> u3(0.001, 0.99);//uP unif
 	res = res + (log(pdf(u3, prms.uP)));
 
-	boost::math::normal_distribution<double> d4(13.06, 4);//Y
+	boost::math::normal_distribution<double> d4(13.06, 20);//Y
 	res = res + (log(pdf(d4, prms.Y)));
 
-	boost::math::uniform_distribution<double> d4x(3, 70);//Y
+	boost::math::uniform_distribution<double> d4x(1, 70);//Y
 	res = res + (log(pdf(d4x, prms.Y)));
 
-	boost::math::uniform_distribution<double> u5(0.001, 1);//w unif
+	boost::math::uniform_distribution<double> u5(0.00001, 0.001);//w unif
 	res = res + (log(pdf(u5, prms.w)));
 	
 	boost::math::uniform_distribution<double> u61(1, 8);//z1 unif
 	boost::math::uniform_distribution<double> u62(1, 8);//z2 unif
-	boost::math::uniform_distribution<double> u63(1, 5);//z3 unif
+	boost::math::uniform_distribution<double> u63(1, 8);//z3 unif
 	boost::math::uniform_distribution<double> u64(1, 8);//z4 unif
-	boost::math::uniform_distribution<double> u65(1, 5.5);//z5 unif
-	boost::math::uniform_distribution<double> u66(1, 5);//z6 unif
+	boost::math::uniform_distribution<double> u65(1, 8);//z5 unif
+	boost::math::uniform_distribution<double> u66(1, 8);//z6 unif
 
 	res = res + (log(pdf(u61, prms.z1)));
 	res = res + (log(pdf(u62, prms.z2)));
@@ -222,18 +221,18 @@ double lprior(modParms prms) {
 
 	//dE = 0.15, dL = 0.269, dP = 1.563
 
-	boost::math::uniform_distribution<double> u8(0, (93/prms.dt));//n unif
+	boost::math::uniform_distribution<double> u8(0, (93*prms.dt));//n unif
 	res = res + (log(pdf(u8, prms.n)));
 
-	boost::math::normal_distribution<double> d5(0.150602, 0.015);//dE
+	boost::math::normal_distribution<double> d5(0.150602, 0.058);//dE
 	res = res + (log(pdf(d5, prms.dE)));
 
-	boost::math::normal_distribution<double> d6(0.268812, 0.04);//dL
+	boost::math::normal_distribution<double> d6(0.268812, 0.085);//dL
 	boost::math::uniform_distribution<double> d6_1(0.2, 0.5);//dL
 	res = res + (log(pdf(d6_1, prms.dL)));
 	res = res + (log(pdf(d6, prms.dL)));
 
-	boost::math::normal_distribution<double> d7(1.563, 0.2);//dP
+	boost::math::normal_distribution<double> d7(1.563, 0.4);//dP
 	res = res + (log(pdf(d7, prms.dP)));
 
 
@@ -282,7 +281,7 @@ pMMHres pMMHSampler(
 	vector<int> parmIter(acptRs.size(), 0);//iteration number for specific parameters
 	pMMHres results;
 
-	
+	prms.tr = fixedParam;
 
 	for (auto iter = 0; iter != niter; ++iter) {
 		propPrm = propPrmFunc(sdProps[parmNum], get<1>(fitPrms[parmNum]));//propose new parameter

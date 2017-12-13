@@ -54,6 +54,7 @@ struct obsDatX {
 	vector <tuple<int, int>> garki802;
 };
 
+double nBgP(double k, double n, double p);
 
 //vector<int> txtReader(string file);
 int binom(int n, double p, boost::mt19937 rd);

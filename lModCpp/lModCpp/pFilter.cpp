@@ -111,7 +111,15 @@ double lbeta(double a, double b) {
 //	return res;
 //}
 
-
+//negBin function
+double nBgP(double k, double n, double p) {
+	if (n >= k) {
+		double res = (lgamma(n + k) - (lgamma(k) + lgamma(1 + n))) + (log(pow(p, k)) + log(pow((1 - p), n)));
+	//	cout << " k = " << k << " n =" << n << " res = " << res << endl;
+		return res;
+	}
+	else return -10000;
+}
 
 /* Beta binomial likelihood function
 @param k Observed data point
@@ -129,10 +137,13 @@ double betaBinom(double k, double n, double p, double w) {
 		double logn = log(n);
 		double logk = log(k);
 		double lognk = log(n - k);
-		return lbeta(k + a, n - k + b) - lbeta(a, b) + (n *logn - k*logk - (n - k)* lognk + 0.5*(logn - logk - lognk - log(2 * m_pi)));//using stirling approximation for bionomial coefficient
+		double res = lbeta(k + a, n - k + b) - lbeta(a, b) + (n *logn - k*logk - (n - k)* lognk + 0.5*(logn - logk - lognk - log(2 * m_pi)));//using stirling approximation for bionomial coefficient
+
+	//	cout << " k = " << k << " n =" << n << " res = " << res << endl;
+		return res;
 	}
 	else
-		return -1000;
+		return -10000;
 }
 
 
@@ -151,7 +162,7 @@ tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt
 	}
 	catch (...) { cout << "mod run exception"; }
 	double sim = get<3>(modRun.back());
-	weight = betaBinom(obsData, sim, 0.01, wp.w); //add weights to tuple
+	weight = betaBinom(obsData, sim, 0.01,wp.w); //add weights to tuple
 	tuple<int, int, int, int, double> res = { get<0>(modRun.back()),get<1>(modRun.back()),get<2>(modRun.back()),get<3>(modRun.back()), weight };
 	return res;
 }
@@ -167,12 +178,13 @@ vector<tuple<int, int, int, int, double>> modStepFncPlot(modParms wp, int obsDat
 	double weight;
 	try
 	{
+
 		modRun = mPmod(wp, rd);
 	}
 	catch (...) { cout << "mod run exception"; }
 
 	double sim = get<3>(modRun.back());
-	weight = betaBinom(obsData, sim, 0.01, wp.w); //add weights to tuple
+	weight = nBgP(obsData, sim, 0.01); //add weights to tuple
 	tuple<int, int, int, int, double> res;
 	vector<tuple<int, int, int, int, double>> res2;
 	for (int j = 0; j < boost::size(modRun); j++) {
@@ -249,7 +261,7 @@ double pFilt(int n,
 	//get initial state of particles
 	particles = iState(n, times.front(), prms, fxdParams);
 
-		ll = (betaBinom(get<1>(obsData[0]), get<3>(particles[0]), 0.01, prms.w));
+		ll = (betaBinom(get<1>(obsData[0]), get<3>(particles[0]), 0.01,prms.w));
 		
 
 		for (auto i = 0; i != times.size() - 1; ++i) {
@@ -273,6 +285,7 @@ double pFilt(int n,
 			//run model in step and update particles in parallel
 			double lltemp = 0;
 
+
 			if (resM == false) {
 #pragma omp parallel for schedule(static) reduction(+:lltemp)  //reduction needed due to problem with thread racing
 				for (int j = 0; j < boost::size(particles); j++) {
@@ -281,6 +294,7 @@ double pFilt(int n,
 					wp.L0 = get<1>(particles[j]);
 					wp.P0 = get<2>(particles[j]);
 					wp.M0 = get<3>(particles[j]);
+
 					int obsDatPoint = get<1>(obsData[i]);
 					particles.at(j) = modStepFnc(wp, obsDatPoint, mrandThread);
 					lltemp = lltemp + get<4>(particles.at(j));
@@ -306,6 +320,7 @@ double pFilt(int n,
 					wp.L0 = get<1>(particles[j]);
 					wp.P0 = get<2>(particles[j]);
 					wp.M0 = get<3>(particles[j]);
+
 					int obsDatPoint = get<1>(obsData[i]);
 					plotRes = modStepFncPlot(wp, obsDatPoint, mrandThread);
 					for (int x = 0; x < boost::size(plotRes); x++) {

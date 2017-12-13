@@ -14,7 +14,7 @@ vector<tuple<int, int, int, int>> mPmod(modParms parmsx, boost::mt19937 rd) {
 	double P = parmsx.P0;
 	double M = parmsx.M0;
 	double K = 100;
-	double trx = parmsx.tr / parmsx.dt;
+	double trx = parmsx.fxdPrm / parmsx.dt;
 	double dt = parmsx.dt;
 	double rFsum;
 	double  uoE = parmsx.uoE;
@@ -101,7 +101,6 @@ vector<tuple<int, int, int, int>> mPmod(modParms parmsx, boost::mt19937 rd) {
 		else M = 20;
 		t++;
 		r.emplace_back(make_tuple(E, L, P, M));
-		//cout << "M = " << M << endl;
 	}
 	return r;
 }
