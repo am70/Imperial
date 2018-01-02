@@ -30,7 +30,7 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 	double uE;
 	double uL;
 	int E;
-	int L;
+	double L;
 	int P;
 	int M;
 	double t = iParms.startTime;
@@ -50,21 +50,26 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 
 	a = (0.5 * dL*dP) / (uM*(dP + uP));
 
-	uE = UoE*exp(z / K);
-	uL = UoL*exp(y*z / K);
-
-	//min start values
-	//double Ms=350
-	//double Ls = (2 * uM*Ms*(dP + uP)) / (dL*dP)
- //   double Es
+	uE = UoE*exp((z / K));
+	uL = UoL*exp((y*z / K));
 
 	E = rint(((B*a)*z) / ((dE + (B*a) + uE)));
 	L = rint((dE*z) / ((dE + dL + uL)));
 	M = rint((0.5 * dL*dP*L) / (uM*(dP + uP)));
 	P = rint((2 * uM*M) / dP);
 
+	/*a = ((n / S) * dP * dL) / ((2 * uM) * (uP * dP));
+	double	b = (UoE / (y * UoL)) * (dL + UoL) - dE - UoE;
+	double	c = -(UoE * dE) / (UoL * y);
+	double	x = (-b + sqrt(pow(b,2) * -4 * a * c)) / (2 * a);
 
-	if (M < 20) M = 20;
+	L = z;
+	E =rint(L / x);
+	P =rint((dL * L) / (uP + dP));
+	M =rint((dP * P) / (2 * uM));
+*/
+
+	if (M < 100) M = 100;
 
 	vector<tuple<int, int, int, int, double>> states = { { E, L, P, M ,0.0 } };
 	states.resize(N, { E, L, P, M, 0.0 });//return initial states, repeated to number of particles
@@ -139,11 +144,13 @@ double betaBinom(double k, double n, double p, double w) {
 		double lognk = log(n - k);
 		double res = lbeta(k + a, n - k + b) - lbeta(a, b) + (n *logn - k*logk - (n - k)* lognk + 0.5*(logn - logk - lognk - log(2 * m_pi)));//using stirling approximation for bionomial coefficient
 
-	//	cout << " k = " << k << " n =" << n << " res = " << res << endl;
 		return res;
 	}
+
 	else
-		return -10000;
+		//cout << " k = " << k << " n =" << n << endl;
+
+		return -1000;
 }
 
 
@@ -349,6 +356,11 @@ double pFilt(int n,
 
 			for (int j = 0; j < boost::size(modPlot); j++) {
 				cout << modPlot.at(j) << ",";
+			}
+			ofstream myfile;
+			myfile.open("Q:\\Imperial\\test.txt");
+			for (int j = 0; j < boost::size(modPlot); j++) {
+				myfile << modPlot.at(j) << ","<<endl;
 			}
 				cin.get();
 		}
