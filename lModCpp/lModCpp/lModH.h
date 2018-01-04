@@ -34,7 +34,7 @@ using namespace std;
 typedef long unsigned int luint;
 
 vector<double> txtReader(string, float);
-
+double medianFnc(vector<double> vec );
 
 //model parameters
 struct modParms {
@@ -70,7 +70,8 @@ double pFilt(int n,
 	vector< tuple<int, int> > obsData,
 	modParms prms,
 	bool resM,
-	int fxdParams);
+	int fxdParams,
+	string outputFile);
 
 //istate
 vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParms, int fxdParm);
@@ -123,3 +124,5 @@ pMMHres pMMHSampler(
 	int startAdapt,
 	int	tell,
 	obsDatX	oDat);
+
+double pFitFunc(int particles, pMMHres results, obsDatX obsDat, int fixedParam, modParms prms);

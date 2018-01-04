@@ -98,7 +98,7 @@ modParms parmUpdt(modParms prms, string prmName, double propPrm) {
 double llFunc(int particles, modParms prms, obsDatX obsDat, int fixedParam) {
 	vector<double> pfiltRes;
 
-	for (auto j = 0; j != 1; ++j) {
+	for (auto j = 0; j != 6; ++j) {
 		vector<tuple<int, int>> oDat;
 		if (j == 0) {
 			oDat = obsDat.garki154;
@@ -142,8 +142,9 @@ double llFunc(int particles, modParms prms, obsDatX obsDat, int fixedParam) {
 		pfiltRes.emplace_back(pFilt(particles,
 			oDat,//garki data
 			prms,//parameters
-			true,//full output or just likelihood
-			fixedParam//fixed parameters
+			false,//full output or just likelihood
+			fixedParam,//fixed parameters
+			"Q:\\Imperial\\fitPlots\\test.txt"
 		));
 	}
 
@@ -185,18 +186,18 @@ double lprior(modParms prms) {
 	boost::math::normal_distribution<double> d4(13.06, 2);//Y
 	res = res + (log(pdf(d4, prms.Y)));
 
-	boost::math::uniform_distribution<double> d4x(0.01, 70);//Y
+	boost::math::uniform_distribution<double> d4x(1, 70);//Y
 	res = res + (log(pdf(d4x, prms.Y)));
 
-	boost::math::uniform_distribution<double> u5(0.000001, 0.00095);//w unif
+	boost::math::uniform_distribution<double> u5(0.000001, 0.0005);//w unif
 	res = res + (log(pdf(u5, prms.w)));
 	
 	boost::math::uniform_distribution<double> u61(1, 8);//z1 unif
 	boost::math::uniform_distribution<double> u62(1, 8);//z2 unif
-	boost::math::uniform_distribution<double> u63(5, 8);//z3 unif
+	boost::math::uniform_distribution<double> u63(1, 8);//z3 unif
 	boost::math::uniform_distribution<double> u64(1, 8);//z4 unif
-	boost::math::uniform_distribution<double> u65(1, 5);//z5 unif
-	boost::math::uniform_distribution<double> u66(1, 4.5);//z6 unif
+	boost::math::uniform_distribution<double> u65(1, 8);//z5 unif
+	boost::math::uniform_distribution<double> u66(1, 8);//z6 unif
 
 	res = res + (log(pdf(u61, prms.z1)));
 	res = res + (log(pdf(u62, prms.z2)));
@@ -208,11 +209,11 @@ double lprior(modParms prms) {
 
 
 	boost::math::uniform_distribution<double> u71(1, 8);//sf1 unif
-	boost::math::uniform_distribution<double> u72(1, 5);//sf2 unif
+	boost::math::uniform_distribution<double> u72(1, 8);//sf2 unif
 	boost::math::uniform_distribution<double> u73(1, 8);//sf3 unif
 	boost::math::uniform_distribution<double> u74(1, 8);//sf4 unif
-	boost::math::uniform_distribution<double> u75(1, 5);//sf5 unif
-	boost::math::uniform_distribution<double> u76(1, 5);//sf6 unif
+	boost::math::uniform_distribution<double> u75(1, 8);//sf5 unif
+	boost::math::uniform_distribution<double> u76(1, 8);//sf6 unif
 
 	res = res + (log(pdf(u71, prms.sf1)));
 	res = res + (log(pdf(u72, prms.sf2)));
@@ -240,11 +241,12 @@ double lprior(modParms prms) {
 	boost::math::uniform_distribution<double> d7_1(0.1, 5);//dP
 	res = res + (log(pdf(d7_1, prms.dP)));
 
-	boost::math::uniform_distribution<double> d8(0.1, 50);//o
+	boost::math::uniform_distribution<double> d8(0.1,50);//o
 	res = res + (log(pdf(d8, prms.o)));
 
 	return(res);
 }
+
 
 
 
@@ -283,13 +285,15 @@ pMMHres pMMHSampler(
 	double llRatio; //ratio between proposed and current ll
 	modParms prms = initParams;
 	double propPrm; //proposed new parameter
+
+	prms.tr = fixedParam;
+
 	llCur = llFunc(particles, prms, oDat, fixedParam) + lprior(prms); //get value for initial ll
 	vector<double> acptRcur = acptRs;//current acceptance ratio
 	vector<double> acpts(acptRs.size(), 0.0);//number of acceptances (use acptRs to get correct vector length)
 	vector<int> parmIter(acptRs.size(), 0);//iteration number for specific parameters
 	pMMHres results;
 
-	prms.tr = fixedParam;
 
 	for (auto iter = 0; iter != niter; ++iter) {
 		propPrm = propPrmFunc(sdProps[parmNum], get<1>(fitPrms[parmNum]));//propose new parameter

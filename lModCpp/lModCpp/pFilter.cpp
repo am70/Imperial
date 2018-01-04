@@ -69,7 +69,7 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 	M =rint((dP * P) / (2 * uM));
 */
 
-	if (M < 100) M = 100;
+	if (M < 20) M = 20;
 
 	vector<tuple<int, int, int, int, double>> states = { { E, L, P, M ,0.0 } };
 	states.resize(N, { E, L, P, M, 0.0 });//return initial states, repeated to number of particles
@@ -191,7 +191,7 @@ vector<tuple<int, int, int, int, double>> modStepFncPlot(modParms wp, int obsDat
 	catch (...) { cout << "mod run exception"; }
 
 	double sim = get<3>(modRun.back());
-	weight = nBgP(obsData, sim, 0.01); //add weights to tuple
+	weight = betaBinom(obsData, sim, 0.01, wp.w); //add weights to tuple
 	tuple<int, int, int, int, double> res;
 	vector<tuple<int, int, int, int, double>> res2;
 	for (int j = 0; j < boost::size(modRun); j++) {
@@ -249,7 +249,8 @@ double pFilt(int n,
 	vector< tuple<int, int> > obsData,
 	modParms prms,
 	bool resM,
-	int fxdParams) {
+	int fxdParams,
+	string outputFile) {
 	vector<int> times;
 	double ll; //log likelihood value
 	modParms wp;
@@ -355,14 +356,14 @@ double pFilt(int n,
 		if (resM == true) {
 
 			for (int j = 0; j < boost::size(modPlot); j++) {
-				cout << modPlot.at(j) << ",";
+				cout <<j << ",";
 			}
+
 			ofstream myfile;
-			myfile.open("Q:\\Imperial\\test.txt");
+			myfile.open(outputFile);
 			for (int j = 0; j < boost::size(modPlot); j++) {
-				myfile << modPlot.at(j) << ","<<endl;
+				myfile << modPlot.at(j) <<endl;
 			}
-				cin.get();
 		}
 	return ll;
 }

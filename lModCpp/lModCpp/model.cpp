@@ -96,9 +96,9 @@ vector<tuple<int, int, int, int>> mPmod(modParms parmsx, boost::mt19937 rd) {
 		mRan = distributionM(rd);
 
 
-		if (M + mRan - Bm > 100)
+		if (M + mRan - Bm > 20)
 			M = rint(M + mRan - Bm);
-		else M = 100;
+		else M = 20;
 		t++;
 		r.emplace_back(make_tuple(E, L, P, M));
 	}

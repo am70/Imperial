@@ -12,7 +12,6 @@ int main()
 
 	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
-	
 	/*for (int j = 0; j < boost::size(rainfall_04); j++) {
 		cout << rainfall_04.at(j) << ",";
 	}
@@ -42,37 +41,37 @@ int main()
 
 
 	//modParms initParams;
-	initParams.uoE = 4.50887e-02;
-	initParams.uoL = 3.26007e-02;
-	initParams.uP = 2.35943e-01;
-	initParams.Y = 2.47546e-01;
-	initParams.z1 = 4.38939;
-	initParams.z2 = 3.14407;
-	initParams.z3 = 5.64210;
-	initParams.z4 = 4.50690;
-	initParams.z5 = 4.26134;
-	initParams.z6 = 4.02513;
+	initParams.uoE = 0.0781;
+	initParams.uoL = 0.0084;
+	initParams.uP = 0.31;
+	initParams.Y = 8,37;
+	initParams.z1 = 4.309;
+	initParams.z2 = 4.367;
+	initParams.z3 = 4.08;
+	initParams.z4 = 3.64;
+	initParams.z5 = 4.68;
+	initParams.z6 = 4.14;
 
-	initParams.w = 9.46306e-04;
-	initParams.sf1 = 3.41299;
-	initParams.sf2 = 4.92682;
-	initParams.sf3 = 4.79676;
-	initParams.sf4 = 4.92480;
-	initParams.sf5 = 4.54220;
-	initParams.sf6 = 4.21002;
-
-
-	initParams.dE = 1.54120e-01;
-	initParams.dL = 3.26433e-01;
-	initParams.dP = 1.55523;
-	initParams.o = 2;
+	initParams.w = 0.000495889;
+	initParams.sf1 = 4.909;
+	initParams.sf2 = 7.87;
+	initParams.sf3 = 6.17;
+	initParams.sf4 = 5.72;
+	initParams.sf5 = 5.74;
+	initParams.sf6 = 5.079;
 
 
-	initParams.n = 2.86226;
+	initParams.dE = 0.144;
+	initParams.dL = 0.317;
+	initParams.dP = 1.4492;
+	initParams.o = 11;
+
+
+	initParams.n = 1.27;
 	initParams.rF = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf05.txt",0.25);
 
 	vector<double> sdProps = { 0.1, 0.1, 0.1, 1, 0.001, 10, 2, 2,2,2,2,2, 2, 2, 2, 2,2,2,0.1,0.1,0.1};
-	vector<double> maxSdProps = { 0.1, 0.1, 0.1, 2, 0.1, 20, 1, 1, 1, 1,1,1, 1, 1, 1, 1,1,1,0.1,0.1,0.1,3};
+	vector<double> maxSdProps = { 0.1, 0.1, 0.1, 2, 0.1, 2, 1, 1, 1, 1,1,1, 1, 1, 1, 1,1,1,0.1,0.1,0.1,3};
 	vector<double> acptRs = { 0.3,0.3,0.3,0.3,0.3,0.3,
 		0.3,0.3,0.3,0.3,0.3,0.3,
 		0.3,0.3,0.3,0.3,0.3,0.3,
@@ -80,20 +79,20 @@ int main()
 	vector<tuple<string, double>> fitPrms = { { "uoE", initParams.uoE },{ "uoL", initParams.uoL },{ "uP", initParams.uP },{ "Y", initParams.Y },
 	{ "w", initParams.w },{ "n", initParams.n },{ "z1", initParams.z1 },{ "z2", initParams.z2 },{ "z3", initParams.z3 },{ "z4", initParams.z4 },{ "z5", initParams.z5 },{ "z6", initParams.z6 },
 	{ "sf1", initParams.sf1 } ,{ "sf2", initParams.sf2 } ,{ "sf3", initParams.sf3 } ,{ "sf4", initParams.sf4 } ,{ "sf5", initParams.sf5 } ,{ "sf6", initParams.sf6 } 
-	,{ "dE", initParams.dE },{ "dL", initParams.dL } ,{ "dP", initParams.dP } ,{ "o", initParams.o } };
+	,{ "dE", initParams.dE },{ "dL", initParams.dL } ,{ "dP", initParams.dP } ,{ "o", initParams.o }};
 
 
 
 	pMMHres results = pMMHSampler(
 		initParams,//initial parameters
-		7,//fixed parameter for days of rainfall   
+		10.7714,//fixed parameter for days of rainfall   
 		sdProps,//initial sf for param proposals
 		acptRs,//acceptance ratios
 		fitPrms,//tuple of initial parm values plus names - needed as no reflection - maybe can be coded better
 		maxSdProps,//max sd for each parameter proposal in tuner
-		300000,//iterations
+		50000,//iterations
 		75,//particles
-		50000,//nburn 
+		20000,//nburn 
 		1,//monitoring
 		3000,//start adapt
 		25,//tell
@@ -111,6 +110,9 @@ int main()
 			<< " " << results.sf1.at(iter) << " " << results.sf2.at(iter) << " " << results.sf3.at(iter) << " " << results.sf4.at(iter) << " " << results.sf5.at(iter) << " " << results.sf6.at(iter) << 
 			" " << results.dE.at(iter) << " " << results.dL.at(iter) << " " << results.dP.at(iter) << " "  << results.o.at(iter) << " " << results.ll.at(iter) <<endl;
 	}
+
+	pFitFunc(75, results, garkiDatGam, 20, initParams);
+
 	cout << "end";
 	cin.get();
 
