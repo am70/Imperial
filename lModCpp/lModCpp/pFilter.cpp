@@ -25,7 +25,7 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 	vector<double> rF = iParms.rF;
 	double uM = iParms.uM;
 	double uP = iParms.uP;
-	double B = iParms.B;
+	double B = iParms.n;
 	double K;
 	double uE;
 	double uL;
@@ -36,7 +36,7 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 	double t = iParms.startTime;
 	double a;
 	//int t = iParms.startTime;
-	double trx = iParms.tr / iParms.dt;
+	double trx = iParms.o / iParms.dt;
 	double rFsum;
 
 	if (t<= trx) {
@@ -120,10 +120,9 @@ double lbeta(double a, double b) {
 double nBgP(double k, double n, double p) {
 	if (n >= k) {
 		double res = (lgamma(n + k) - (lgamma(k) + lgamma(1 + n))) + (log(pow(p, k)) + log(pow((1 - p), n)));
-	//	cout << " k = " << k << " n =" << n << " res = " << res << endl;
 		return res;
 	}
-	else return -10000;
+	else return -1000;
 }
 
 /* Beta binomial likelihood function
@@ -133,7 +132,7 @@ double nBgP(double k, double n, double p) {
 @param w overdisperion parameter
 @return log likelihood*/
 double betaBinom(double k, double n, double p, double w) {
-	//n = n + 100;
+	//n = n + 300;
 	if (n >= k) {
 		if (k <= 0) k = 1;
 		if (k == n) n = n + 1;
@@ -142,14 +141,12 @@ double betaBinom(double k, double n, double p, double w) {
 		double logn = log(n);
 		double logk = log(k);
 		double lognk = log(n - k);
-		double res = lbeta(k + a, n - k + b) - lbeta(a, b) + (n *logn - k*logk - (n - k)* lognk + 0.5*(logn - logk - lognk - log(2 * m_pi)));//using stirling approximation for bionomial coefficient
-
+		double res = lbeta(k + a, n - k + b) - lbeta(a, b) + boost::math::lgamma(n+1)-(boost::math::lgamma(k+1)+boost::math::lgamma(n-k+1));
 		return res;
 	}
 
 	else
 		//cout << " k = " << k << " n =" << n << endl;
-
 		return -1000;
 }
 
@@ -185,7 +182,6 @@ vector<tuple<int, int, int, int, double>> modStepFncPlot(modParms wp, int obsDat
 	double weight;
 	try
 	{
-
 		modRun = mPmod(wp, rd);
 	}
 	catch (...) { cout << "mod run exception"; }
@@ -287,7 +283,7 @@ double pFilt(int n,
 			wp.n = prms.n;
 			wp.w = prms.w;
 			wp.rF = prms.rF;
-			wp.fxdPrm = fxdParams;
+			wp.fxdPrm = prms.o;
 			wp.startTime = times.at(i);
 			wp.endTime = times.at(i + 1);
 			//run model in step and update particles in parallel

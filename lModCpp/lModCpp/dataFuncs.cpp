@@ -15,7 +15,7 @@ vector<double> txtReader(string file, float dt) {
 		while (inputFile >> value) {
 			for (int j = 0; j < (1 / dt); j++) {
 				dat.emplace_back(value*dt);
-				
+
 			}
 		}
 	}
@@ -76,8 +76,9 @@ double pFitFunc(int particles, pMMHres results, obsDatX obsDat, int fixedParam, 
 	vector<double> rainfall_01 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf01.txt", 0.25);
 
 	prms.uoE = medianFnc(results.uoE);
-	cout << prms.uoE;
 	prms.uoL = medianFnc(results.uoL);
+	prms.uM = medianFnc(results.uM);
+
 	prms.uP = medianFnc(results.uP);
 	prms.Y = medianFnc(results.Y);
 	prms.z1 = medianFnc(results.z1);
@@ -98,6 +99,8 @@ double pFitFunc(int particles, pMMHres results, obsDatX obsDat, int fixedParam, 
 	prms.dP = medianFnc(results.dP);
 	prms.o = medianFnc(results.o);
 	prms.n = medianFnc(results.n);
+
+
 	for (auto j = 0; j != 6; ++j) {
 		vector<tuple<int, int>> oDat;
 		if (j == 0) {
@@ -153,5 +156,4 @@ double pFitFunc(int particles, pMMHres results, obsDatX obsDat, int fixedParam, 
 		);
 	}
 
-	return 1;
 }

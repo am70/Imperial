@@ -28,6 +28,7 @@ double tuner(double curSd, double acptR, double curAcptR, double maxSd) {
 		curAcptR = 0.01;
 	double res = (curSd *quantile(dist, (acptR / 2))) / quantile(dist, (curAcptR / 2));
 	if (res > maxSd) res = maxSd;
+	if (res <= 0) res = 0;
 	return res;
 }
 
@@ -86,6 +87,8 @@ modParms parmUpdt(modParms prms, string prmName, double propPrm) {
 		prms.dP = propPrm;
 	if (prmName == "o")
 		prms.o = propPrm;
+	if (prmName == "uM")
+		prms.uM = propPrm;
 	return prms;
 }
 
@@ -159,7 +162,7 @@ double propPrmFunc(double sd, double parm) {
 	boost::normal_distribution<> nd(0.0, sd);
 	double ran = nd(rng);
 	double prop = ran + parm;
-	if (prop < 0) prop = 0.0;
+	if (prop <= 0) prop = 0;
 	return prop;
 }
 
@@ -168,7 +171,7 @@ double propPrmFunc(double sd, double parm) {
 @return sum loglikelihood for each parameter*/
 double lprior(modParms prms) {
 	double res = 0;
-	boost::math::normal_distribution<double> d1(0.035, 0.009);//uoE
+	boost::math::normal_distribution<double> d1(0.035, 0.002);//uoE
 	res = res + (log(pdf(d1, prms.uoE)));
 	boost::math::uniform_distribution<double> u1(0.001, 0.99);//uoE unif
 	res = res + (log(pdf(u1, prms.uoE)));
@@ -178,18 +181,22 @@ double lprior(modParms prms) {
 	boost::math::uniform_distribution<double> u2(0.001, 0.99);//uoL unif
 	res = res + (log(pdf(u2, prms.uoL)));
 
-	boost::math::normal_distribution<double> d3(0.25, 0.0557);//uP
+	boost::math::normal_distribution<double> d3(0.25, 0.035);//uP
 	res = res + (log(pdf(d3, prms.uP)));
 	boost::math::uniform_distribution<double> u3(0.001, 0.99);//uP unif
 	res = res + (log(pdf(u3, prms.uP)));
 
-	boost::math::normal_distribution<double> d4(13.06, 2);//Y
+	boost::math::normal_distribution<double> uM1(0.091,0.04);//uM unif
+	res = res + (log(pdf(uM1, prms.uM)));
+
+
+	boost::math::normal_distribution<double> d4(13.06, 4);//Y
 	res = res + (log(pdf(d4, prms.Y)));
 
-	boost::math::uniform_distribution<double> d4x(1, 70);//Y
+	boost::math::uniform_distribution<double> d4x(0.1, 70);//Y
 	res = res + (log(pdf(d4x, prms.Y)));
 
-	boost::math::uniform_distribution<double> u5(0.000001, 0.0005);//w unif
+	boost::math::uniform_distribution<double> u5(0.000001, 1);//w unif
 	res = res + (log(pdf(u5, prms.w)));
 	
 	boost::math::uniform_distribution<double> u61(1, 8);//z1 unif
@@ -208,12 +215,12 @@ double lprior(modParms prms) {
 
 
 
-	boost::math::uniform_distribution<double> u71(1, 8);//sf1 unif
-	boost::math::uniform_distribution<double> u72(1, 8);//sf2 unif
-	boost::math::uniform_distribution<double> u73(1, 8);//sf3 unif
-	boost::math::uniform_distribution<double> u74(1, 8);//sf4 unif
-	boost::math::uniform_distribution<double> u75(1, 8);//sf5 unif
-	boost::math::uniform_distribution<double> u76(1, 8);//sf6 unif
+	boost::math::uniform_distribution<double> u71(1, 7);//sf1 unif
+	boost::math::uniform_distribution<double> u72(1, 7);//sf2 unif
+	boost::math::uniform_distribution<double> u73(1, 7);//sf3 unif
+	boost::math::uniform_distribution<double> u74(1, 7);//sf4 unif
+	boost::math::uniform_distribution<double> u75(1, 7);//sf5 unif
+	boost::math::uniform_distribution<double> u76(1, 7);//sf6 unif
 
 	res = res + (log(pdf(u71, prms.sf1)));
 	res = res + (log(pdf(u72, prms.sf2)));
@@ -224,8 +231,9 @@ double lprior(modParms prms) {
 
 	//dE = 0.15, dL = 0.269, dP = 1.563
 
-	boost::math::uniform_distribution<double> u8(0, (93*prms.dt));//n unif
+	boost::math::uniform_distribution<double> u8(0, 93);//n unif
 	res = res + (log(pdf(u8, prms.n)));
+
 
 
 	boost::math::normal_distribution<double> d5(0.150602, 0.01);//dE
@@ -241,7 +249,7 @@ double lprior(modParms prms) {
 	boost::math::uniform_distribution<double> d7_1(0.1, 5);//dP
 	res = res + (log(pdf(d7_1, prms.dP)));
 
-	boost::math::uniform_distribution<double> d8(0.1,50);//o
+	boost::math::uniform_distribution<double> d8(1,14);//o
 	res = res + (log(pdf(d8, prms.o)));
 
 	return(res);
@@ -286,7 +294,7 @@ pMMHres pMMHSampler(
 	modParms prms = initParams;
 	double propPrm; //proposed new parameter
 
-	prms.tr = fixedParam;
+	prms.tr = prms.o;
 
 	llCur = llFunc(particles, prms, oDat, fixedParam) + lprior(prms); //get value for initial ll
 	vector<double> acptRcur = acptRs;//current acceptance ratio
@@ -303,21 +311,21 @@ pMMHres pMMHSampler(
 		if ((monitoring = true && iter % tell == 0)) {
 
 			cout << "iteration " << iter << " of " << niter << endl;
-			cout << " uoE = " << prms.uoE << " uoL = " << prms.uoL << " uoP = " << prms.uP << " Y = " << prms.Y << " w = " << prms.w << " n = " << prms.n << " z1 = " << prms.z1 << endl
+			cout << " uoE = " << prms.uoE << " uoL = " << prms.uoL << " uoP = " << prms.uP << " uM = " << prms.uM << " Y = " << prms.Y << " w = " << prms.w << " n = " << prms.n << " z1 = " << prms.z1 << endl
 				<< " z2 = " << prms.z2 << " z3 = " << prms.z3 << " z4 = " << prms.z4 << " z5 = " << prms.z5 << " z6 = " << prms.z6 << " sf1 = " << prms.sf1 << " sf2 = " << prms.sf2 << " sf3 = " << prms.sf3 << " sf4 = " << prms.sf4 << " sf5 = " << prms.sf5 << " sf6 = " << prms.sf6
 				<< "dE = " << prms.dE << " dL = " << prms.dL << " dP = " << prms.dP << " o = " << prms.o << endl;;
 
 			cout << "||---------aratio--------||" << endl;
-			cout << " uoE = " << acptRcur[0] << " uoL = " << acptRcur[1] << " uoP = " << acptRcur[2] << " Y = " << acptRcur[3] << " w = " << acptRcur[4] << " n = " << acptRcur[5] << " z1 = " << acptRcur[6] << endl
+			cout << " uoE = " << acptRcur[0] << " uoL = " << acptRcur[1] << " uoP = " << acptRcur[2] << " uM = " << acptRcur[22] << " Y = " << acptRcur[3] << " w = " << acptRcur[4] << " n = " << acptRcur[5] << " z1 = " << acptRcur[6] << endl
 				<< " z2 = " << acptRcur[7] << " z3 = " << acptRcur[8] << " z4 = " << acptRcur[9] << " z5 = " << acptRcur[10] << " z6 = " << acptRcur[11] << " sf1 = " << acptRcur[12] << " sf2 = " << acptRcur[13]
 				<< " sf3 = " << acptRcur[14] << " sf4 = " << acptRcur[15] << " sf5 = " << acptRcur[16] << " sf6 = " << acptRcur[17] << "dE = " << acptRcur[18] << " dL = " << acptRcur[19] << " dP = " << acptRcur[20] << " o = " << acptRcur[21] << endl;
 			cout << "||---------aNum--------||" << endl;
-			cout << " uoE = " << acpts[0] << " uoL = " << acpts[1] << " uoP = " << acpts[2] << " Y = " << acpts[3] << " w = " << acpts[4] << " n = " << acpts[5] << " z1 = " << acpts[6] << endl
+			cout << " uoE = " << acpts[0] << " uoL = " << acpts[1] << " uoP = " << acpts[2] << " uM = " << acpts[22] << " Y = " << acpts[3] << " w = " << acpts[4] << " n = " << acpts[5] << " z1 = " << acpts[6] << endl
 				<< " z2 = " << acpts[7] << " z3 = " << acpts[8] << " z4 = " << acpts[9] << " z5 = " << acpts[10] << " z6 = " << acpts[11] << " sf1 = " << acpts[12] << " sf2 = " << acpts[13]
 				<< " sf3 = " << acpts[14] << " sf4 = " << acpts[15] << " sf5 = " << acpts[16] << " sf6 = " << acpts[17] << "dE = " << acpts[18] << " dL = " << acpts[19] << " dP = " << acpts[20] << " o = " << acpts[21] << endl;
 
 			cout << "||---------sd--------||" << endl;
-			cout << " uoE = " << sdProps[0] << " uoL = " << sdProps[1] << " uoP = " << sdProps[2] << " Y = " << sdProps[3] << " w = " << sdProps[4] << " n = " << sdProps[5] << " z1 = " << sdProps[6] << endl
+			cout << " uoE = " << sdProps[0] << " uoL = " << sdProps[1] << " uoP = " << sdProps[2] << " uM = " << sdProps[22] << " Y = " << sdProps[3] << " w = " << sdProps[4] << " n = " << sdProps[5] << " z1 = " << sdProps[6] << endl
 				<< " z2 = " << sdProps[7] << " z3 = " << sdProps[8] << " z4 = " << sdProps[9] << " z5 = " << sdProps[10] << " z6 = " << sdProps[11] << " sf1 = " << sdProps[12] << " sf2 = " << sdProps[13]
 				<< " sf3 = " << sdProps[14] << " sf4 = " << sdProps[15] << " sf5 = " << sdProps[16] << " sf6 = " << sdProps[17] << "dE = " << sdProps[18] << " dL = " << sdProps[19] << " dP = " << sdProps[20]<< " o = " << sdProps[21] << endl;
 			cout << "||-----------------------||" << endl;
@@ -353,6 +361,8 @@ pMMHres pMMHSampler(
 			results.uoE.emplace_back(prms.uoE);
 			results.uoL.emplace_back(prms.uoL);
 			results.uP.emplace_back(prms.uP);
+			results.uM.emplace_back(prms.uM);
+
 			results.Y.emplace_back(prms.Y);
 			results.w.emplace_back(prms.w);
 			results.n.emplace_back(prms.n);

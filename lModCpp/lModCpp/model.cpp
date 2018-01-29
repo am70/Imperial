@@ -36,23 +36,29 @@ vector<tuple<int, int, int, int>> mPmod(modParms parmsx, boost::mt19937 rd) {
 	double mRan;
 	double dP = parmsx.dP;
 
+
 	vector<double> rF = parmsx.rF;
 	vector<tuple<int, int, int, int>> r;
 
 	while (t < time) {
 
 		if (t <= trx) {
-			rFsum = std::accumulate(rF.begin(), rF.begin() + t, 0);
+			rFsum = std::accumulate(rF.begin(), rF.begin() + t, 0.0);
 			K = ((sf*((1 / t)*rFsum)));
 		}
 		else {
-			rFsum = std::accumulate(rF.begin() + (t - trx), rF.begin() + t, 0);
+			rFsum = std::accumulate(rF.begin() + (t - trx), rF.begin() + t, 0.0);
 			K =  ((sf*((1 / trx)*rFsum)));
 		}
 
-		uE = uoE*exp(((E + L) / (K)));
-		uL = uoL*exp(((Y*(E + L) / (K))));
-		//uN = uoN*exp(1 + (Yn*(E + L) / (K)));
+		uE = 1-((uoE*(K)*(((E+L) - (K)) / (E+L))));
+		uL = 1-((uoL*(K)*(Y*(((E + L) - (K)) / (E + L)))));
+
+		if (uL < 0)
+			uL = 0;
+		if (uE < 0)
+			uE = 0;
+
 		if ((dE + uE)*dt < 1) {
 			boost::binomial_distribution<int> distributionBe(E, (dE + uE)*dt);
 			Be = distributionBe(rd);
@@ -95,10 +101,9 @@ vector<tuple<int, int, int, int>> mPmod(modParms parmsx, boost::mt19937 rd) {
 		boost::binomial_distribution<int> distributionM(Bp, (dP / (uP + dP)));
 		mRan = distributionM(rd);
 
-
-		if (M + mRan - Bm > 20)
+		if (M + mRan - Bm > 100)
 			M = rint(M + mRan - Bm);
-		else M = 20;
+		else M = 100;
 		t++;
 		r.emplace_back(make_tuple(E, L, P, M));
 	}
