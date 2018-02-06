@@ -35,7 +35,7 @@ vector<tuple<int, int, int, int>> mPmod(modParms parmsx, boost::mt19937 rd) {
 
 	double mRan;
 	double dP = parmsx.dP;
-
+	double Mg = parmsx.Mg;
 
 	vector<double> rF = parmsx.rF;
 	vector<tuple<int, int, int, int>> r;
@@ -51,8 +51,8 @@ vector<tuple<int, int, int, int>> mPmod(modParms parmsx, boost::mt19937 rd) {
 			K =  ((sf*((1 / trx)*rFsum)));
 		}
 
-		uE = 1-((uoE*(K)*(((E+L) - (K)) / (E+L))));
-		uL = 1-((uoL*(K)*(Y*(((E + L) - (K)) / (E + L)))));
+	uE = uoE*exp(((E + L) / (K)));
+		uL = uoL*exp(((Y*(E + L) / (K))));
 
 		if (uL < 0)
 			uL = 0;
@@ -101,12 +101,26 @@ vector<tuple<int, int, int, int>> mPmod(modParms parmsx, boost::mt19937 rd) {
 		boost::binomial_distribution<int> distributionM(Bp, (dP / (uP + dP)));
 		mRan = distributionM(rd);
 
-		if (M + mRan - Bm > 100)
+		if (M + mRan - Bm > 1)
 			M = rint(M + mRan - Bm);
-		else M = 100;
+		else M = 1;
+
+		boost::poisson_distribution<long unsigned int> distributionRp2(rint(Mg+1));
+		M = M + distributionRp2(rd);
+
 		t++;
 		r.emplace_back(make_tuple(E, L, P, M));
+
+
 	}
+
+	//ofstream myfile2;
+	//myfile2.open("Q:\\Imperial\\fitPlots\\sTest3.txt");
+	//for (auto iter = 0; iter != size(r); ++iter) {
+	//	cout << get<3>(r[iter]) << endl;
+	//	myfile2 << get<3>(r[iter]) << ","<<endl;
+	//}
+	//cin.get();
 	return r;
 }
 
