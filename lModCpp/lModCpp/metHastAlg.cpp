@@ -2,12 +2,12 @@
 boost::mt19937 rng(std::time(0));
 
 
-vector<double> rainfall_05 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf05.txt", 0.25);
-vector<double> rainfall_07 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf07.txt", 0.25);
-vector<double> rainfall_08 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf08.txt", 0.25);
-vector<double> rainfall_04 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf04.txt", 0.25);
-vector<double> rainfall_02 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf02.txt", 0.25);
-vector<double> rainfall_01 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf01.txt", 0.25);
+vector<double> rainfall_05 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf05.txt", 0.25);
+vector<double> rainfall_07 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf07.txt", 0.25);
+vector<double> rainfall_08 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf08.txt", 0.25);
+vector<double> rainfall_04 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf04.txt", 0.25);
+vector<double> rainfall_02 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf02.txt", 0.25);
+vector<double> rainfall_01 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf01.txt", 0.25);
 
 
 
@@ -102,7 +102,7 @@ modParms parmUpdt(modParms prms, string prmName, double propPrm) {
 double llFunc(int particles, modParms prms, obsDatX obsDat, int fixedParam) {
 	vector<double> pfiltRes;
 
-	for (auto j = 0; j != 6; ++j) {
+	for (auto j = 3; j != 4; ++j) {
 		vector<tuple<int, int>> oDat;
 		if (j == 0) {
 			oDat = obsDat.garki154;
@@ -146,11 +146,13 @@ double llFunc(int particles, modParms prms, obsDatX obsDat, int fixedParam) {
 		pfiltRes.emplace_back(pFilt(particles,
 			oDat,//garki data
 			prms,//parameters
-			false,//full output or just likelihood
+			true,//full output or just likelihood
 			fixedParam,//fixed parameters
-			"Q:\\Imperial\\fitPlots\\test.txt"
+			"C:\\Imperial\\fitPlots\\test.txt",
+			true
 		));
 	}
+	cin.get();
 	return boost::accumulate(pfiltRes, 0.0);
 }
 
@@ -340,7 +342,7 @@ pMMHres pMMHSampler(
 
 
 		/*ofstream myfile;
-		myfile.open("Q:\\test.csv");
+		myfile.open("C:\\test.csv");
 			myfile << " Mg = " << prms.Mg << endl;*/
 		
 

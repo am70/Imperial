@@ -25,37 +25,37 @@ int main()
 
 	//modParms initParams;
 	initParams.uoE = 0.0598336;
-	initParams.uoL = 0.0398348;
-	initParams.uP = 0.18053;
-	initParams.uM = 0.0613272;
-	initParams.Y = 13.44607;
+	initParams.uoL = 0.0376;
+	initParams.uP = 0.202;
+	initParams.uM = 0.0166;
+	initParams.Y = 0.149407;
 	initParams.w = 0.0001;
-	initParams.n = 11.6496;
+	initParams.n = 10.2874;
 
-	initParams.z1 = 7.58718;
-	initParams.z2 = 4.91746;
-	initParams.z3 = 5.87573;
-	initParams.z4 = 4.90541;
-	initParams.z5 = 7.81856;
-	initParams.z6 = 6.13859;
+	initParams.z1 = 6.676;
+	initParams.z2 = 5.032;
+	initParams.z3 = 6.304;
+	initParams.z4 = 4.4022;
+	initParams.z5 = 7.146;
+	initParams.z6 = 7.35;
 
-	initParams.sf1 = 10.6058;
-	initParams.sf2 = 7.30038;
-	initParams.sf3 = 7.53952;
+	initParams.sf1 = 4.759;
+	initParams.sf2 = 14;
+	initParams.sf3 = 8.275;
 	initParams.sf4 = 13.4258;
-	initParams.sf5 = 7.34137;
-	initParams.sf6 = 6.61745;
+	initParams.sf5 = 7.8921;
+	initParams.sf6 = 6.585;
 
-	initParams.dE = 0.00751125;
-	initParams.dL = 0.420767;
-	initParams.dP = 1.43223;
-	initParams.o = 6.11526;
+	initParams.dE = 0.008;
+	initParams.dL = 0.495;
+	initParams.dP = 1.54;
+	initParams.o = 8.79;
 	initParams.dt = 0.25;
-	initParams.Mg = 184.101;
+	initParams.Mg = 1683;
 
 	initParams.p = 0.0001;
 
-	initParams.rF = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf01.txt", 0.25);
+	initParams.rF = txtReader("C:\\Imperial\\lModCpp\\Data\\rf01.txt", 0.25);
 
 
 
@@ -91,8 +91,8 @@ int main()
 		acptRs,//acceptance ratios
 		fitPrms,//tuple of initial parm values plus names - needed as no reflection - maybe can be coded better
 		maxSdProps,//max sd for each parameter proposal in tuner
-		50000,//iterations
-		45,//particles
+		25000,//iterations
+		30,//particles
 		10000,//nburn 
 		1,//monitoring
 		1000,//start adapt
@@ -105,7 +105,7 @@ int main()
 
 	//write results to csv
 	ofstream myfile;
-	myfile.open("Q:\\Imperial\\1milTestTr7_TEST3.txt");
+	myfile.open("C:\\Imperial\\1milTestTr7_TEST3.txt");
 	for (auto iter = 0; iter != size(results.ll); ++iter) {
 		myfile << results.uoE.at(iter) << " " << results.uoL.at(iter) << " " << results.uP.at(iter) << " " << results.Y.at(iter) << " " << results.w.at(iter)
 			<< " " << results.n.at(iter) << " " << results.z1.at(iter) << " " << results.z2.at(iter) << " " << results.z3.at(iter) << " " << results.z4.at(iter) << " " << results.z5.at(iter) << " " << results.z6.at(iter)

@@ -161,7 +161,7 @@ double betaBinom(double k, double n, double p, double w) {
 @return tuple containing state ints for E, L, P, M and likelihood (non-log), at the end of 
 a model run with designated start and end times*/
 tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt19937 rd) {
-	vector<tuple<int, int, int, int>> modRun;
+	vector<tuple<int, int, int, int,double>> modRun;
 	modRun.reserve(wp.endTime - wp.startTime);
 	double weight; 
 		modRun = mPmod(wp, rd);
@@ -176,17 +176,17 @@ tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt
 @param obsData, observed data for calculating likelihood value
 @return tuple containing state ints for E, L, P, M and likelihood (non-log), at the end of
 a model run with designated start and end times*/
-vector<tuple<int, int, int, int, double>> modStepFncPlot(modParms wp, int obsData, boost::mt19937 rd) {
-	vector<tuple<int, int, int, int>> modRun;
+vector<tuple<int, int, int, int, double,double>> modStepFncPlot(modParms wp, int obsData, boost::mt19937 rd) {
+	vector<tuple<int, int, int, int,double>> modRun;
 	modRun.reserve(wp.endTime - wp.startTime);
 	double weight;
 		modRun = mPmod(wp, rd);
 	double sim = get<3>(modRun.back());
 	weight = betaBinom(obsData, sim, 0.0001,wp.w); //add weights to tuple
-	tuple<int, int, int, int, double> res;
-	vector<tuple<int, int, int, int, double>> res2;
+	tuple<int, int, int, int, double,double> res;
+	vector<tuple<int, int, int, int, double,double>> res2;
 	for (int j = 0; j < boost::size(modRun); j++) {
-		res = { get<0>(modRun[j]),get<1>(modRun[j]),get<2>(modRun[j]),get<3>(modRun[j]), weight };
+		res = { get<0>(modRun[j]),get<1>(modRun[j]),get<2>(modRun[j]),get<3>(modRun[j]), weight,get<4>(modRun[j]) };
 		res2.emplace_back(res);
 	}
 	return res2;
@@ -259,7 +259,8 @@ double pFilt(int n,
 	modParms prms,
 	bool resM,
 	int fxdParams,
-	string outputFile) {
+	string outputFile,
+bool reff) {
 	vector<int> times;
 	double ll; //log likelihood value
 	modParms wp;
@@ -335,7 +336,7 @@ double pFilt(int n,
 
 			//alternative loop for getting plot outputs from particle filter - could be coded better...
 			if (resM == true) {
-				vector < tuple<int, int, int, int, double>> plotRes;
+				vector < tuple<int, int, int, int, double,double>> plotRes;
 				plotResTemp.clear();
 				plotResTemp.resize(wp.endTime - wp.startTime);
 				for (int j = 0; j < boost::size(particles); j++) {
@@ -348,7 +349,11 @@ double pFilt(int n,
 					int obsDatPoint = get<1>(obsData[i]);
 					plotRes = modStepFncPlot(wp, obsDatPoint, mrandThread);
 					for (int x = 0; x < boost::size(plotRes); x++) {
-						plotResTemp.at(x)= plotResTemp.at(x)+(get<3>(plotRes[x]));
+						if(reff = true)
+						plotResTemp.at(x)= plotResTemp.at(x)+(get<5>(plotRes[x]));
+						else
+							plotResTemp.at(x) = plotResTemp.at(x) + (get<3>(plotRes[x]));
+
 					}
 					particles.at(j) = { get<0>(plotRes.back()),get<1>(plotRes.back()),get<2>(plotRes.back()),get<3>(plotRes.back()), get<4>(plotRes.back()) };;
 					lltemp = lltemp + get<4>(particles.at(j));

@@ -1,6 +1,6 @@
 #include "lModH.h"
 
-vector<tuple<int, int, int, int>> mPmod(modParms parmsx, boost::mt19937 rd) {
+vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937 rd) {
 
 	int t = parmsx.startTime;
 	int time = parmsx.endTime;
@@ -32,13 +32,14 @@ vector<tuple<int, int, int, int>> mPmod(modParms parmsx, boost::mt19937 rd) {
 	double uL;
 	double uN;
 	//double uoN =0.25;
+	double rEff;
 
 	double mRan;
 	double dP = parmsx.dP;
 	double Mg = parmsx.Mg;
 
 	vector<double> rF = parmsx.rF;
-	vector<tuple<int, int, int, int>> r;
+	vector<tuple<int, int, int, int,double>> r;
 
 	while (t < time) {
 
@@ -108,8 +109,11 @@ vector<tuple<int, int, int, int>> mPmod(modParms parmsx, boost::mt19937 rd) {
 		boost::poisson_distribution<long unsigned int> distributionRp2(rint(Mg+1));
 		M = M + distributionRp2(rd);
 
+
+		rEff = 0.5*((93.6*dt) / (exp(uM*S) - 1))*(1 / (1 + uE / dE))*(1 / (1 + uL / dL))*(1 / (1 + (uP*dt) / dP));
+
 		t++;
-		r.emplace_back(make_tuple(E, L, P, M));
+		r.emplace_back(make_tuple(E, L, P, M,rEff));
 
 
 	}
