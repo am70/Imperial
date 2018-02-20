@@ -49,16 +49,18 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 		K = ((sf*((1 / trx)*rFsum)));
 	}
 
-	a = (0.5 * dL*dP) / (uM*(dP + uP));
+	//exp carrying cap
+	//a = (0.5 * dL*dP) / (uM*(dP + uP));
 
-	uE = UoE*exp((z / K));
-	uL = UoL*exp((y*z / K));
+	//uE = UoE*exp((z / K));
+	//uL = UoL*exp((y*z / K));
 
-	E = rint(((B*a)*z) / ((dE + (B*a) + uE)));
-	L = rint((dE*z) / ((dE + dL + uL)));
-	M = rint((0.5 * dL*dP*L) / (uM*(dP + uP)));
-	P = rint((2 * uM*M) / dP);
+	//E = rint(((B*a)*z) / ((dE + (B*a) + uE)));
+	//L = rint((dE*z) / ((dE + dL + uL)));
+	//M = rint((0.5 * dL*dP*L) / (uM*(dP + uP)));
+	//P = rint((2 * uM*M) / dP);
 
+	//power carrying cap
 	/*a = ((n / S) * dP * dL) / ((2 * uM) * (uP * dP));
 	double	b = (UoE / (y * UoL)) * (dL + UoL) - dE - UoE;
 	double	c = -(UoE * dE) / (UoL * y);
@@ -70,8 +72,18 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 	M =rint((dP * P) / (2 * uM));
 */
 
-	//boost::poisson_distribution<long unsigned int> distributionRp2(rint(Mg + 1));
-	//M = M + distributionRp2(mrand);
+	//linear carrying cap
+	dE = 1 / dE;
+	dL = 1 / dL;
+	dP = 1 / dP;
+	M = z;
+	double W = -0.5*(y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE) + sqrt(0.25*pow((y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE), 2) + y*((B*UoL*dE) / (2 * UoE*uM*dL*(1 + dP*uP))));
+	E = rint(2*W*uM*dL*(1+dP*uP)*M);
+	L = rint(2 * uM*dL*(1 + dP*uP)*M);
+	P = rint(2 * dP*uM*M);
+
+	boost::poisson_distribution<long unsigned int> distributionRp2(rint(Mg + 1));
+	M = M + distributionRp2(mrand);
 	if (M < 1)
 		M = 1;
 
@@ -129,8 +141,38 @@ double nBgP(double k, double n, double p) {
 		p = 1;
 	if(k==0)
 		k=1;
-		double res = (lgamma(n + k) - (lgamma(k) + lgamma(1 + n))) + (k*log(p)) + n*log(1-p);
+		double res =  (lgamma(n + k) - (lgamma(k) + lgamma(1 + n))) + (k*log(p)) + n*log(1-p);
 		return res;
+}
+
+
+
+/*negBin function
+@param k Observed data point
+@param n Simulated data point
+@param r overdispersion parameter
+@param p fraction of population*/
+double nB(double k, double n, double r, double p) {
+	double m = p*n;
+	double res = (lgamma(r + k) - (lgamma(k + 1) + lgamma(r))) + k*(log(m) - (log(r + m))) + r*(log(r) - log(r + m));
+	return res;
+}
+
+/*binomial function
+@param k Observed data point
+@param n Simulated data point
+@param p fraction of population*/
+double dbinom(double k, double n, double p) {
+	if (n >= k) {
+		if (p > 1)
+			p = 1;
+		if (k == 0)
+			k = 1;
+		double res = (boost::math::lgamma(n + 1) - (boost::math::lgamma(k + 1) + boost::math::lgamma(n - k + 1))) + (k*log(p)) + ((n - k)*log(1 - p));
+		return res;
+	}
+	else return -1000;
+
 }
 
 /* Beta binomial likelihood function
@@ -141,8 +183,7 @@ double nBgP(double k, double n, double p) {
 @return log likelihood*/
 double betaBinom(double k, double n, double p, double w) {
 	//n = n + 300;
-	if (n <= k)
-		n = k + 1;
+	if (n >= k) {
 		if (k <= 0) k = 1;
 		if (k == n) n = n + 1;
 		double a = p * ((1 / w) - 1);
@@ -150,8 +191,10 @@ double betaBinom(double k, double n, double p, double w) {
 		double logn = log(n);
 		double logk = log(k);
 		double lognk = log(n - k);
-		double res = lbeta(k + a, n - k + b) - lbeta(a, b) + boost::math::lgamma(n+1)-(boost::math::lgamma(k+1)+boost::math::lgamma(n-k+1));
+		double res = lbeta(k + a, n - k + b) - lbeta(a, b) + boost::math::lgamma(n + 1) - (boost::math::lgamma(k + 1) + boost::math::lgamma(n - k + 1));
 		return res;
+	}
+	else return -1000;
 }
 
 
@@ -166,7 +209,7 @@ tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt
 	double weight; 
 		modRun = mPmod(wp, rd);
 	double sim = get<3>(modRun.back());
-	weight = betaBinom(obsData, sim, 0.0001, wp.w); //add weights to tuple
+	weight = nB(obsData, sim,wp.w, wp.p); //add weights to tuple
 	tuple<int, int, int, int, double> res = { get<0>(modRun.back()),get<1>(modRun.back()),get<2>(modRun.back()),get<3>(modRun.back()), weight };
 	return res;
 }
@@ -182,7 +225,7 @@ vector<tuple<int, int, int, int, double,double>> modStepFncPlot(modParms wp, int
 	double weight;
 		modRun = mPmod(wp, rd);
 	double sim = get<3>(modRun.back());
-	weight = betaBinom(obsData, sim, 0.0001,wp.w); //add weights to tuple
+	weight = nB(obsData, sim,wp.w,wp.p); //add weights to tuple
 	tuple<int, int, int, int, double,double> res;
 	vector<tuple<int, int, int, int, double,double>> res2;
 	for (int j = 0; j < boost::size(modRun); j++) {
@@ -278,7 +321,7 @@ bool reff) {
 	//get initial state of particles
 	particles = iState(n, times.front(), prms, fxdParams);
 
-		ll = (betaBinom(get<1>(obsData[0]), get<3>(particles[0]),prms.p,prms.w));
+		ll = (nB(get<1>(obsData[0]), get<3>(particles[0]), prms.w,prms.p));
 		
 		vector<vector<double>> resMat(size(particles), vector<double>(size(obsData)));
 
@@ -321,7 +364,7 @@ bool reff) {
 					int obsDatPoint = get<1>(obsData[i]);
 					particles.at(j) = modStepFnc(wp, obsDatPoint, mrandThread);
 					
-					resMat[j][i] = get<4>(particles.at(j));
+				    //resMat[j][i] = get<4>(particles.at(j));
 
 					lltemp = lltemp + get<4>(particles.at(j));
 					//if (std::isnan(get<4>(particles.at(j))) == 0)  get<4>(particles.at(j)) = 0;
@@ -349,7 +392,7 @@ bool reff) {
 					int obsDatPoint = get<1>(obsData[i]);
 					plotRes = modStepFncPlot(wp, obsDatPoint, mrandThread);
 					for (int x = 0; x < boost::size(plotRes); x++) {
-						if(reff = true)
+						if(reff == true)
 						plotResTemp.at(x)= plotResTemp.at(x)+(get<5>(plotRes[x]));
 						else
 							plotResTemp.at(x) = plotResTemp.at(x) + (get<3>(plotRes[x]));
@@ -387,7 +430,7 @@ bool reff) {
 		}
 
 		//take random sample at end of resMat
-		double resNum = rSampMat(resMat);
+		//double resNum = rSampMat(resMat);
 
-	return resNum;
+	return ll;
 }

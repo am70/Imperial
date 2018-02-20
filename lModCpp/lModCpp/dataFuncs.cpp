@@ -68,12 +68,14 @@ double medianFnc(vector<double> vec) {
 double pFitFunc(int particles, pMMHres results, obsDatX obsDat, int fixedParam, modParms prms) {
 	string outputFile;
 
-	vector<double> rainfall_05 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf05.txt", 0.25);
-	vector<double> rainfall_07 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf07.txt", 0.25);
-	vector<double> rainfall_08 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf08.txt", 0.25);
-	vector<double> rainfall_04 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf04.txt", 0.25);
-	vector<double> rainfall_02 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf02.txt", 0.25);
-	vector<double> rainfall_01 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf01.txt", 0.25);
+	vector<double> rainfall_05 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf05.txt", 0.25);
+	vector<double> rainfall_07 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf07.txt", 0.25);
+	vector<double> rainfall_08 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf08.txt", 0.25);
+	vector<double> rainfall_04 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf04.txt", 0.25);
+	vector<double> rainfall_02 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf02.txt", 0.25);
+	vector<double> rainfall_01 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf01.txt", 0.25);
+	vector<double> rainfall_03 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf03.txt", 0.25);
+
 
 	prms.uoE = medianFnc(results.uoE);
 	prms.uoL = medianFnc(results.uoL);
@@ -99,51 +101,53 @@ double pFitFunc(int particles, pMMHres results, obsDatX obsDat, int fixedParam, 
 	prms.dP = medianFnc(results.dP);
 	prms.o = medianFnc(results.o);
 	prms.n = medianFnc(results.n);
+	prms.p = medianFnc(results.p);
+
 
 
 	for (auto j = 0; j != 6; ++j) {
 		vector<tuple<int, int>> oDat;
 		if (j == 0) {
-			oDat = obsDat.garki154;
+			oDat = obsDat.garki408;
 			prms.sf = pow(10, prms.sf1);
 			prms.z = pow(10, prms.z1);
-			prms.rF = rainfall_05;
-			outputFile = "C:\\Imperial\\fitPlots\\garki154.txt";
+			prms.rF = rainfall_03;
+			outputFile = "Q:\\Imperial\\fitPlots\\garki408.txt";
 		}
 		else if (j == 1) {
 			oDat = obsDat.garki202;
 			prms.sf = pow(10, prms.sf2);
 			prms.z = pow(10, prms.z2);
 			prms.rF = rainfall_04;
-			outputFile = "C:\\Imperial\\fitPlots\\garki202.txt";
+			outputFile = "Q:\\Imperial\\fitPlots\\garki202.txt";
 		}
 		else if (j == 2) {
 			oDat = obsDat.garki218;
 			prms.sf = pow(10, prms.sf3);
 			prms.z = pow(10, prms.z3);
 			prms.rF = rainfall_07;
-			outputFile = "C:\\Imperial\\fitPlots\\garki218.txt";
+			outputFile = "Q:\\Imperial\\fitPlots\\garki218.txt";
 		}
 		else if (j == 3) {
 			oDat = obsDat.garki304;
 			prms.sf = pow(10, prms.sf4);
 			prms.z = pow(10, prms.z4);
 			prms.rF = rainfall_08;
-			outputFile = "C:\\Imperial\\fitPlots\\garki304.txt";
+			outputFile = "Q:\\Imperial\\fitPlots\\garki304.txt";
 		}
 		else if (j == 4) {
 			oDat = obsDat.garki553;
 			prms.sf = pow(10, prms.sf5);
 			prms.z = pow(10, prms.z5);
 			prms.rF = rainfall_02;
-			outputFile = "C:\\Imperial\\fitPlots\\garki553.txt";
+			outputFile = "Q:\\Imperial\\fitPlots\\garki553.txt";
 		}
 		else if (j == 5) {
 			oDat = obsDat.garki802;
 			prms.sf = pow(10, prms.sf6);
 			prms.z = pow(10, prms.z6);
 			prms.rF = rainfall_01;
-			outputFile = "C:\\Imperial\\fitPlots\\garki802.txt";
+			outputFile = "Q:\\Imperial\\fitPlots\\garki802.txt";
 		}
 
 		//run particle filter

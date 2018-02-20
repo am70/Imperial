@@ -52,6 +52,8 @@ struct obsDatX {
 	vector <tuple<int, int>> garki202;
 	vector <tuple<int, int>> garki553;
 	vector <tuple<int, int>> garki802;
+	vector <tuple<int, int>> garki408;
+
 };
 
 double nBgP(double k, double n, double p);
@@ -64,6 +66,8 @@ double betaBinom(double k, double n, double p, double w);
 vector<tuple<int, int, int, int,double>> mPmod(modParms, boost::mt19937 rd);
 tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt19937 rd);
 double llFunc(int particles, modParms prms, obsDatX obsDat, int fixedParam);
+double dbinom(double k, double n, double p);
+double nB(double k, double n, double r, double p);
 
 //pfilter
 double pFilt(int n,

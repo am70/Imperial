@@ -9,6 +9,7 @@
 int main()
 {
 
+
 	//std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
 	modParms initParams;
@@ -16,6 +17,9 @@ int main()
 
 // read in garki village data anoph gamb 
 	garkiDatGam.garki154 = { { 15,3 },{ 29,4 },{ 43,4 },{ 57,6 },{ 71,17 },{ 85,7 },{ 99,20 },{ 113,34 },{ 141,18 },{ 155,5 },{ 169,4 },{ 183,0 },{ 196,0 } , { 210,0 }, { 224,0 }, { 238,1 }, { 252,0 }, { 266,0 }};
+
+	garkiDatGam.garki408 = { { 5,7 },{ 19,99 },{ 33,670 },{ 47,1266 },{ 61,876 },{ 75,1340 },{ 89,227 },{ 103,513 },{ 117,49 },{ 131,19 },{ 145,15 },{ 158,7 } ,{ 172,15 },{186,2} };
+
 	garkiDatGam.garki202 = { { 8,18 },{ 22,15 },{ 36,20 },{ 50,167 },{ 64,155 },{ 78,370 },{ 92,178 },{ 106,127 },{ 120,75 },{ 134,25 },{ 147,5 },{ 162,3 },{ 175,0 } , { 189,0 }, { 203,1 }, { 216,0 }, { 231,0 }, { 245,0 } };
 	garkiDatGam.garki218 = { { 19,99 },{ 33,266 },{ 47,211 },{ 61,301 },{ 75,475 },{ 89,309 },{ 103,279 },{ 117,52 },{ 131,14 },{ 147,6 },{ 156,10 }, { 172,0 }, { 186,0 }, { 200,0 }, { 215,0 }, { 228,0 }, { 242,0 }};
 	garkiDatGam.garki304 = { { 18,3 },{ 32,20 },{ 46,19 },{ 60,80 },{ 74,69 },{ 88,357 },{ 102,310 },{ 116,151 },{ 130,141 },{ 144,129 },{ 158,15 },{ 172,2 },{ 186,1 },{ 197,0 },{ 211,0 } , { 225,0 }, { 239,0 }, { 253,0 }, { 267,0 } };
@@ -24,58 +28,63 @@ int main()
 
 
 	//modParms initParams;
-	initParams.uoE = 0.0598336;
-	initParams.uoL = 0.0376;
-	initParams.uP = 0.202;
-	initParams.uM = 0.0166;
-	initParams.Y = 0.149407;
-	initParams.w = 0.0001;
-	initParams.n = 10.2874;
+	initParams.uoE = 0.0342128;
+	initParams.uoL = 0.0380283;
+	initParams.uP = 0.243781;
+	initParams.uM = 0.0887209;
+	initParams.Y = 9.64374;
+	initParams.w = 175;
+	initParams.n = 1.80589;
 
-	initParams.z1 = 6.676;
-	initParams.z2 = 5.032;
-	initParams.z3 = 6.304;
-	initParams.z4 = 4.4022;
-	initParams.z5 = 7.146;
-	initParams.z6 = 7.35;
+	initParams.z1 = 3.81073;
+	initParams.z2 = 2.84467;
+	initParams.z3 = 3.79285;
+	initParams.z4 = 2.3262;
+	initParams.z5 = 4.01179;
+	initParams.z6 = 4.1425;
 
-	initParams.sf1 = 4.759;
-	initParams.sf2 = 14;
-	initParams.sf3 = 8.275;
-	initParams.sf4 = 13.4258;
-	initParams.sf5 = 7.8921;
-	initParams.sf6 = 6.585;
+	initParams.sf1 = 5.14794;
+	initParams.sf2 = 4.87898;
+	initParams.sf3 = 5.17532;
+	initParams.sf4 = 5.59073;
+	initParams.sf5 = 4.93854;
+	initParams.sf6 = 3.82135;
 
-	initParams.dE = 0.008;
-	initParams.dL = 0.495;
-	initParams.dP = 1.54;
-	initParams.o = 8.79;
+	initParams.dE = 0.166911;
+	initParams.dL = 0.634255;
+	initParams.dP = 0.778013;
+	initParams.o = 5.87151;
 	initParams.dt = 0.25;
-	initParams.Mg = 1683;
+	initParams.Mg = 5.56342;
 
-	initParams.p = 0.0001;
+	initParams.p = 0.01;
 
-	initParams.rF = txtReader("C:\\Imperial\\lModCpp\\Data\\rf01.txt", 0.25);
-
-
-
+	initParams.rF = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf01.txt", 0.25);
 
 
 	vector<double> sdProps = { 
-		0.001, 0.001, 0.01,0.01,5,0.001, 
-		1, 1, 1,1,1,1,
-		1, 1, 1, 1, 1,1,
-		1,0.05,0.05,0.05,1,40,0.001};
+		0.001, 0.001, 0.01,0.01,1,0, 
+		0.1, 0.1, 0.1,0.1,0.1,0.1,
+		0.1, 0.1, 0.1, 0.1, 0.1,0.1,
+		1,0.05,0.05,0.05,1,5,0};
+
 	vector<double> maxSdProps = {
-		0.05, 0.05, 0.8, 0.5,5,0.01,
-		3, 3, 3, 3,3,3,
-		4, 4, 4, 4,4,4,
-		0.1,0.1,0.1,0.1,1,250,0.001};
+		0.05, 0.05, 0.8, 0.5,5,0,
+		0.5, 0.5, 0.5, 0.5,0.5,0.5,
+		0.5, 0.5, 0.5, 0.5,0.5,0.5,
+		0.1,0.1,0.1,0.1,1,10,0};
 	vector<double> acptRs = {
-		0.25,0.25,0.25,0.25,0.25,0.25,
-		0.25,0.25,0.25,0.25,0.25,0.25,
-		0.25,0.25,0.25,0.25,0.25,0.25,
-		0.25,0.25,0.25,0.25,0.25,0.25,0.25 };
+		0.2,0.2,0.2,0.2,0.2,0.2,
+		0.2,0.2,0.2,0.2,0.2,0.2,
+		0.2,0.2,0.2,0.2,0.2,0.2,
+		0.2,0.2,0.2,0.2,0.2,0.2,0.2 };
+
+
+	//vector<double> sdProps2 = {
+	//	0, 0, 0,0,0,0,
+	//	0, 0, 0,0,0,0,
+	//	0, 0, 0, 0, 0,0,
+	//	0,0,0,0,0,0,0 };
 
 	vector<tuple<string, double>> fitPrms = { { "uoE", initParams.uoE },{ "uoL", initParams.uoL },{ "uP", initParams.uP },{ "uM", initParams.uM },{ "Y", initParams.Y },
 	{ "w", initParams.w },{ "n", initParams.n },{ "z1", initParams.z1 },{ "z2", initParams.z2 },{ "z3", initParams.z3 },{ "z4", initParams.z4 },{ "z5", initParams.z5 },{ "z6", initParams.z6 },
@@ -91,9 +100,9 @@ int main()
 		acptRs,//acceptance ratios
 		fitPrms,//tuple of initial parm values plus names - needed as no reflection - maybe can be coded better
 		maxSdProps,//max sd for each parameter proposal in tuner
-		25000,//iterations
-		30,//particles
-		10000,//nburn 
+		300000,//iterations
+		150,//particles
+		75000,//nburn 
 		1,//monitoring
 		1000,//start adapt
 		25,//tell
@@ -105,7 +114,7 @@ int main()
 
 	//write results to csv
 	ofstream myfile;
-	myfile.open("C:\\Imperial\\1milTestTr7_TEST3.txt");
+	myfile.open("Q:\\Imperial\\1milTestTr7_TEST3.txt");
 	for (auto iter = 0; iter != size(results.ll); ++iter) {
 		myfile << results.uoE.at(iter) << " " << results.uoL.at(iter) << " " << results.uP.at(iter) << " " << results.Y.at(iter) << " " << results.w.at(iter)
 			<< " " << results.n.at(iter) << " " << results.z1.at(iter) << " " << results.z2.at(iter) << " " << results.z3.at(iter) << " " << results.z4.at(iter) << " " << results.z5.at(iter) << " " << results.z6.at(iter)

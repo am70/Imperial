@@ -2,12 +2,13 @@
 boost::mt19937 rng(std::time(0));
 
 
-vector<double> rainfall_05 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf05.txt", 0.25);
-vector<double> rainfall_07 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf07.txt", 0.25);
-vector<double> rainfall_08 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf08.txt", 0.25);
-vector<double> rainfall_04 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf04.txt", 0.25);
-vector<double> rainfall_02 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf02.txt", 0.25);
-vector<double> rainfall_01 = txtReader("C:\\Imperial\\lModCpp\\Data\\rf01.txt", 0.25);
+vector<double> rainfall_05 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf05.txt", 0.25);
+vector<double> rainfall_07 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf07.txt", 0.25);
+vector<double> rainfall_08 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf08.txt", 0.25);
+vector<double> rainfall_04 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf04.txt", 0.25);
+vector<double> rainfall_02 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf02.txt", 0.25);
+vector<double> rainfall_01 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf01.txt", 0.25);
+vector<double> rainfall_03 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf03.txt", 0.25);
 
 
 
@@ -102,13 +103,13 @@ modParms parmUpdt(modParms prms, string prmName, double propPrm) {
 double llFunc(int particles, modParms prms, obsDatX obsDat, int fixedParam) {
 	vector<double> pfiltRes;
 
-	for (auto j = 3; j != 4; ++j) {
+	for (auto j = 0; j != 6; ++j) {
 		vector<tuple<int, int>> oDat;
 		if (j == 0) {
-			oDat = obsDat.garki154;
+			oDat = obsDat.garki408;
 			prms.sf = pow(10, prms.sf1);
 			prms.z = pow(10, prms.z1);
-			prms.rF = rainfall_05;
+			prms.rF = rainfall_03;
 		}
 		else if (j == 1) {
 			oDat = obsDat.garki202;
@@ -142,17 +143,18 @@ double llFunc(int particles, modParms prms, obsDatX obsDat, int fixedParam) {
 		}
 
 
+
 		//run particle filter
 		pfiltRes.emplace_back(pFilt(particles,
 			oDat,//garki data
 			prms,//parameters
-			true,//full output or just likelihood
+			false,//full output or just likelihood
 			fixedParam,//fixed parameters
-			"C:\\Imperial\\fitPlots\\test.txt",
-			true
+			"Q:\\Imperial\\fitPlots\\test.txt",
+			false
 		));
 	}
-	cin.get();
+
 	return boost::accumulate(pfiltRes, 0.0);
 }
 
@@ -173,33 +175,33 @@ double propPrmFunc(double sd, double parm) {
 @return sum loglikelihood for each parameter*/
 double lprior(modParms prms) {
 	double res = 0;
-	boost::math::normal_distribution<double> d1(0.035, 0.0046);//uoE
+	boost::math::normal_distribution<double> d1(0.035, 0.0026);//uoE
 	res = res + (log(pdf(d1, prms.uoE)));
 	boost::math::uniform_distribution<double> u1(0.001, 0.99);//uoE unif
 	res = res + (log(pdf(u1, prms.uoE)));
 
-	boost::math::normal_distribution<double> d2(0.035, 0.0046);//uoL
+	boost::math::normal_distribution<double> d2(0.035, 0.0026);//uoL
 	res = res + (log(pdf(d2, prms.uoL)));
 	boost::math::uniform_distribution<double> u2(0.001, 0.99);//uoL unif
 	res = res + (log(pdf(u2, prms.uoL)));
 
-	boost::math::normal_distribution<double> d3(0.25, 0.035);//uP
+	boost::math::normal_distribution<double> d3(0.25, 0.01);//uP
 	res = res + (log(pdf(d3, prms.uP)));
 	boost::math::uniform_distribution<double> u3(0.001, 0.99);//uP unif
 	res = res + (log(pdf(u3, prms.uP)));
 
-	boost::math::normal_distribution<double> uM1(0.091,0.01);//uM unif
+	boost::math::normal_distribution<double> uM1(0.091,0.005);//uM unif
 	res = res + (log(pdf(uM1, prms.uM)));
 
 
-	boost::math::normal_distribution<double> d4(13.06, 2);//Y
+	boost::math::normal_distribution<double> d4(13.06, 4);//Y
 	res = res + (log(pdf(d4, prms.Y)));
 
 	boost::math::uniform_distribution<double> d4x(0.1, 70);//Y
 	res = res + (log(pdf(d4x, prms.Y)));
 
-	boost::math::uniform_distribution<double> u5(0.000001, 1);//w unif
-	res = res + (log(pdf(u5, prms.w)));
+	//boost::math::uniform_distribution<double> u5(0.000001, 1);//w unif
+	//res = res + (log(pdf(u5, prms.w)));
 	
 	boost::math::uniform_distribution<double> u61(1, 15);//z1 unif
 	boost::math::uniform_distribution<double> u62(1, 15);//z2 unif
@@ -217,11 +219,11 @@ double lprior(modParms prms) {
 
 
 
-	boost::math::uniform_distribution<double> u71(1, 20);//sf1 unif
+	boost::math::uniform_distribution<double> u71(1, 15);//sf1 unif
 	boost::math::uniform_distribution<double> u72(1, 15);//sf2 unif
-	boost::math::uniform_distribution<double> u73(1, 9.5);//sf3 unif
+	boost::math::uniform_distribution<double> u73(1, 15);//sf3 unif
 	boost::math::uniform_distribution<double> u74(1, 15);//sf4 unif
-	boost::math::uniform_distribution<double> u75(1, 9);//sf5 unif
+	boost::math::uniform_distribution<double> u75(1, 15);//sf5 unif
 	boost::math::uniform_distribution<double> u76(1, 15);//sf6 unif
 
 	res = res + (log(pdf(u71, prms.sf1)));
@@ -241,25 +243,17 @@ double lprior(modParms prms) {
 	boost::math::normal_distribution<double> d5(0.150602, 0.01);//dE
 	res = res + (log(pdf(d5, prms.dE)));
 
-	boost::math::normal_distribution<double> d6(0.268812, 0.055);//dL
-	boost::math::uniform_distribution<double> d6_1(0.2, 0.5);//dL
-	res = res + (log(pdf(d6_1, prms.dL)));
+	boost::math::normal_distribution<double> d6(0.268812, 0.08);//dL
 	res = res + (log(pdf(d6, prms.dL)));
 
-	boost::math::normal_distribution<double> d7(1.563, 0.05);//dP
+	boost::math::normal_distribution<double> d7(1, 0.05);//dP
 	res = res + (log(pdf(d7, prms.dP)));
-	boost::math::uniform_distribution<double> d7_1(0.1, 5);//dP
-	res = res + (log(pdf(d7_1, prms.dP)));
 
-	boost::math::uniform_distribution<double> d8(1,12);//o
+
+	boost::math::uniform_distribution<double> d8(1,7);//o
 	res = res + (log(pdf(d8, prms.o)));
 
-	boost::math::uniform_distribution<double> dp(0.00001, 1);//dP
-	res = res + (log(pdf(dp, prms.p)));
 
-
-	boost::math::normal_distribution<double> dp1(0.001, 0.0005);//dP
-	res = res + (log(pdf(dp1, prms.p)));
 
 	return(res);
 }
@@ -342,7 +336,7 @@ pMMHres pMMHSampler(
 
 
 		/*ofstream myfile;
-		myfile.open("C:\\test.csv");
+		myfile.open("Q:\\test.csv");
 			myfile << " Mg = " << prms.Mg << endl;*/
 		
 
