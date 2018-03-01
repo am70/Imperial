@@ -50,15 +50,15 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 	}
 
 	//exp carrying cap
-	//a = (0.5 * dL*dP) / (uM*(dP + uP));
+	a = (0.5 * dL*dP) / (uM*(dP + uP));
 
-	//uE = UoE*exp((z / K));
-	//uL = UoL*exp((y*z / K));
+	uE = UoE*exp((z / K));
+	uL = UoL*exp((y*z / K));
 
-	//E = rint(((B*a)*z) / ((dE + (B*a) + uE)));
-	//L = rint((dE*z) / ((dE + dL + uL)));
-	//M = rint((0.5 * dL*dP*L) / (uM*(dP + uP)));
-	//P = rint((2 * uM*M) / dP);
+	E = rint(((B*a)*z) / ((dE + (B*a) + uE)));
+	L = rint((dE*z) / ((dE + dL + uL)));
+	M = rint((0.5 * dL*dP*L) / (uM*(dP + uP)));
+	P = rint((2 * uM*M) / dP);
 
 	//power carrying cap
 	/*a = ((n / S) * dP * dL) / ((2 * uM) * (uP * dP));
@@ -73,20 +73,20 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 */
 
 	//linear carrying cap
-	dE = 1 / dE;
-	dL = 1 / dL;
-	dP = 1 / dP;
-	M = z;
-	double W = -0.5*(y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE) + sqrt(0.25*pow((y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE), 2) + y*((B*UoL*dE) / (2 * UoE*uM*dL*(1 + dP*uP))));
-	E = rint(2*W*uM*dL*(1+dP*uP)*M);
-	L = rint(2 * uM*dL*(1 + dP*uP)*M);
-	P = rint(2 * dP*uM*M);
-
-	boost::poisson_distribution<long unsigned int> distributionRp2(rint(Mg + 1));
-	M = M + distributionRp2(mrand);
+	//dE = 1 / dE;
+	//dL = 1 / dL;
+	//dP = 1 / dP;
+	//M = z;
+	//double W = -0.5*(y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE) + sqrt(0.25*pow((y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE), 2) + y*((B*UoL*dE) / (2 * UoE*uM*dL*(1 + dP*uP))));
+	//E = rint(2*W*uM*dL*(1+dP*uP)*M);
+	//L = rint(2 * uM*dL*(1 + dP*uP)*M);
+	//P = rint(2 * dP*uM*M);
+	if (Mg > 1) {
+		boost::poisson_distribution<long unsigned int> distributionRp2(rint(Mg));
+		M = M + distributionRp2(mrand);
+	}
 	if (M < 1)
 		M = 1;
-
 	vector<tuple<int, int, int, int, double>> states = { { E, L, P, M ,0.0 } };
 	states.resize(N, { E, L, P, M, 0.0 });//return initial states, repeated to number of particles
 	return states;
@@ -209,7 +209,7 @@ tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt
 	double weight; 
 		modRun = mPmod(wp, rd);
 	double sim = get<3>(modRun.back());
-	weight = nB(obsData, sim,wp.w, wp.p); //add weights to tuple
+	weight = betaBinom(obsData, sim, wp.p,wp.w); //add weights to tuple
 	tuple<int, int, int, int, double> res = { get<0>(modRun.back()),get<1>(modRun.back()),get<2>(modRun.back()),get<3>(modRun.back()), weight };
 	return res;
 }
@@ -225,7 +225,7 @@ vector<tuple<int, int, int, int, double,double>> modStepFncPlot(modParms wp, int
 	double weight;
 		modRun = mPmod(wp, rd);
 	double sim = get<3>(modRun.back());
-	weight = nB(obsData, sim,wp.w,wp.p); //add weights to tuple
+	weight = betaBinom(obsData, sim,wp.p,wp.w); //add weights to tuple
 	tuple<int, int, int, int, double,double> res;
 	vector<tuple<int, int, int, int, double,double>> res2;
 	for (int j = 0; j < boost::size(modRun); j++) {
@@ -239,7 +239,7 @@ vector<tuple<int, int, int, int, double,double>> modStepFncPlot(modParms wp, int
 /*rand particle sample function
 @param samp vector of tuples containing particles E,L,M,P
 @return resamped particles*/
-auto rSamp(vector<std::tuple<int, int, int, int, double>>& samp) {
+vector<tuple<int, int, int, int, double>> rSamp(vector<std::tuple<int, int, int, int, double>>& samp) {
 	vector<std::tuple<int, int, int, int, double>> temp;
 	vector<double> w;// weights
 	for (auto&& i : samp)
@@ -263,7 +263,7 @@ double rSampMat(vector<vector<double>> vP) {
 		temp.emplace_back(vP.at(boost::size(vP[0]))[i],i);//tuple 0 = end of particle vec likelihood
 		w.emplace_back(exp(vP.at(boost::size(vP[0]))[i]));
 	}
-		std::discrete_distribution<int> dd{ w.begin(), w.end() }; // create distribution
+		std::discrete_distribution<int> dd{ w.begin(), w.end()}; // create distribution
 		tempRes=(temp[dd(mrand)]);
 	return accumulate(vP[get<1>(tempRes)].begin(), vP[get<1>(tempRes)].end(), 0.0);
 }
@@ -275,12 +275,14 @@ vector<tuple<int, int, int, int, double>> normalise(vector<tuple<int, int, int, 
 	const auto pComp = [](const auto& lhs, const auto& rhs)
 	{ return get<4>(lhs) < get<4>(rhs); };
 	const double maxVal = get<4>(*std::max_element(particles.begin(), particles.end(), pComp));
-
 	double sum = 0;
 	for (int i = 0; i != boost::size(particles); i++) {
+
 		get<4>(particles[i]) = (get<4>(particles[i])) - maxVal;
-		sum = sum + exp((get<4>(particles[i])) - maxVal);
+		sum = sum + exp((get<4>(particles[i])));
+
 	}
+
 	for (int i = 0; i != boost::size(particles); i++) {
 		get<4>(particles[i]) = exp(get<4>(particles[i])) / sum;
 	}
@@ -321,7 +323,7 @@ bool reff) {
 	//get initial state of particles
 	particles = iState(n, times.front(), prms, fxdParams);
 
-		ll = (nB(get<1>(obsData[0]), get<3>(particles[0]), prms.w,prms.p));
+		ll = (betaBinom(get<1>(obsData[0]), get<3>(particles[0]),prms.p,wp.w));
 		
 		vector<vector<double>> resMat(size(particles), vector<double>(size(obsData)));
 
@@ -364,7 +366,7 @@ bool reff) {
 					int obsDatPoint = get<1>(obsData[i]);
 					particles.at(j) = modStepFnc(wp, obsDatPoint, mrandThread);
 					
-				    //resMat[j][i] = get<4>(particles.at(j));
+				  // resMat[j][i] = get<4>(particles.at(j));
 
 					lltemp = lltemp + get<4>(particles.at(j));
 					//if (std::isnan(get<4>(particles.at(j))) == 0)  get<4>(particles.at(j)) = 0;

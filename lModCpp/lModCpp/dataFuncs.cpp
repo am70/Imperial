@@ -22,6 +22,9 @@ vector<double> txtReader(string file, float dt) {
 	return (dat);
 }
 
+
+
+
 //text file reader for mosquito data
 //@param file text file location
 //@return vector of ints from text file
@@ -65,16 +68,17 @@ double medianFnc(vector<double> vec) {
 
 
 ////plot fit function
-double pFitFunc(int particles, pMMHres results, obsDatX obsDat, int fixedParam, modParms prms) {
-	string outputFile;
+double pFitFunc(int particles, pMMHres results, obsDatX obsDat, int fixedParam, modParms prms, string outputFile) {
 
-	vector<double> rainfall_05 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf05.txt", 0.25);
-	vector<double> rainfall_07 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf07.txt", 0.25);
-	vector<double> rainfall_08 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf08.txt", 0.25);
-	vector<double> rainfall_04 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf04.txt", 0.25);
-	vector<double> rainfall_02 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf02.txt", 0.25);
-	vector<double> rainfall_01 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf01.txt", 0.25);
-	vector<double> rainfall_03 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf03.txt", 0.25);
+	string orgFile = outputFile;
+
+	vector<double> rainfall_05 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf05.txt", prms.dt);
+	vector<double> rainfall_07 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf07.txt", prms.dt);
+	vector<double> rainfall_08 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf08.txt", prms.dt);
+	vector<double> rainfall_04 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf04.txt", prms.dt);
+	vector<double> rainfall_02 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf02.txt", prms.dt);
+	vector<double> rainfall_01 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf01.txt", prms.dt);
+	vector<double> rainfall_03 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf03.txt", prms.dt);
 
 
 	prms.uoE = medianFnc(results.uoE);
@@ -84,15 +88,15 @@ double pFitFunc(int particles, pMMHres results, obsDatX obsDat, int fixedParam, 
 	prms.uP = medianFnc(results.uP);
 	prms.Y = medianFnc(results.Y);
 	prms.z1 = medianFnc(results.z1);
-	prms.z2 = medianFnc(results.z2);
-	prms.z3 = medianFnc(results.z3);
+	/*prms.z2 = medianFnc(results.z2);
+	prms.z3 = medianFnc(results.z3);*/
 	prms.z4 = medianFnc(results.z4);
 	prms.z5 = medianFnc(results.z5);
 	prms.z6 = medianFnc(results.z6);
 	prms.w = medianFnc(results.w);
 	prms.sf1 = medianFnc(results.sf1);
-	prms.sf2 = medianFnc(results.sf2);
-	prms.sf3 = medianFnc(results.sf3);
+	/*prms.sf2 = medianFnc(results.sf2);
+	prms.sf3 = medianFnc(results.sf3);*/
 	prms.sf4 = medianFnc(results.sf4);
 	prms.sf5 = medianFnc(results.sf5);
 	prms.sf6 = medianFnc(results.sf6);
@@ -105,16 +109,16 @@ double pFitFunc(int particles, pMMHres results, obsDatX obsDat, int fixedParam, 
 
 
 
-	for (auto j = 0; j != 6; ++j) {
+	for (auto j = 0; j != 4; ++j) {
 		vector<tuple<int, int>> oDat;
 		if (j == 0) {
 			oDat = obsDat.garki408;
 			prms.sf = pow(10, prms.sf1);
 			prms.z = pow(10, prms.z1);
 			prms.rF = rainfall_03;
-			outputFile = "Q:\\Imperial\\fitPlots\\garki408.txt";
+			outputFile.append("\\garki408.txt");
 		}
-		else if (j == 1) {
+	/*	else if (j == 1) {
 			oDat = obsDat.garki202;
 			prms.sf = pow(10, prms.sf2);
 			prms.z = pow(10, prms.z2);
@@ -127,27 +131,30 @@ double pFitFunc(int particles, pMMHres results, obsDatX obsDat, int fixedParam, 
 			prms.z = pow(10, prms.z3);
 			prms.rF = rainfall_07;
 			outputFile = "Q:\\Imperial\\fitPlots\\garki218.txt";
-		}
-		else if (j == 3) {
-			oDat = obsDat.garki304;
+		}*/
+		else if (j == 1) {
+			outputFile = orgFile;
+			oDat = obsDat.garki801;
 			prms.sf = pow(10, prms.sf4);
 			prms.z = pow(10, prms.z4);
-			prms.rF = rainfall_08;
-			outputFile = "Q:\\Imperial\\fitPlots\\garki304.txt";
+			prms.rF = rainfall_01;
+			outputFile.append("\\garki801.txt");
 		}
-		else if (j == 4) {
+		else if (j == 2) {
+			outputFile = orgFile;
 			oDat = obsDat.garki553;
 			prms.sf = pow(10, prms.sf5);
 			prms.z = pow(10, prms.z5);
 			prms.rF = rainfall_02;
-			outputFile = "Q:\\Imperial\\fitPlots\\garki553.txt";
+			outputFile.append("\\garki553.txt");
 		}
-		else if (j == 5) {
+		else if (j == 3) {
+			outputFile = orgFile;
 			oDat = obsDat.garki802;
 			prms.sf = pow(10, prms.sf6);
 			prms.z = pow(10, prms.z6);
 			prms.rF = rainfall_01;
-			outputFile = "Q:\\Imperial\\fitPlots\\garki802.txt";
+			outputFile.append("\\garki802.txt");
 		}
 
 		//run particle filter
@@ -160,5 +167,5 @@ double pFitFunc(int particles, pMMHres results, obsDatX obsDat, int fixedParam, 
 			false
 		);
 	}
-
+	return 0.0;
 }

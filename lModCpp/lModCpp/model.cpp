@@ -52,8 +52,8 @@ vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937 r
 			K =  ((sf*((1 / trx)*rFsum)));
 		}
 
-	uE = uoE*(1+((E + L) / (K)));
-		uL = uoL*(1+((Y*(E + L) / (K))));
+	uE = uoE*exp(((E + L) / (K)));
+		uL = uoL*exp(((Y*(E + L) / (K))));
 
 		if (uL < 0)
 			uL = 0;
@@ -102,13 +102,15 @@ vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937 r
 		boost::binomial_distribution<int> distributionM(Bp, (dP / (uP + dP)));
 		mRan = distributionM(rd);
 
-		if (M + mRan - Bm > 1)
 			M = rint(M + mRan - Bm);
-		else M = 1;
+	
 
-		boost::poisson_distribution<long unsigned int> distributionRp2(rint(Mg+1));
-		M = M + distributionRp2(rd);
-
+			if (Mg > 1) {
+				boost::poisson_distribution<long unsigned int> distributionRp2(rint(Mg));
+				M = M + distributionRp2(rd);
+			}
+			if (M < 1)
+				M = 1;
 
 		rEff = 0.5*((93.6*dt) / (exp(uM*S) - 1))*(1 / (1 + uE / dE))*(1 / (1 + uL / dL))*(1 / (1 + (uP*dt) / dP));
 

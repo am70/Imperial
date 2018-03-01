@@ -103,7 +103,7 @@ modParms parmUpdt(modParms prms, string prmName, double propPrm) {
 double llFunc(int particles, modParms prms, obsDatX obsDat, int fixedParam) {
 	vector<double> pfiltRes;
 
-	for (auto j = 0; j != 6; ++j) {
+	for (auto j = 0; j != 4; ++j) {
 		vector<tuple<int, int>> oDat;
 		if (j == 0) {
 			oDat = obsDat.garki408;
@@ -111,31 +111,31 @@ double llFunc(int particles, modParms prms, obsDatX obsDat, int fixedParam) {
 			prms.z = pow(10, prms.z1);
 			prms.rF = rainfall_03;
 		}
-		else if (j == 1) {
-			oDat = obsDat.garki202;
-			prms.sf = pow(10, prms.sf2);
-			prms.z = pow(10, prms.z2);
-			prms.rF = rainfall_04;
-		}
-		else if (j == 2) {
+		//else if (j == 1) {
+		//	oDat = obsDat.garki202;
+		//	prms.sf = pow(10, prms.sf2);
+		//	prms.z = pow(10, prms.z2);
+		//	prms.rF = rainfall_04;
+		//}
+	/*	else if (j == 1) {
 			oDat = obsDat.garki218;
 			prms.sf = pow(10, prms.sf3);
 			prms.z = pow(10, prms.z3);
 			prms.rF = rainfall_07;
-		}
-		else if (j == 3) {
-			oDat = obsDat.garki304;
+		}*/
+		else if (j == 1) {
+			oDat = obsDat.garki801;
 			prms.sf = pow(10, prms.sf4);
 			prms.z = pow(10, prms.z4);
-			prms.rF = rainfall_08;
+			prms.rF = rainfall_01;
 		}
-		else if (j == 4) {
+		else if (j == 2) {
 			oDat = obsDat.garki553;
 			prms.sf = pow(10, prms.sf5);
 			prms.z = pow(10, prms.z5);
 			prms.rF = rainfall_02;
 		}
-		else if (j == 5) {
+		else if (j == 3) {
 			oDat = obsDat.garki802;
 			prms.sf = pow(10, prms.sf6);
 			prms.z = pow(10, prms.z6);
@@ -185,7 +185,7 @@ double lprior(modParms prms) {
 	boost::math::uniform_distribution<double> u2(0.001, 0.99);//uoL unif
 	res = res + (log(pdf(u2, prms.uoL)));
 
-	boost::math::normal_distribution<double> d3(0.25, 0.01);//uP
+	boost::math::normal_distribution<double> d3(0.25, 0.005);//uP
 	res = res + (log(pdf(d3, prms.uP)));
 	boost::math::uniform_distribution<double> u3(0.001, 0.99);//uP unif
 	res = res + (log(pdf(u3, prms.uP)));
@@ -204,31 +204,31 @@ double lprior(modParms prms) {
 	//res = res + (log(pdf(u5, prms.w)));
 	
 	boost::math::uniform_distribution<double> u61(1, 15);//z1 unif
-	boost::math::uniform_distribution<double> u62(1, 15);//z2 unif
-	boost::math::uniform_distribution<double> u63(1, 6.8);//z3 unif
+	//boost::math::uniform_distribution<double> u62(1, 15);//z2 unif
+	//boost::math::uniform_distribution<double> u63(1, 10);//z3 unif
 	boost::math::uniform_distribution<double> u64(1, 15);//z4 unif
-	boost::math::uniform_distribution<double> u65(1, 7.5);//z5 unif
+	boost::math::uniform_distribution<double> u65(1, 10);//z5 unif
 	boost::math::uniform_distribution<double> u66(1, 15);//z6 unif
 
 	res = res + (log(pdf(u61, prms.z1)));
-	res = res + (log(pdf(u62, prms.z2)));
-	res = res + (log(pdf(u63, prms.z3)));
+	//res = res + (log(pdf(u62, prms.z2)));
+	//res = res + (log(pdf(u63, prms.z3)));
 	res = res + (log(pdf(u64, prms.z4)));
 	res = res + (log(pdf(u65, prms.z5)));
 	res = res + (log(pdf(u66, prms.z6)));
 
 
 
-	boost::math::uniform_distribution<double> u71(1, 15);//sf1 unif
-	boost::math::uniform_distribution<double> u72(1, 15);//sf2 unif
-	boost::math::uniform_distribution<double> u73(1, 15);//sf3 unif
-	boost::math::uniform_distribution<double> u74(1, 15);//sf4 unif
-	boost::math::uniform_distribution<double> u75(1, 15);//sf5 unif
-	boost::math::uniform_distribution<double> u76(1, 15);//sf6 unif
+	boost::math::uniform_distribution<double> u71(1, 10);//sf1 unif
+	//boost::math::uniform_distribution<double> u72(1, 10);//sf2 unif
+	//boost::math::uniform_distribution<double> u73(1, 10);//sf3 unif
+	boost::math::uniform_distribution<double> u74(1, 10);//sf4 unif
+	boost::math::uniform_distribution<double> u75(1, 10);//sf5 unif
+	boost::math::uniform_distribution<double> u76(1, 10);//sf6 unif
 
 	res = res + (log(pdf(u71, prms.sf1)));
-	res = res + (log(pdf(u72, prms.sf2)));
-	res = res + (log(pdf(u73, prms.sf3)));
+	//res = res + (log(pdf(u72, prms.sf2)));
+	//res = res + (log(pdf(u73, prms.sf3)));
 	res = res + (log(pdf(u74, prms.sf4)));
 	res = res + (log(pdf(u75, prms.sf5)));
 	res = res + (log(pdf(u76, prms.sf6)));
@@ -240,20 +240,22 @@ double lprior(modParms prms) {
 
 
 
-	boost::math::normal_distribution<double> d5(0.150602, 0.01);//dE
+	boost::math::normal_distribution<double> d5(0.150602, 0.03);//dE
 	res = res + (log(pdf(d5, prms.dE)));
 
-	boost::math::normal_distribution<double> d6(0.268812, 0.08);//dL
+	boost::math::normal_distribution<double> d6(0.268812, 0.05);//dL
 	res = res + (log(pdf(d6, prms.dL)));
 
-	boost::math::normal_distribution<double> d7(1, 0.05);//dP
+	boost::math::normal_distribution<double> d7(1, 0.1);//dP
 	res = res + (log(pdf(d7, prms.dP)));
 
 
-	boost::math::uniform_distribution<double> d8(1,7);//o
-	res = res + (log(pdf(d8, prms.o)));
+	//boost::math::uniform_distribution<double> d8(1,20);//o
+	//res = res + (log(pdf(d8, prms.o)));
 
 
+	boost::math::uniform_distribution<double> mm(1, 50);//mg
+	res = res + (log(pdf(mm, prms.Mg)));
 
 	return(res);
 }
@@ -316,7 +318,7 @@ pMMHres pMMHSampler(
 			cout << endl << "||-----------------------||" << endl;
 			cout << "iteration " << iter << " of " << niter << endl;
 			cout << " uoE = " << prms.uoE << " uoL = " << prms.uoL << " uoP = " << prms.uP << " uM = " << prms.uM << " Y = " << prms.Y << " w = " << prms.w << " n = " << prms.n << " z1 = " << prms.z1 << endl
-				<< " z2 = " << prms.z2 << " z3 = " << prms.z3 << " z4 = " << prms.z4 << " z5 = " << prms.z5 << " z6 = " << prms.z6 << " sf1 = " << prms.sf1 << " sf2 = " << prms.sf2 << " sf3 = " << prms.sf3 << " sf4 = " << prms.sf4 << " sf5 = " << prms.sf5 << " sf6 = " << prms.sf6
+			 << " z4 = " << prms.z4 << " z5 = " << prms.z5 << " z6 = " << prms.z6 << " sf1 = " << prms.sf1 << " sf4 = " << prms.sf4 << " sf5 = " << prms.sf5 << " sf6 = " << prms.sf6
 				<< "dE = " << prms.dE << " dL = " << prms.dL << " dP = " << prms.dP << " o = " << prms.o << " Mg = " << prms.Mg << " p = " << prms.p <<endl;
 			cout << "||---------aratio--------||" << endl;
 
@@ -376,15 +378,11 @@ pMMHres pMMHSampler(
 			results.w.emplace_back(prms.w);
 			results.n.emplace_back(prms.n);
 			results.z1.emplace_back(prms.z1);
-			results.z2.emplace_back(prms.z2);
-			results.z3.emplace_back(prms.z3);
 			results.z4.emplace_back(prms.z4);
 			results.z5.emplace_back(prms.z5);
 			results.z6.emplace_back(prms.z6);
 
 			results.sf1.emplace_back(prms.sf1);
-			results.sf2.emplace_back(prms.sf2);
-			results.sf3.emplace_back(prms.sf3);
 			results.sf4.emplace_back(prms.sf4);
 			results.sf5.emplace_back(prms.sf5);
 			results.sf6.emplace_back(prms.sf6);

@@ -6,13 +6,34 @@
 #include <chrono>
 #include <fstream>
 
+
+
 int main()
 {
 
-
+	
 	//std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
-	modParms initParams;
+	
+	//vector<tuple<int, int, int, int, double>> test = { {1,2,1,2,-4},{ 2,2,1,2,-4.5 } ,{ 3,2,1,2,-5 } ,{ 4,2,1,2,-3 } };
+
+	//vector<tuple<int, int, int, int, double>> test2 = normalise(test, 100.00);
+
+	//for (auto i = 0; i != size(test2); ++i) {
+	//	cout << get<4>(test2[i])<<endl;
+	//}
+
+
+	//vector<tuple<int, int, int, int, double>> test3 = rSamp(test2);
+
+	//for (auto i = 0; i != size(test3); ++i) {
+	//	double ff = get<0>(test3[i]);
+	//	cout << ff;
+	//}
+
+	//cin.get();
+
+		modParms initParams;
 	obsDatX garkiDatGam;
 
 // read in garki village data anoph gamb 
@@ -25,106 +46,140 @@ int main()
 	garkiDatGam.garki304 = { { 18,3 },{ 32,20 },{ 46,19 },{ 60,80 },{ 74,69 },{ 88,357 },{ 102,310 },{ 116,151 },{ 130,141 },{ 144,129 },{ 158,15 },{ 172,2 },{ 186,1 },{ 197,0 },{ 211,0 } , { 225,0 }, { 239,0 }, { 253,0 }, { 267,0 } };
 	garkiDatGam.garki553 = { { 12,112 },{ 26,143 },{ 40,656 },{ 54,250 },{ 68,673 },{ 82,683 },{ 96,336 },{ 110,124 },{ 124,19 },{ 138,2 },{ 153,7 },{ 165,13 },{ 179,1 },{ 193,0 } , { 207,0 }, { 221,0 } };
 	garkiDatGam.garki802 = { { 18,69 },{ 32,285 },{ 46,66 },{ 60,20 },{ 74,103 },{ 88,67 },{ 102,6 },{ 116,8 },{ 130,3 },{ 144,2 },{ 158,0 },{ 171,2 } , { 185,0 }};
-
-
-	//modParms initParams;
-	initParams.uoE = 0.0342128;
-	initParams.uoL = 0.0380283;
-	initParams.uP = 0.243781;
-	initParams.uM = 0.0887209;
-	initParams.Y = 9.64374;
-	initParams.w = 175;
-	initParams.n = 1.80589;
-
-	initParams.z1 = 3.81073;
-	initParams.z2 = 2.84467;
-	initParams.z3 = 3.79285;
-	initParams.z4 = 2.3262;
-	initParams.z5 = 4.01179;
-	initParams.z6 = 4.1425;
-
-	initParams.sf1 = 5.14794;
-	initParams.sf2 = 4.87898;
-	initParams.sf3 = 5.17532;
-	initParams.sf4 = 5.59073;
-	initParams.sf5 = 4.93854;
-	initParams.sf6 = 3.82135;
-
-	initParams.dE = 0.166911;
-	initParams.dL = 0.634255;
-	initParams.dP = 0.778013;
-	initParams.o = 5.87151;
-	initParams.dt = 0.25;
-	initParams.Mg = 5.56342;
-
-	initParams.p = 0.01;
-
-	initParams.rF = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf01.txt", 0.25);
-
-
-	vector<double> sdProps = { 
-		0.001, 0.001, 0.01,0.01,1,0, 
-		0.1, 0.1, 0.1,0.1,0.1,0.1,
-		0.1, 0.1, 0.1, 0.1, 0.1,0.1,
-		1,0.05,0.05,0.05,1,5,0};
-
-	vector<double> maxSdProps = {
-		0.05, 0.05, 0.8, 0.5,5,0,
-		0.5, 0.5, 0.5, 0.5,0.5,0.5,
-		0.5, 0.5, 0.5, 0.5,0.5,0.5,
-		0.1,0.1,0.1,0.1,1,10,0};
-	vector<double> acptRs = {
-		0.2,0.2,0.2,0.2,0.2,0.2,
-		0.2,0.2,0.2,0.2,0.2,0.2,
-		0.2,0.2,0.2,0.2,0.2,0.2,
-		0.2,0.2,0.2,0.2,0.2,0.2,0.2 };
-
-
-	//vector<double> sdProps2 = {
-	//	0, 0, 0,0,0,0,
-	//	0, 0, 0,0,0,0,
-	//	0, 0, 0, 0, 0,0,
-	//	0,0,0,0,0,0,0 };
-
-	vector<tuple<string, double>> fitPrms = { { "uoE", initParams.uoE },{ "uoL", initParams.uoL },{ "uP", initParams.uP },{ "uM", initParams.uM },{ "Y", initParams.Y },
-	{ "w", initParams.w },{ "n", initParams.n },{ "z1", initParams.z1 },{ "z2", initParams.z2 },{ "z3", initParams.z3 },{ "z4", initParams.z4 },{ "z5", initParams.z5 },{ "z6", initParams.z6 },
-	{ "sf1", initParams.sf1 } ,{ "sf2", initParams.sf2 } ,{ "sf3", initParams.sf3 } ,{ "sf4", initParams.sf4 } ,{ "sf5", initParams.sf5 } ,{ "sf6", initParams.sf6 }
-	,{ "dE", initParams.dE },{ "dL", initParams.dL } ,{ "dP", initParams.dP } ,{ "o", initParams.o },{ "Mg", initParams.Mg },{"p",initParams.p } };
-
-
-
-	pMMHres results = pMMHSampler(
-		initParams,//initial parameters
-		6,//fixed parameter(s) if any - obsolete? 
-		sdProps,//initial sf for param proposals
-		acptRs,//acceptance ratios
-		fitPrms,//tuple of initial parm values plus names - needed as no reflection - maybe can be coded better
-		maxSdProps,//max sd for each parameter proposal in tuner
-		300000,//iterations
-		150,//particles
-		75000,//nburn 
-		1,//monitoring
-		1000,//start adapt
-		25,//tell
-		garkiDatGam//observed data
-	);
-
-	//std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-	//std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::seconds>(end - begin).count() << std::endl;
-
-	//write results to csv
-	ofstream myfile;
-	myfile.open("Q:\\Imperial\\1milTestTr7_TEST3.txt");
-	for (auto iter = 0; iter != size(results.ll); ++iter) {
-		myfile << results.uoE.at(iter) << " " << results.uoL.at(iter) << " " << results.uP.at(iter) << " " << results.Y.at(iter) << " " << results.w.at(iter)
-			<< " " << results.n.at(iter) << " " << results.z1.at(iter) << " " << results.z2.at(iter) << " " << results.z3.at(iter) << " " << results.z4.at(iter) << " " << results.z5.at(iter) << " " << results.z6.at(iter)
-			<< " " << results.sf1.at(iter) << " " << results.sf2.at(iter) << " " << results.sf3.at(iter) << " " << results.sf4.at(iter) << " " << results.sf5.at(iter) << " " << results.sf6.at(iter) << 
-			" " << results.dE.at(iter) << " " << results.dL.at(iter) << " " << results.dP.at(iter) << " "  << results.o.at(iter)<< " " << results.uM.at(iter) << " " << results.Mg.at(iter) << " " << results.p.at(iter)<< " " << results.ll.at(iter) <<endl;
-	}
+	garkiDatGam.garki801 = { { 4,8 },{ 18,36 },{ 32,249 },{ 46,118 },{ 60,69 },{ 74,250 },{ 88,93 },{ 102,68 },{ 116,24 },{ 130,11 },{ 144,5 },{ 158,0 } ,{ 171,0 } };
+	
 	
 
-	pFitFunc(75, results, garkiDatGam, 20, initParams);
-	cout << "End";
+	int ff = 1;
+	int tau;
+
+	while (ff <= 6) {
+
+		if (ff == 1)
+			tau = 5;
+		if (ff == 2)
+			tau = 6;
+		if (ff == 3)
+			tau = 7;
+		if (ff == 4)
+			tau = 8;
+		if (ff == 5)
+			tau = 10;
+		if (ff == 6)
+			tau = 14;
+
+		//modParms initParams;
+		initParams.uoE = 0.0337123;
+		initParams.uoL = 0.0364015;
+		initParams.uP = 0.240449;
+		initParams.uM = 0.0944544;
+		initParams.Y = 4.49817;
+		initParams.w = 0.001;
+		initParams.n = 1.52476;
+
+		initParams.z1 = 4.83399;
+		initParams.z2 = 3.54433;
+		initParams.z3 = 4.03068;
+		initParams.z4 = 6.5593;
+		initParams.z5 = 4.82894;
+		initParams.z6 = 4.2944;
+
+		initParams.sf1 = 5.94847;
+		initParams.sf2 = 5.55559;
+		initParams.sf3 = 5.95307;
+		initParams.sf4 = 5.70143;
+		initParams.sf5 = 5.71892;
+		initParams.sf6 = 5.00923;
+
+		initParams.dE = 0.212957;
+		initParams.dL = 0.339412;
+		initParams.dP = 0.978322;
+		initParams.o = tau;
+		initParams.dt = 0.25;
+		initParams.Mg = 2;
+
+		initParams.p = 0.01;
+
+		initParams.rF = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf01.txt", initParams.dt);
+
+
+		vector<double> sdProps = {
+			0.001, 0.001, 0.01,0.01,1,0.0001,
+			5, 0.1, 0.1,0.1,0.1,
+			0.1, 0.1, 0.1,0.1
+			,0.01,0.05,0.05,0,5,0.001 };
+
+		vector<double> maxSdProps = {
+			0.05, 0.05, 0.8, 0.5,6,0.005,
+			4, 2, 2, 2,2,
+			2, 2,2,2,
+			0.1,0.1,0.1,0,3,0.01 };
+		vector<double> acptRs = {
+			0.25,0.25,0.25,0.25,0.25,0.25,
+			0.25,0.25,0.25,0.25,
+			0.25,0.25,0.25,0.25,
+			0.25,0.25,0.25,0.25,0.25,0.25,0.25 };
+
+
+		//vector<double> sdProps2 = {
+		//	0, 0, 0,0,0,0,
+		//	0, 0, 0,0,0,0,
+		//	0, 0, 0, 0, 0,0,
+		//	0,0,0,0,0,0,0 };
+
+		vector<tuple<string, double>> fitPrms = { { "uoE", initParams.uoE },{ "uoL", initParams.uoL },{ "uP", initParams.uP },{ "uM", initParams.uM },{ "Y", initParams.Y },
+		{ "w", initParams.w },{ "n", initParams.n },{ "z1", initParams.z1 },{ "z4", initParams.z4 },{ "z5", initParams.z5 },{ "z6", initParams.z6 },
+		{ "sf1", initParams.sf1 }  ,{ "sf4", initParams.sf4 } ,{ "sf5", initParams.sf5 } ,{ "sf6", initParams.sf6 }
+		,{ "dE", initParams.dE },{ "dL", initParams.dL } ,{ "dP", initParams.dP } ,{ "o", initParams.o },{ "Mg", initParams.Mg },{"p",initParams.p } };
+
+
+
+		pMMHres results = pMMHSampler(
+			initParams,//initial parameters
+			6,//fixed parameter(s) if any - obsolete? 
+			sdProps,//initial sf for param proposals
+			acptRs,//acceptance ratios
+			fitPrms,//tuple of initial parm values plus names - needed as no reflection - maybe can be coded better
+			maxSdProps,//max sd for each parameter proposal in tuner
+			100000,//iterations
+			75,//particles
+			10000,//nburn 
+			1,//monitoring
+			1000,//start adapt
+			25,//tell
+			garkiDatGam//observed data
+		);
+
+		//std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+		//std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::seconds>(end - begin).count() << std::endl;
+
+
+
+		//write results to csv
+		string fileName = "Q:\\Imperial\\particleTest\\";
+		string loc = to_string(tau);
+		fileName.append(loc);
+		//boost::filesystem::create_directory(fileName);
+		fileName.append("\\results.txt");
+		
+		ofstream myfile;
+		myfile.open(fileName);
+
+		for (auto iter = 0; iter != size(results.ll); ++iter) {
+			myfile << results.uoE.at(iter) << " " << results.uoL.at(iter) << " " << results.uP.at(iter) << " " << results.Y.at(iter) << " " << results.w.at(iter)
+				<< " " << results.n.at(iter) << " " << results.z1.at(iter) << " " << results.z4.at(iter) << " " << results.z5.at(iter) << " " << results.z6.at(iter)
+				<< " " << results.sf1.at(iter) << " " << results.sf4.at(iter) << " " << results.sf5.at(iter) << " " << results.sf6.at(iter) <<
+				" " << results.dE.at(iter) << " " << results.dL.at(iter) << " " << results.dP.at(iter) << " " << results.o.at(iter) << " " << results.uM.at(iter) << " " << results.Mg.at(iter) << " " << results.p.at(iter) << " " << results.ll.at(iter) << endl;
+		}
+
+		string fileNameFit = "Q:\\Imperial\\particleTest\\";
+		fileNameFit.append(loc);
+		pFitFunc(250, results, garkiDatGam, 20, initParams, fileNameFit);
+		cout << "End";
+
+		ff++;
+			
+	}
 	cin.get();
 
 	//std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
