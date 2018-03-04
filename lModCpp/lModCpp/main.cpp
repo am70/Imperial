@@ -45,12 +45,18 @@ int main()
 	garkiDatGam.garki218 = { { 19,99 },{ 33,266 },{ 47,211 },{ 61,301 },{ 75,475 },{ 89,309 },{ 103,279 },{ 117,52 },{ 131,14 },{ 147,6 },{ 156,10 }, { 172,0 }, { 186,0 }, { 200,0 }, { 215,0 }, { 228,0 }, { 242,0 }};
 	garkiDatGam.garki304 = { { 18,3 },{ 32,20 },{ 46,19 },{ 60,80 },{ 74,69 },{ 88,357 },{ 102,310 },{ 116,151 },{ 130,141 },{ 144,129 },{ 158,15 },{ 172,2 },{ 186,1 },{ 197,0 },{ 211,0 } , { 225,0 }, { 239,0 }, { 253,0 }, { 267,0 } };
 	garkiDatGam.garki553 = { { 12,112 },{ 26,143 },{ 40,656 },{ 54,250 },{ 68,673 },{ 82,683 },{ 96,336 },{ 110,124 },{ 124,19 },{ 138,2 },{ 153,7 },{ 165,13 },{ 179,1 },{ 193,0 } , { 207,0 }, { 221,0 } };
-	garkiDatGam.garki802 = { { 18,69 },{ 32,285 },{ 46,66 },{ 60,20 },{ 74,103 },{ 88,67 },{ 102,6 },{ 116,8 },{ 130,3 },{ 144,2 },{ 158,0 },{ 171,2 } , { 185,0 }};
-	garkiDatGam.garki801 = { { 4,8 },{ 18,36 },{ 32,249 },{ 46,118 },{ 60,69 },{ 74,250 },{ 88,93 },{ 102,68 },{ 116,24 },{ 130,11 },{ 144,5 },{ 158,0 } ,{ 171,0 } };
+	
+	garkiDatGam.garki802 = { { 4,9 },{ 18,69 },{ 32,285 },{ 46,66 },{ 60,20 },{ 74,103 },{ 88,67 },{ 102,6 },{ 116,8 },{ 130,3 },{ 144,2 },{ 158,0 },{ 171,2 } ,{ 185,0 },{ 199,0 },{ 212,0 },{ 227,0 },{ 241,0 },
+	{ 255,0 },{ 269,0 },{ 283, 2 },{ 297,0 },{ 311,2 },{ 325,3 },{ 339,2 },{ 353,7 } ,{ 368,39 },{ 382,17 },{ 396,13 },{ 410,13 },{ 424,21 },{ 440,24 },{ 454,12 },{ 468,0 },{ 482,3 },{ 496,0 },{ 510,0 },{ 524,0 } };//, { 538,0 }, { 552,0 }
+	//,{ 566,0 },{ 580,0 },{ 594,0 },{ 608,0 },{ 622,0 },{ 636,0 },{ 650,0 },{ 663,0 },{ 678,0 },{ 692,1 } ,{ 706,4 } ,{ 720,11 },{ 734,6 },{ 748,7 },{ 762,76 },{ 776,221 },{ 790,213 },{ 804,44 },{ 818,35 },{ 832,3 },{ 846,0 } };
+
+		garkiDatGam.garki801 = { { 4,8 },{ 18,36 },{ 32,249 },{ 46,118 },{ 60,69 },{ 74,250 },{ 88,93 },{ 102,68 },{ 116,24 },{ 130,11 },{ 144,5 },{ 158,0 } ,{ 171,0 } ,{ 185,0 },{ 199,0 },{ 212,0 },{ 227,0 },{ 241,0 },
+		{ 255,0 },{ 269,1 },{ 283, 1 },{ 297,1 },{ 311,0 },{ 325,3 },{ 339,5 },{ 353,6 } ,{ 368,83 },{ 382,23 },{ 396,24 },{ 410,41 },{ 424,61 },{ 440,63 },{ 454,14 },{ 468,5 },{ 482,4 },{ 496,0 },{ 510,0 },{ 524,0 } };//, { 538,1 }, { 552,0 }
+	//,{ 566,0 },{ 580,0 },{ 594,0 },{ 608,0 },{ 622,0 },{ 636,0 },{ 650,0 },{ 663,0 },{ 678,1 },{ 692,1 } ,{ 706,3 } ,{ 720,8 },{ 734,24 },{ 748,25 },{ 762,175 },{ 776,221 },{ 790,777 },{ 804,329 },{ 818,167 },{ 832,21 },{ 846,1 } };
 	
 	
 
-	int ff = 1;
+	int ff = 6;
 	int tau;
 
 	while (ff <= 6) {
@@ -69,36 +75,36 @@ int main()
 			tau = 14;
 
 		//modParms initParams;
-		initParams.uoE = 0.0337123;
-		initParams.uoL = 0.0364015;
-		initParams.uP = 0.240449;
-		initParams.uM = 0.0944544;
-		initParams.Y = 4.49817;
-		initParams.w = 0.001;
-		initParams.n = 1.52476;
+		initParams.uoE = 0.03433460;
+		initParams.uoL = 0.03512250;
+		initParams.uP = 0.24917000;
+		initParams.uM = 0.08926820;
+		initParams.Y = 13.34380000;
+		initParams.w = 0.00238884;
+		initParams.n = 12.25690000;
 
-		initParams.z1 = 4.83399;
+		initParams.z1 = 3.18654000;
 		initParams.z2 = 3.54433;
 		initParams.z3 = 4.03068;
-		initParams.z4 = 6.5593;
-		initParams.z5 = 4.82894;
-		initParams.z6 = 4.2944;
+		initParams.z4 = 3.24753000;
+		initParams.z5 = 4.50852000;
+		initParams.z6 = 3.64079000;
 
-		initParams.sf1 = 5.94847;
+		initParams.sf1 = 5.64762000;
 		initParams.sf2 = 5.55559;
 		initParams.sf3 = 5.95307;
-		initParams.sf4 = 5.70143;
-		initParams.sf5 = 5.71892;
-		initParams.sf6 = 5.00923;
+		initParams.sf4 = 5.00651000;
+		initParams.sf5 = 5.37639000;
+		initParams.sf6 = 4.54287000;
 
-		initParams.dE = 0.212957;
-		initParams.dL = 0.339412;
-		initParams.dP = 0.978322;
-		initParams.o = tau;
+		initParams.dE = 0.14072900;
+		initParams.dL = 0.24493500;
+		initParams.dP = 0.99716900;
+		initParams.o = 8;
 		initParams.dt = 0.25;
-		initParams.Mg = 2;
+		initParams.Mg = 9.27955000;
 
-		initParams.p = 0.01;
+		initParams.p = 0.00327994;
 
 		initParams.rF = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf01.txt", initParams.dt);
 
@@ -141,8 +147,8 @@ int main()
 			acptRs,//acceptance ratios
 			fitPrms,//tuple of initial parm values plus names - needed as no reflection - maybe can be coded better
 			maxSdProps,//max sd for each parameter proposal in tuner
-			100000,//iterations
-			75,//particles
+			200000,//iterations
+			50,//particles
 			10000,//nburn 
 			1,//monitoring
 			1000,//start adapt
@@ -156,7 +162,7 @@ int main()
 
 
 		//write results to csv
-		string fileName = "Q:\\Imperial\\particleTest\\";
+		string fileName = "Q:\\Imperial\\particleTestLinear\\";
 		string loc = to_string(tau);
 		fileName.append(loc);
 		//boost::filesystem::create_directory(fileName);
@@ -172,7 +178,7 @@ int main()
 				" " << results.dE.at(iter) << " " << results.dL.at(iter) << " " << results.dP.at(iter) << " " << results.o.at(iter) << " " << results.uM.at(iter) << " " << results.Mg.at(iter) << " " << results.p.at(iter) << " " << results.ll.at(iter) << endl;
 		}
 
-		string fileNameFit = "Q:\\Imperial\\particleTest\\";
+		string fileNameFit = "Q:\\Imperial\\particleTestLinear\\";
 		fileNameFit.append(loc);
 		pFitFunc(250, results, garkiDatGam, 20, initParams, fileNameFit);
 		cout << "End";

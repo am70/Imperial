@@ -2,7 +2,7 @@
 
 vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937 rd) {
 
-	int t = parmsx.startTime;
+	int t =  parmsx.startTime;
 	int time = parmsx.endTime;
 	double Be = 0;
 	double Bl = 0;
@@ -14,7 +14,7 @@ vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937 r
 	double P = parmsx.P0;
 	double M = parmsx.M0;
 	double K = 100;
-	double trx = parmsx.fxdPrm / parmsx.dt;
+	double trx = rint(parmsx.fxdPrm / parmsx.dt);
 	double dt = parmsx.dt;
 	double rFsum;
 	double  uoE = parmsx.uoE;
@@ -112,7 +112,7 @@ vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937 r
 			if (M < 1)
 				M = 1;
 
-		rEff = 0.5*((93.6*dt) / (exp(uM*S) - 1))*(1 / (1 + uE / dE))*(1 / (1 + uL / dL))*(1 / (1 + (uP*dt) / dP));
+			rEff = 0.5*((n) / (exp(uM*S) - 1))*(1 / (1 + uE / dE))*(1 / (1 + uL / dL))*(1 / (1 + (uP) / dP));
 
 		t++;
 		r.emplace_back(make_tuple(E, L, P, M,rEff));
@@ -122,9 +122,9 @@ vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937 r
 
 	//ofstream myfile2;
 	//myfile2.open("Q:\\Imperial\\fitPlots\\sTest3.txt");
-	//for (auto iter = 0; iter != size(r); ++iter) {
-	//	cout << get<3>(r[iter]) << endl;
-	//	myfile2 << get<3>(r[iter]) << ","<<endl;
+	//for (int iter = 0; iter != size(r); ++iter) {
+	////	cout << get<4>(r[iter]) << endl;
+	//	myfile2 << get<0>(r[iter]) << ","<<get<1>(r[iter]) << "," << get<2>(r[iter]) << "," << get<3>(r[iter]) << "," << get<4>(r[iter]) <<endl;
 	//}
 	//cin.get();
 	return r;

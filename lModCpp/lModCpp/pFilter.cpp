@@ -313,7 +313,10 @@ bool reff) {
 	particles.reserve(n);
 	vector<double> modPlotRes;
 	vector<double> modPlot;
+	vector<double> modPlotReff;
 	vector<double> plotResTemp;
+	vector<double> plotResTempReff;
+
 
 	//calculate discreet time steps for observed data
 	for (auto i = begin(obsData); i != end(obsData); ++i) {
@@ -384,6 +387,8 @@ bool reff) {
 				vector < tuple<int, int, int, int, double,double>> plotRes;
 				plotResTemp.clear();
 				plotResTemp.resize(wp.endTime - wp.startTime);
+				plotResTempReff.clear();
+				plotResTempReff.resize(wp.endTime - wp.startTime);
 				for (int j = 0; j < boost::size(particles); j++) {
 					boost::mt19937 mrandThread(std::random_device{}());
 					wp.E0 = get<0>(particles[j]);
@@ -394,9 +399,7 @@ bool reff) {
 					int obsDatPoint = get<1>(obsData[i]);
 					plotRes = modStepFncPlot(wp, obsDatPoint, mrandThread);
 					for (int x = 0; x < boost::size(plotRes); x++) {
-						if(reff == true)
-						plotResTemp.at(x)= plotResTemp.at(x)+(get<5>(plotRes[x]));
-						else
+							plotResTempReff.at(x)= plotResTempReff.at(x)+(get<5>(plotRes[x]));
 							plotResTemp.at(x) = plotResTemp.at(x) + (get<3>(plotRes[x]));
 
 					}
@@ -405,6 +408,7 @@ bool reff) {
 				}
 				for (int g = 0; g < boost::size(plotResTemp); g++) {
 					modPlot.emplace_back(plotResTemp.at(g) / boost::size(particles));
+					modPlotReff.emplace_back(plotResTempReff.at(g) / boost::size(particles));
 				}
 				//take mean of likelihoods from particles
 				//double llMean = lltemp / boost::size(particles);
@@ -423,11 +427,19 @@ bool reff) {
 			for (int j = 0; j < boost::size(modPlot); j++) {
 				cout <<j << ",";
 			}
-
+			string opF = outputFile;
+			outputFile.append(".txt");
 			ofstream myfile;
 			myfile.open(outputFile);
 			for (int j = 0; j < boost::size(modPlot); j++) {
 				myfile << modPlot.at(j) <<endl;
+			}
+
+			opF.append("Reff.txt");
+			ofstream myfileReff;
+			myfileReff.open(opF);
+			for (int j = 0; j < boost::size(modPlotReff); j++) {
+				myfileReff << modPlotReff.at(j) << endl;
 			}
 		}
 

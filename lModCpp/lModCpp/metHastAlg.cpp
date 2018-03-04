@@ -250,8 +250,8 @@ double lprior(modParms prms) {
 	res = res + (log(pdf(d7, prms.dP)));
 
 
-	//boost::math::uniform_distribution<double> d8(1,20);//o
-	//res = res + (log(pdf(d8, prms.o)));
+	boost::math::normal_distribution<double> d8(12.75,2);//n
+	res = res + (log(pdf(d8, prms.n)));
 
 
 	boost::math::uniform_distribution<double> mm(1, 50);//mg

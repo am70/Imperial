@@ -116,7 +116,7 @@ double pFitFunc(int particles, pMMHres results, obsDatX obsDat, int fixedParam, 
 			prms.sf = pow(10, prms.sf1);
 			prms.z = pow(10, prms.z1);
 			prms.rF = rainfall_03;
-			outputFile.append("\\garki408.txt");
+			outputFile.append("\\garki408");
 		}
 	/*	else if (j == 1) {
 			oDat = obsDat.garki202;
@@ -138,7 +138,7 @@ double pFitFunc(int particles, pMMHres results, obsDatX obsDat, int fixedParam, 
 			prms.sf = pow(10, prms.sf4);
 			prms.z = pow(10, prms.z4);
 			prms.rF = rainfall_01;
-			outputFile.append("\\garki801.txt");
+			outputFile.append("\\garki801");
 		}
 		else if (j == 2) {
 			outputFile = orgFile;
@@ -146,7 +146,7 @@ double pFitFunc(int particles, pMMHres results, obsDatX obsDat, int fixedParam, 
 			prms.sf = pow(10, prms.sf5);
 			prms.z = pow(10, prms.z5);
 			prms.rF = rainfall_02;
-			outputFile.append("\\garki553.txt");
+			outputFile.append("\\garki553");
 		}
 		else if (j == 3) {
 			outputFile = orgFile;
@@ -154,7 +154,7 @@ double pFitFunc(int particles, pMMHres results, obsDatX obsDat, int fixedParam, 
 			prms.sf = pow(10, prms.sf6);
 			prms.z = pow(10, prms.z6);
 			prms.rF = rainfall_01;
-			outputFile.append("\\garki802.txt");
+			outputFile.append("\\garki802");
 		}
 
 		//run particle filter
