@@ -14,7 +14,7 @@ vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937 r
 	double P = parmsx.P0;
 	double M = parmsx.M0;
 	double K = 100;
-	double trx = rint(parmsx.fxdPrm / parmsx.dt);
+	double trx = rint(parmsx.tau / parmsx.dt);
 	double dt = parmsx.dt;
 	double rFsum;
 	double  uoE = parmsx.uoE;
@@ -52,8 +52,11 @@ vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937 r
 			K =  ((sf*((1 / trx)*rFsum)));
 		}
 
-	uE = uoE*exp(((E + L) / (K)));
-		uL = uoL*exp(((Y*(E + L) / (K))));
+	
+
+
+	uE = uoE*pow(((E + L) / (K)),o);
+		uL = uoL*pow((Y*((E + L) / (K))),o);
 
 		if (uL < 0)
 			uL = 0;
@@ -78,18 +81,27 @@ vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937 r
 			Bl = distributionBl(rd);
 		}
 
-		boost::binomial_distribution<int> distributionBp(P, (dP + uP)*dt);
-		Bp = distributionBp(rd);
+		
+			boost::binomial_distribution<int> distributionBp(P, (dP + uP)*dt);
+			Bp = distributionBp(rd);
+	
 
-		boost::binomial_distribution<int> distributionBm(M, uM*dt);
-		Bm = distributionBm(rd);
+		if (M > 1) {
+			boost::binomial_distribution<int> distributionBm(M, uM*dt);
+			Bm = distributionBm(rd);
+		}
+		else Bm = 0;
 
-		boost::binomial_distribution<int> distributionNt(M, (dt / S));
-		nt = distributionNt(rd);
+
+		if (M > 1) {
+			boost::binomial_distribution<int> distributionNt(M, (dt / S));
+			nt = distributionNt(rd);
+		}
+		else nt = 0;
 
 		if (n*nt > 0) {
 			boost::poisson_distribution<long unsigned int> distributionRp(n*nt);
-			E = rint(E - Be + distributionRp(rd));
+			E = rint(E - Be + distributionRp(rd));//CHANGE AFTER TEST!!!!!!!!!!!
 		}
 		else E = rint(E - Be);
 
@@ -109,7 +121,7 @@ vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937 r
 				boost::poisson_distribution<long unsigned int> distributionRp2(rint(Mg));
 				M = M + distributionRp2(rd);
 			}
-			if (M < 1)
+			if (M <= 1)
 				M = 1;
 
 			rEff = 0.5*((n) / (exp(uM*S) - 1))*(1 / (1 + uE / dE))*(1 / (1 + uL / dL))*(1 / (1 + (uP) / dP));

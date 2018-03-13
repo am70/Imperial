@@ -56,75 +56,65 @@ int main()
 	
 	
 
-	int ff = 6;
+	int ff = 32;
 	int tau;
 
-	while (ff <= 6) {
-
-		if (ff == 1)
-			tau = 5;
-		if (ff == 2)
-			tau = 6;
-		if (ff == 3)
-			tau = 7;
-		if (ff == 4)
-			tau = 8;
-		if (ff == 5)
-			tau = 10;
-		if (ff == 6)
-			tau = 14;
+	while (ff <= 32) {
+		tau = ff;
+	
 
 		//modParms initParams;
-		initParams.uoE = 0.03433460;
-		initParams.uoL = 0.03512250;
-		initParams.uP = 0.24917000;
-		initParams.uM = 0.08926820;
-		initParams.Y = 13.34380000;
-		initParams.w = 0.00238884;
-		initParams.n = 12.25690000;
+		initParams.uoE = 3.50586e-02;
+		initParams.uoL = 3.53680e-02;
+		initParams.uP = 2.49816e-01;
+		initParams.uM = 9.09940e-02;
+		initParams.Y = 1.35308e+01;
+		initParams.w = 3.71656e-03;
+		initParams.n = 1.24981e+01;
 
-		initParams.z1 = 3.18654000;
+		initParams.z1 = 3.19952e+00;
 		initParams.z2 = 3.54433;
 		initParams.z3 = 4.03068;
-		initParams.z4 = 3.24753000;
-		initParams.z5 = 4.50852000;
-		initParams.z6 = 3.64079000;
+		initParams.z4 = 3.25496e+00;
+		initParams.z5 = 4.37879e+00;
+		initParams.z6 = 3.31632e+00;
 
-		initParams.sf1 = 5.64762000;
+		initParams.sf1 = 5.32839e+00;
 		initParams.sf2 = 5.55559;
 		initParams.sf3 = 5.95307;
-		initParams.sf4 = 5.00651000;
-		initParams.sf5 = 5.37639000;
-		initParams.sf6 = 4.54287000;
+		initParams.sf4 = 4.43658e+00;
+		initParams.sf5 = 5.27567e+00;
+		initParams.sf6 = 4.03437e+00;
 
-		initParams.dE = 0.14072900;
-		initParams.dL = 0.24493500;
-		initParams.dP = 0.99716900;
-		initParams.o = 8;
+		initParams.dE = 1.48557e-01;
+		initParams.dL = 2.66665e-01;
+		initParams.dP = 9.78945e-01;
+		initParams.o = 10;
 		initParams.dt = 0.25;
-		initParams.Mg = 9.27955000;
+		initParams.Mg = 2;
+		initParams.tau = 7;
 
-		initParams.p = 0.00327994;
+		initParams.p = 4.82295e-03;
 
 		initParams.rF = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf01.txt", initParams.dt);
 
 
 		vector<double> sdProps = {
 			0.001, 0.001, 0.01,0.01,1,0.0001,
-			5, 0.1, 0.1,0.1,0.1,
+			4, 0.1, 0.1,0.1,0.1,
 			0.1, 0.1, 0.1,0.1
-			,0.01,0.05,0.05,0,5,0.001 };
+			,0.01,0.05,0.05,3,0,5,0.001 };
 
 		vector<double> maxSdProps = {
 			0.05, 0.05, 0.8, 0.5,6,0.005,
-			4, 2, 2, 2,2,
+			5, 2, 2, 2,2,
 			2, 2,2,2,
-			0.1,0.1,0.1,0,3,0.01 };
+			0.1,0.1,0.1,4,0,5,0.01 };
 		vector<double> acptRs = {
 			0.25,0.25,0.25,0.25,0.25,0.25,
 			0.25,0.25,0.25,0.25,
 			0.25,0.25,0.25,0.25,
-			0.25,0.25,0.25,0.25,0.25,0.25,0.25 };
+			0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25 };
 
 
 		//vector<double> sdProps2 = {
@@ -136,7 +126,7 @@ int main()
 		vector<tuple<string, double>> fitPrms = { { "uoE", initParams.uoE },{ "uoL", initParams.uoL },{ "uP", initParams.uP },{ "uM", initParams.uM },{ "Y", initParams.Y },
 		{ "w", initParams.w },{ "n", initParams.n },{ "z1", initParams.z1 },{ "z4", initParams.z4 },{ "z5", initParams.z5 },{ "z6", initParams.z6 },
 		{ "sf1", initParams.sf1 }  ,{ "sf4", initParams.sf4 } ,{ "sf5", initParams.sf5 } ,{ "sf6", initParams.sf6 }
-		,{ "dE", initParams.dE },{ "dL", initParams.dL } ,{ "dP", initParams.dP } ,{ "o", initParams.o },{ "Mg", initParams.Mg },{"p",initParams.p } };
+		,{ "dE", initParams.dE },{ "dL", initParams.dL } ,{ "dP", initParams.dP } ,{ "o", initParams.o },{ "tau", initParams.tau },{ "Mg", initParams.Mg },{"p",initParams.p } };
 
 
 
@@ -147,9 +137,9 @@ int main()
 			acptRs,//acceptance ratios
 			fitPrms,//tuple of initial parm values plus names - needed as no reflection - maybe can be coded better
 			maxSdProps,//max sd for each parameter proposal in tuner
-			200000,//iterations
-			50,//particles
-			10000,//nburn 
+			500000,//iterations
+			75,//particles
+			50000,//nburn 
 			1,//monitoring
 			1000,//start adapt
 			25,//tell
@@ -162,7 +152,7 @@ int main()
 
 
 		//write results to csv
-		string fileName = "Q:\\Imperial\\particleTestLinear\\";
+		string fileName = "Q:\\Imperial\\particleTestLinearN\\";
 		string loc = to_string(tau);
 		fileName.append(loc);
 		//boost::filesystem::create_directory(fileName);
@@ -175,15 +165,15 @@ int main()
 			myfile << results.uoE.at(iter) << " " << results.uoL.at(iter) << " " << results.uP.at(iter) << " " << results.Y.at(iter) << " " << results.w.at(iter)
 				<< " " << results.n.at(iter) << " " << results.z1.at(iter) << " " << results.z4.at(iter) << " " << results.z5.at(iter) << " " << results.z6.at(iter)
 				<< " " << results.sf1.at(iter) << " " << results.sf4.at(iter) << " " << results.sf5.at(iter) << " " << results.sf6.at(iter) <<
-				" " << results.dE.at(iter) << " " << results.dL.at(iter) << " " << results.dP.at(iter) << " " << results.o.at(iter) << " " << results.uM.at(iter) << " " << results.Mg.at(iter) << " " << results.p.at(iter) << " " << results.ll.at(iter) << endl;
+				" " << results.dE.at(iter) << " " << results.dL.at(iter) << " " << results.dP.at(iter) << " " << results.o.at(iter) << " " << results.tau.at(iter)<<" " << results.uM.at(iter) << " " << results.Mg.at(iter) << " " << results.p.at(iter) << " " << results.ll.at(iter) << endl;
 		}
 
-		string fileNameFit = "Q:\\Imperial\\particleTestLinear\\";
+		string fileNameFit = "Q:\\Imperial\\particleTestLinearN\\";
 		fileNameFit.append(loc);
 		pFitFunc(250, results, garkiDatGam, 20, initParams, fileNameFit);
 		cout << "End";
 
-		ff++;
+		ff = ff+2;
 			
 	}
 	cin.get();

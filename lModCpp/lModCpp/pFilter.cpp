@@ -37,7 +37,7 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 	double a;
 	double Mg = iParms.Mg;
 	//int t = iParms.startTime;
-	double trx = iParms.o / iParms.dt;
+	double trx = rint(iParms.tau / iParms.dt);
 	double rFsum;
 
 	if (t<= trx) {
@@ -50,18 +50,18 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 	}
 
 	//exp carrying cap
-	a = (0.5 * dL*dP) / (uM*(dP + uP));
+	//a = (0.5 * dL*dP) / (uM*(dP + uP));
 
-	uE = UoE*exp((z / K));
-	uL = UoL*exp((y*z / K));
+	//uE = UoE*exp((z / K));
+	//uL = UoL*exp((y*z / K));
 
-	E = rint(((B*a)*z) / ((dE + (B*a) + uE)));
-	L = rint((dE*z) / ((dE + dL + uL)));
-	M = rint((0.5 * dL*dP*L) / (uM*(dP + uP)));
-	P = rint((2 * uM*M) / dP);
+	//E = rint(((n*a)*z) / ((dE + (n*a) + uE)));
+	//L = rint((dE*z) / ((dE + dL + uL)));
+	//M = rint((0.5 * dL*dP*L) / (uM*(dP + uP)));
+	//P = rint((2 * uM*M) / dP);
 
 	//power carrying cap
-	/*a = ((n / S) * dP * dL) / ((2 * uM) * (uP * dP));
+	a = ((n / S) * dP * dL) / ((2 * uM) * (uP * dP));
 	double	b = (UoE / (y * UoL)) * (dL + UoL) - dE - UoE;
 	double	c = -(UoE * dE) / (UoL * y);
 	double	x = (-b + sqrt(pow(b,2) * -4 * a * c)) / (2 * a);
@@ -70,17 +70,18 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 	E =rint(L / x);
 	P =rint((dL * L) / (uP + dP));
 	M =rint((dP * P) / (2 * uM));
-*/
+
 
 	//linear carrying cap
 	//dE = 1 / dE;
 	//dL = 1 / dL;
 	//dP = 1 / dP;
 	//M = z;
-	//double W = -0.5*(y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE) + sqrt(0.25*pow((y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE), 2) + y*((B*UoL*dE) / (2 * UoE*uM*dL*(1 + dP*uP))));
+	//double W = -0.5*(y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE) + sqrt(0.25*pow((y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE), 2) + y*((n*UoL*dE) / (2 * UoE*uM*dL*(1 + dP*uP))));
 	//E = rint(2*W*uM*dL*(1+dP*uP)*M);
 	//L = rint(2 * uM*dL*(1 + dP*uP)*M);
 	//P = rint(2 * dP*uM*M);
+
 	if (Mg > 1) {
 		boost::poisson_distribution<long unsigned int> distributionRp2(rint(Mg));
 		M = M + distributionRp2(mrand);
@@ -182,7 +183,7 @@ double dbinom(double k, double n, double p) {
 @param w overdisperion parameter
 @return log likelihood*/
 double betaBinom(double k, double n, double p, double w) {
-	//n = n + 300;
+	//n = n + 10;
 	if (n >= k) {
 		if (k <= 0) k = 1;
 		if (k == n) n = n + 1;
@@ -347,6 +348,8 @@ bool reff) {
 			wp.rF = prms.rF;
 			wp.Mg = prms.Mg;
 			wp.p = prms.p;
+			wp.o = prms.o;
+			wp.tau = prms.tau;
 
 
 			wp.fxdPrm = prms.o;
@@ -424,9 +427,8 @@ bool reff) {
 	}
 		if (resM == true) {
 
-			for (int j = 0; j < boost::size(modPlot); j++) {
-				cout <<j << ",";
-			}
+		
+			
 			string opF = outputFile;
 			outputFile.append(".txt");
 			ofstream myfile;
