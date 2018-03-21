@@ -52,11 +52,11 @@ vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937 r
 			K =  ((sf*((1 / trx)*rFsum)));
 		}
 
-	
+		//((sf*(1 / (trx*(1 - exp(-time / trx))))*rFsum)); exp rainfall carrying cap
 
 
-	uE = uoE*pow(((E + L) / (K)),o);
-		uL = uoL*pow((Y*((E + L) / (K))),o);
+	uE = uoE*(1+((E + L) / (K)));
+		uL = uoL*(1+(Y*((E + L) / (K))));
 
 		if (uL < 0)
 			uL = 0;

@@ -61,26 +61,26 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 	//P = rint((2 * uM*M) / dP);
 
 	//power carrying cap
-	a = ((n / S) * dP * dL) / ((2 * uM) * (uP * dP));
-	double	b = (UoE / (y * UoL)) * (dL + UoL) - dE - UoE;
-	double	c = -(UoE * dE) / (UoL * y);
-	double	x = (-b + sqrt(pow(b,2) * -4 * a * c)) / (2 * a);
+	//a = ((n / S) * dP * dL) / ((2 * uM) * (uP * dP));
+	//double	b = (UoE / (y * UoL)) * (dL + UoL) - dE - UoE;
+	//double	c = -(UoE * dE) / (UoL * y);
+	//double	x = (-b + sqrt(pow(b,2) * -4 * a * c)) / (2 * a);
 
-	L = z;
-	E =rint(L / x);
-	P =rint((dL * L) / (uP + dP));
-	M =rint((dP * P) / (2 * uM));
+	//L = z;
+	//E =rint(L / x);
+	//P =rint((dL * L) / (uP + dP));
+	//M =rint((dP * P) / (2 * uM));
 
 
 	//linear carrying cap
-	//dE = 1 / dE;
-	//dL = 1 / dL;
-	//dP = 1 / dP;
-	//M = z;
-	//double W = -0.5*(y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE) + sqrt(0.25*pow((y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE), 2) + y*((n*UoL*dE) / (2 * UoE*uM*dL*(1 + dP*uP))));
-	//E = rint(2*W*uM*dL*(1+dP*uP)*M);
-	//L = rint(2 * uM*dL*(1 + dP*uP)*M);
-	//P = rint(2 * dP*uM*M);
+	dE = 1 / dE;
+	dL = 1 / dL;
+	dP = 1 / dP;
+	M = z;
+	double W = -0.5*(y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE) + sqrt(0.25*pow((y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE), 2) + y*((n*UoL*dE) / (2 * UoE*uM*dL*(1 + dP*uP))));
+	E = rint(2*W*uM*dL*(1+dP*uP)*M);
+	L = rint(2 * uM*dL*(1 + dP*uP)*M);
+	P = rint(2 * dP*uM*M);
 
 	if (Mg > 1) {
 		boost::poisson_distribution<long unsigned int> distributionRp2(rint(Mg));
@@ -372,7 +372,7 @@ bool reff) {
 					int obsDatPoint = get<1>(obsData[i]);
 					particles.at(j) = modStepFnc(wp, obsDatPoint, mrandThread);
 					
-				  // resMat[j][i] = get<4>(particles.at(j));
+				   resMat[j][i] = get<4>(particles.at(j));
 
 					lltemp = lltemp + get<4>(particles.at(j));
 					//if (std::isnan(get<4>(particles.at(j))) == 0)  get<4>(particles.at(j)) = 0;
@@ -446,7 +446,7 @@ bool reff) {
 		}
 
 		//take random sample at end of resMat
-		//double resNum = rSampMat(resMat);
+		double resNum = rSampMat(resMat);
 
-	return ll;
+	return resNum;
 }

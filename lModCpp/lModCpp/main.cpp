@@ -56,60 +56,60 @@ int main()
 	
 	
 
-	int ff = 32;
+	int ff = 35;
 	int tau;
 
-	while (ff <= 32) {
+	while (ff <= 35) {
 		tau = ff;
 	
 
 		//modParms initParams;
-		initParams.uoE = 3.50586e-02;
-		initParams.uoL = 3.53680e-02;
-		initParams.uP = 2.49816e-01;
-		initParams.uM = 9.09940e-02;
-		initParams.Y = 1.35308e+01;
-		initParams.w = 3.71656e-03;
-		initParams.n = 1.24981e+01;
+		initParams.uoE = 0.0361393;
+		initParams.uoL = 0.0295857;
+		initParams.uP = 0.279611;
+		initParams.uM = 0.0842671;
+		initParams.Y = 12.038;
+		initParams.w = 0.0110063;
+		initParams.n = 7;
 
-		initParams.z1 = 3.19952e+00;
+		initParams.z1 = 2.11392;
 		initParams.z2 = 3.54433;
 		initParams.z3 = 4.03068;
-		initParams.z4 = 3.25496e+00;
-		initParams.z5 = 4.37879e+00;
-		initParams.z6 = 3.31632e+00;
+		initParams.z4 = 2.77054;
+		initParams.z5 = 3.42122;
+		initParams.z6 = 3.14363;
 
-		initParams.sf1 = 5.32839e+00;
-		initParams.sf2 = 5.55559;
+		initParams.sf1 = 3.77229;
+		initParams.sf2 = 2.81513;
 		initParams.sf3 = 5.95307;
-		initParams.sf4 = 4.43658e+00;
-		initParams.sf5 = 5.27567e+00;
-		initParams.sf6 = 4.03437e+00;
+		initParams.sf4 = 2.81513;
+		initParams.sf5 = 3.62676;
+		initParams.sf6 = 2.26616;
 
-		initParams.dE = 1.48557e-01;
-		initParams.dL = 2.66665e-01;
-		initParams.dP = 9.78945e-01;
-		initParams.o = 10;
+		initParams.dE = 0.14424;
+		initParams.dL = 0.213182;
+		initParams.dP = 0.972388;
+		initParams.o = 0.579851;
 		initParams.dt = 0.25;
-		initParams.Mg = 2;
+		initParams.Mg = 2.5;
 		initParams.tau = 7;
 
-		initParams.p = 4.82295e-03;
+		initParams.p = 0.0196771;
 
 		initParams.rF = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf01.txt", initParams.dt);
 
 
 		vector<double> sdProps = {
 			0.001, 0.001, 0.01,0.01,1,0.0001,
-			4, 0.1, 0.1,0.1,0.1,
+			1, 0.1, 0.1,0.1,0.1,
 			0.1, 0.1, 0.1,0.1
-			,0.01,0.05,0.05,3,0,5,0.001 };
+			,0.01,0.05,0.05,0,1,0.5,0.001 };
 
 		vector<double> maxSdProps = {
-			0.05, 0.05, 0.8, 0.5,6,0.005,
-			5, 2, 2, 2,2,
-			2, 2,2,2,
-			0.1,0.1,0.1,4,0,5,0.01 };
+			0.05, 0.05, 0.8, 0.5,6,0.001,
+			1, 5, 5, 5,5,
+			5, 5,5,5,
+			0.1,0.1,0.1,0,3,0.5,0.001 };
 		vector<double> acptRs = {
 			0.25,0.25,0.25,0.25,0.25,0.25,
 			0.25,0.25,0.25,0.25,
@@ -137,7 +137,7 @@ int main()
 			acptRs,//acceptance ratios
 			fitPrms,//tuple of initial parm values plus names - needed as no reflection - maybe can be coded better
 			maxSdProps,//max sd for each parameter proposal in tuner
-			500000,//iterations
+			1000000,//iterations
 			75,//particles
 			50000,//nburn 
 			1,//monitoring
