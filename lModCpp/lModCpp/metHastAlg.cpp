@@ -91,6 +91,8 @@ modParms parmUpdt(modParms prms, string prmName, double propPrm) {
 		prms.Mg = propPrm;
 	if (prmName == "p")
 		prms.p = propPrm;
+	if (prmName == "tau")
+		prms.tau = propPrm;
 	return prms;
 }
 
@@ -142,8 +144,6 @@ double llFunc(int particles, modParms prms, obsDatX obsDat, int fixedParam) {
 			prms.rF = rainfall_01;
 		}
 
-
-
 		//run particle filter
 		pfiltRes.emplace_back(pFilt(particles,
 			oDat,//garki data
@@ -175,17 +175,17 @@ double propPrmFunc(double sd, double parm) {
 @return sum loglikelihood for each parameter*/
 double lprior(modParms prms) {
 	double res = 0;
-	boost::math::normal_distribution<double> d1(0.035, 0.0026);//uoE
+	boost::math::normal_distribution<double> d1(0.035, 0.0056);//uoE
 	res = res + (log(pdf(d1, prms.uoE)));
 	boost::math::uniform_distribution<double> u1(0.001, 0.99);//uoE unif
 	res = res + (log(pdf(u1, prms.uoE)));
 
-	boost::math::normal_distribution<double> d2(0.035, 0.0026);//uoL
+	boost::math::normal_distribution<double> d2(0.035, 0.0056);//uoL
 	res = res + (log(pdf(d2, prms.uoL)));
 	boost::math::uniform_distribution<double> u2(0.001, 0.99);//uoL unif
 	res = res + (log(pdf(u2, prms.uoL)));
 
-	boost::math::normal_distribution<double> d3(0.25, 0.005);//uP
+	boost::math::normal_distribution<double> d3(0.25, 0.05);//uP
 	res = res + (log(pdf(d3, prms.uP)));
 	boost::math::uniform_distribution<double> u3(0.001, 0.99);//uP unif
 	res = res + (log(pdf(u3, prms.uP)));
@@ -235,23 +235,26 @@ double lprior(modParms prms) {
 
 	//dE = 0.15, dL = 0.269, dP = 1.563
 
-	boost::math::uniform_distribution<double> u8(0.01, 93*0.25);//n unif
+	boost::math::uniform_distribution<double> u8(0.01, 93);//n unif
 	res = res + (log(pdf(u8, prms.n)));
 
 
 
-	boost::math::normal_distribution<double> d5(0.150602, 0.03);//dE
+	boost::math::normal_distribution<double> d5(0.150602, 0.04);//dE
 	res = res + (log(pdf(d5, prms.dE)));
 
-	boost::math::normal_distribution<double> d6(0.268812, 0.05);//dL
+	boost::math::normal_distribution<double> d6(0.268812, 0.06);//dL
 	res = res + (log(pdf(d6, prms.dL)));
 
 	boost::math::normal_distribution<double> d7(1, 0.1);//dP
 	res = res + (log(pdf(d7, prms.dP)));
 
+	boost::math::normal_distribution<double> dtau(7, 1.5);//tau
+	res = res + (log(pdf(dtau, rint(prms.tau))));
 
-	boost::math::normal_distribution<double> d8(12.75,2);//n
-	res = res + (log(pdf(d8, prms.n)));
+
+	boost::math::uniform_distribution<double> d8(0.001,5);//o
+	res = res + (log(pdf(d8, prms.o)));
 
 
 	boost::math::uniform_distribution<double> mm(1, 50);//mg
@@ -319,7 +322,7 @@ pMMHres pMMHSampler(
 			cout << "iteration " << iter << " of " << niter << endl;
 			cout << " uoE = " << prms.uoE << " uoL = " << prms.uoL << " uoP = " << prms.uP << " uM = " << prms.uM << " Y = " << prms.Y << " w = " << prms.w << " n = " << prms.n << " z1 = " << prms.z1 << endl
 			 << " z4 = " << prms.z4 << " z5 = " << prms.z5 << " z6 = " << prms.z6 << " sf1 = " << prms.sf1 << " sf4 = " << prms.sf4 << " sf5 = " << prms.sf5 << " sf6 = " << prms.sf6
-				<< "dE = " << prms.dE << " dL = " << prms.dL << " dP = " << prms.dP << " o = " << prms.o << " Mg = " << prms.Mg << " p = " << prms.p <<endl;
+				<< "dE = " << prms.dE << " dL = " << prms.dL << " dP = " << prms.dP << " o = " << prms.o << " Mg = " << prms.Mg << " p = " << prms.p << " tau = " << prms.tau << endl;
 			cout << "||---------aratio--------||" << endl;
 
 			for (auto iter = 0; iter != size(sdProps); ++iter) {
@@ -393,6 +396,7 @@ pMMHres pMMHSampler(
 			results.o.emplace_back(prms.o);
 			results.Mg.emplace_back(prms.Mg);
 			results.p.emplace_back(prms.p);
+			results.tau.emplace_back(prms.tau);
 
 
 			results.ll.emplace_back(llCur);

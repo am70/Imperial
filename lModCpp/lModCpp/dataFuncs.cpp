@@ -67,6 +67,8 @@ double medianFnc(vector<double> vec) {
 
 
 
+
+
 ////plot fit function
 double pFitFunc(int particles, pMMHres results, obsDatX obsDat, int fixedParam, modParms prms, string outputFile) {
 
@@ -106,6 +108,7 @@ double pFitFunc(int particles, pMMHres results, obsDatX obsDat, int fixedParam, 
 	prms.o = medianFnc(results.o);
 	prms.n = medianFnc(results.n);
 	prms.p = medianFnc(results.p);
+	prms.tau = medianFnc(results.tau);
 
 
 
