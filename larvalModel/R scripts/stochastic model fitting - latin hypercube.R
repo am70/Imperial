@@ -15,32 +15,32 @@ library(devtools)
 #                                                                                                                                       #
 #########################################################################################################################################
 
-
-mos_params <- function(
-  #parameter estimates from white et al (2011)
-  rF=rFx,
-  dE = 0.150, #development time of early larval instars
-  dL = 0.269, #development time of late larval instars
-  dP = 1.563, #development time of pupae
-  uoE = 0.034, #per capita daily mortality rate of early instars (low density)
-  uoL = 0.035, #per capita daily mortality rate of late instars (low density)
-  uP = 0.25, #per capita daily mortality rate of pupae
-  uM = 0.096, # per capita daily mortality rate of adult An.gambiae - KEEP
-  B = 21.19, #No. of eggs laid per day per mosquito
-  Y = 13.25, #effect of density dependence on late instars relative to early instars
-  S = 3, #duration of gonotrophic cycle - KEEP
-  Emax = 93.6, #max number of eggs per oviposition per mosquito - KEEP
-  tr = 4, #days of rainfall contributing to carrying capacity
-  sf = 10, #scaling factor
-  dt=delta,
-  O=1,
-  n=10,
-  E0=177,
-  L0=8,
-  P0=1,
-  M0=7
-)
-return(as.list(environment()))
+# 
+# mos_params <- function(
+#   #parameter estimates from white et al (2011)
+#   rF=rFx,
+#   dE = 0.150, #development time of early larval instars
+#   dL = 0.269, #development time of late larval instars
+#   dP = 1.563, #development time of pupae
+#   uoE = 0.034, #per capita daily mortality rate of early instars (low density)
+#   uoL = 0.035, #per capita daily mortality rate of late instars (low density)
+#   uP = 0.25, #per capita daily mortality rate of pupae
+#   uM = 0.096, # per capita daily mortality rate of adult An.gambiae - KEEP
+#   B = 21.19, #No. of eggs laid per day per mosquito
+#   Y = 13.25, #effect of density dependence on late instars relative to early instars
+#   S = 3, #duration of gonotrophic cycle - KEEP
+#   Emax = 93.6, #max number of eggs per oviposition per mosquito - KEEP
+#   tr = 4, #days of rainfall contributing to carrying capacity
+#   sf = 10, #scaling factor
+#   dt=delta,
+#   O=1,
+#   n=10,
+#   E0=177,
+#   L0=8,
+#   P0=1,
+#   M0=7
+# )
+# return(as.list(environment()))
 
 ##model in odin
 larvalR <- odin::odin({
@@ -68,6 +68,7 @@ larvalR <- odin::odin({
   M0<-user()
   time1<-user()
   o<-user()
+  Mg<-user()
   
   #initial values
   
@@ -76,27 +77,29 @@ larvalR <- odin::odin({
   initial(P) <- P0
   initial(M) <- M0
   initial(timeX)<-time1
-  initial(ts)<-0
+ 
+  tt<-round(trx)
+
+  K <-if (timeX<=tt) ((sf*((1/tt)*(sum(rF[0:(timeX-1)]))))) 
+  else ((sf*((1/tt)*(sum(rF[(timeX-tt):timeX-1])))))
   
-  K <-if (timeX<=trx) (1+(sf*((1/trx)*(sum(rF[0:(timeX-1)]))))) else (1+(sf*((1/trx)*(sum(rF[(timeX-trx):timeX-1])))))
-  
-  uE<-uoE*dt*exp((E+L)/K)  #^o >1 density dep. mortality gets greater quicker as density increases 0-1 the opposite
-  uL<-uoL*dt*exp(Y*(E+L)/K)
+  uE = uoE*(1+((E + L) / (K)))
+  uL = uoL*(1+(Y*((E + L) / (K))))
   
   update(timeX)<-timeX+1
+  
   Be<-if((dE+uE)*dt<1) rbinom(E,(dE+uE)*dt) else rbinom(E,1)
   Bl<-if ((dL+uL)*dt<1) rbinom(L, (dL+uL)*dt) else rbinom(L,1)
   Bp<-rbinom(P,(dP+uP)*dt)
   Bm<-rbinom(M,uM*dt)
   nt<-rbinom(M,(dt/S))
-  update(ts)<-M-Bm
-  
-  update(E)<-E-Be+rpois(nt*n) #else rpois(nt*n)
-  update(L)<-L-Bl+rbinom(Be,(dE/(uE+dE))) #else rbinom(Be,(dE/(uE+dE)))
-  update(P)<-P-Bp+rbinom(Bl,(dL/(uL+dL))) #else rbinom(Bl,(dL/(uL+dL)))
-  update(M)<-if(M-Bm>0)M+round(0.5*(rbinom(Bp,(dP/(uP+dP)))))-Bm else 1+round(0.5*(rbinom(Bp,(dP/(uP+dP)))))
-  
-  
+
+  update(E)<-round(E-Be+rpois(nt*n)) #else rpois(nt*n)
+  update(L)<-round(L-Bl+rbinom(Be,(dE/(uE+dE)))) #else rbinom(Be,(dE/(uE+dE)))
+  update(P)<-round(P-Bp+rbinom(Bl,(dL/(uL+dL)))) #else rbinom(Bl,(dL/(uL+dL)))
+  mTemp =M+round(0.5*(rbinom(Bp,(dP/(uP+dP)))))-Bm+rpois(round(Mg))
+  update(M)<-mTemp
+
 })
 
 
