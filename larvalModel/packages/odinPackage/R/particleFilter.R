@@ -13,9 +13,9 @@
 # @param prms model parameters
 # @fxdParams fixed parameter (currently just for n in mosParamsP) - maybe update for multiple fixed parameters
 # @return conditions for E, L, P and M
-iState<-function(N,t,prms,fxdParams){
-parms<-mosParamsP(uoE=prms[1],uoL = prms[2],uP=prms[3],Y=prms[4],n=prms[8],sf=prms[7])
-z <- prms[5]#fitted (E-L)
+iState<-function(N,t,prms,rFx){
+parms<-mosParamsP(uoE=prms[1],uoL = prms[2],uP=prms[3],Y=prms[4],n=prms[6],sf=prms[8],dE=prms[9],dL=prms[10],dP=prms[11],o=prms[12],tr=prms[13],uM=prms[14],Mg=prms[15],rF=rFx)
+z <- prms[7]#fitted (E-L)
 dE <- parms$dE
 dL <- parms$dL
 dP <- parms$dP
@@ -29,23 +29,46 @@ rF <- parms$rF
 uM <- parms$uM
 uP <- parms$uP
 tr <- parms$tr / delta
+Mg<-parms$Mg
 B<-parms$B
 
-
+if(tr>t)
+  K <- (1 + (sf * ((1 / tr) * (sum(
+    rF[0:(t - 1)]
+  )))))
+  else
 K <- (1 + (sf * ((1 / tr) * (sum(
-  rF[(t - tr):t - 1]
+  rF[(t - tr):(t - 1)]
 )))))
 
-a=(1/2*dL*dP)/(uM*(dP+uP))
+#exp carrying cap
+# a=(1/2*dL*dP)/(uM*(dP+uP))
+# 
+# uE=UoE*exp(z/K)
+# uL=UoL*exp(y*z/K)
+# 
+# 
+# E=((B*a)*z)/(dE+(B*a)+uE)
+# L=(dE*z)/(dE+dL+uL)
+# M=(1/2*dL*dP*L)/uM*(dP+uP)
+# P=2*uM*M/dP
 
-uE=UoE*exp(z/K)
-uL=UoL*exp(y*z/K)
+#linear carrying cap
+dE = 1 / dE
+dL = 1 / dL
+dP = 1 / dP
+M = z
+W = -0.5*(y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE) + sqrt(0.25*((y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE)^2) + y*((n*UoL*dE) / (2 * UoE*uM*dL*(1 + dP*uP))))
+E = round(2*W*uM*dL*(1+dP*uP)*M,0)
+L = round(2 * uM*dL*(1 + dP*uP)*M,0)
+P = round(2 * dP*uM*M,0)
 
+if (Mg > 1) {
+  M = M + rpois(1,Mg)
+}
+if (M < 1)
+  M = 1
 
-E=((B*a)*z)/(dE+(B*a)+uE)
-L=(dE*z)/(dE+dL+uL)
-M=(1/2*dL*dP*L)/uM*(dP+uP)
-P=2*uM*M/dP
 conds <- cbind(E, L, P, M)
 conds <- conds[rep(seq_len(nrow(conds)), each = N),]
 return(round(conds, 0))
@@ -82,7 +105,17 @@ betaBinom <- function(k, n, p, w) {
   lbeta(k + a, n - k + b) - lbeta(a, b) + lchoose(n, k)
 }
 
-
+g<-NULL
+for(i in seq(0.1,2,by=0.01)){
+tP = 0.1#influence of historical rainfall on current ground water
+s=i#tolerance parameter if s is colse to zero more days of rain are included
+#time = day
+tStar=tP*log(1/s)
+tau=(time-tStar)#amount of time in calc
+wd = sum(rFx2[tau:time])*(exp(-((time-tau)/tP))/tP)
+g<-rbind(g,wd)
+print(g)
+}
 
 #likelihood function - obsolete?
 # @param input string of values for likelihood function - in order: sim data point, Obs data point, negBin prob, population scaling factor, time in model for rainfall 
@@ -118,13 +151,26 @@ modStep3 <- function(weightInput) {
   currentTime <-
     as.numeric(dataInput[, c(5)])#time in model to run from
   nextTime <- as.numeric(dataInput[, c(6)])#time in model to run to
-  pr <- as.numeric(dataInput[, c(7:11,13)])#parameters
-  fixed <- dataInput[14]#fixed parameters, currently just n
+  pr <- as.numeric(dataInput[, c(7:20)])#parameters
+  fixed <- dataInput[13]#fixed parameters, currently just n
   #initialise model
-  if (dataInput[12] == 1)
-    rFc <- rFx
-  else
+  if (dataInput[21] == 1)
+    rFc <- rFx1
+  if (dataInput[21] == 2)
     rFc <- rFx2
+  if (dataInput[21] == 3)
+    rFc <- rFx3
+  if (dataInput[21] == 4)
+    rFc <- rFx4
+  if (dataInput[21] == 5)
+    rFc <- rFx5
+  if (dataInput[21] == 6)
+    rFc <- rFx6
+  if (dataInput[21] == 7)
+    rFc <- rFx7
+  if (dataInput[21] == 8)
+    rFc <- rFx8
+  
   params <-
     mosParamsP(
       E0 = initialState[1],
@@ -135,14 +181,15 @@ modStep3 <- function(weightInput) {
       uoL = pr[2],
       uP = pr[3],
       Y = pr[4],
-      sf = pr[5],
-      n = pr[6],
+      sf = pr[7],
+      n = pr[5],
+      ,dE=pr[8],dL=pr[9],dP=pr[10],tr=pr[11],uM=pr[12],Mg=pr[13],o=pr[14],
       rF = rFc,
       time1 = currentTime,
-      tr = as.numeric(fixed)
+      time2 = nextTime
     )
   #run model between two discrete time periods and return results
-  modR <- larvalModP(user = params)#run model
+  modR <- larvalR(user = params)#run model
   simDat <-
     as.data.frame(modR$run(seq(
       currentTime, nextTime, length.out = nextTime - currentTime
@@ -155,7 +202,6 @@ modStep3 <- function(weightInput) {
 ##model step function - for use when returning p.filter full results
 # @ param weightInput string of values for model state, time to run model from/to and model parameters
 modStep4 <- function(weightInput) {
-  #parse input data
   dataInput <-
     read.table(text = weightInput,
                sep = ",",
@@ -165,13 +211,26 @@ modStep4 <- function(weightInput) {
   currentTime <-
     as.numeric(dataInput[, c(5)])#time in model to run from
   nextTime <- as.numeric(dataInput[, c(6)])#time in model to run to
-  pr <- as.numeric(dataInput[, c(7:11,13)])#parameters
-  fixed <- dataInput[14]#fixed parameters, currently just n
+  pr <- as.numeric(dataInput[, c(7:20)])#parameters
+  fixed <- dataInput[13]#fixed parameters, currently just n
   #initialise model
-  if (dataInput[12] == 1)
-    rFc <- rFx
-  else
+  if (dataInput[20] == 1)
+    rFc <- rFx1
+  if (dataInput[20] == 2)
     rFc <- rFx2
+  if (dataInput[20] == 3)
+    rFc <- rFx3
+  if (dataInput[20] == 4)
+    rFc <- rFx4
+  if (dataInput[20] == 5)
+    rFc <- rFx5
+  if (dataInput[20] == 6)
+    rFc <- rFx6
+  if (dataInput[20] == 7)
+    rFc <- rFx7
+  if (dataInput[20] == 8)
+    rFc <- rFx8
+  
   params <-
     mosParamsP(
       E0 = initialState[1],
@@ -182,14 +241,15 @@ modStep4 <- function(weightInput) {
       uoL = pr[2],
       uP = pr[3],
       Y = pr[4],
-      sf = pr[5],
-      n = pr[6],
+      sf = pr[7],
+      n = pr[5],
+      ,dE=pr[8],dL=pr[9],dP=pr[10],tr=pr[11],uM=pr[12],Mg=pr[13],o=pr[14],
       rF = rFc,
       time1 = currentTime,
-      tr = as.numeric(fixed)
+      time2 = nextTime
     )
   #run model between two discrete time periods and return results
-  modR <- larvalModP(user = params)#run model
+  modR <- larvalR(user = params)#run model
   simDat <- as.data.frame(modR$run(seq(currentTime, nextTime)))
   
   return(as.data.frame(simDat))
@@ -226,13 +286,13 @@ pFilt <-
             prms,
             resM = F,
             rFclust,
-            fxdParams,
+            rFx,
             cluster = F)
   {
     times = c(obsData$time / delta) #/delta as model is running in discrete time steps
     
-    particles = iState(n, t = times[1], prms = prms, fxdParams) #initial state
-    ll = mean(betaBinom(obsData[1, 2], particles[, 4], 0.01, prms[6]))#starts ll with betaBinom of starting values, else losing data from first data point
+    particles = iState(n, t = times[1], prms = prms, rFx) #initial state
+    ll = mean(betaBinom(obsData[1, 2], particles[, 4], prms[16], prms[5]))#starts ll with betaBinom of starting values, else losing data from first data point
     rMeans <- NULL
     for (i in 1:length(times[-length(times)])) {
       wp <-
@@ -247,16 +307,26 @@ pFilt <-
           prms[2], #UoL
           prms[3], #uP
           prms[4], #Y
+          prms[6],#n
           prms[7], #z
+          prms[8], #sf
+          
+          prms[9], #dE
+          prms[10], #dL
+          prms[11], #dP
+          prms[13], #tau
+          prms[14], #uM
+          prms[15], #Mg
+          prms[12], #o
+          
+          
           rFclust,#rainfall data set
-          prms[8],#n
-          fxdParams,#fixed parameter tr
           sep = ","
         )
     if (cluster == F)
-      particlesTemp = parLapply(cl,wp, stepFun) #use NULL for dide cluster, cl for local
+      particlesTemp = lapply(wp, stepFun) #use NULL for dide cluster, cl for local
     else
-      particlesTemp = parLapply(NULL, wp, stepFun)
+      particlesTemp = lapply(wp, stepFun)
     
     particles <- data.frame(t(sapply(particlesTemp, `[`)))
 
@@ -264,20 +334,20 @@ pFilt <-
     weights <-
       betaBinom(obsData[i + 1, 2], (20 + round(as.vector(
         unlist(particles$M, 0)
-      ))), 0.01, prms[6])
+      ))), prms[16], prms[5])
     ll = ll + mean(weights)
 
     #normalise weights
-    swP = sum(weights)
-    weights = weights / swP
-    weights <- (weights) - max(weights)
-    weights <- exp(weights * 0.9)
-    weights[is.na(weights)] <- 1e-50
+    mxWeight<-max(weights)
+    weights<-weights-mxWeight
+    swP = sum(exp(weights))
+    weights = exp(weights) / swP
+
     
     #used for outputting full runs from pF for model visualisations.
     if (resM == T) {
       if (cluster == F)
-        particlesTemp1 = parLapply(cl, wp, modStep4)
+        particlesTemp1 = lapply( wp, modStep4)
       else
         particlesTemp1 = parLapply(NULL, wp, modStep4)
       pt <- NULL
