@@ -1,4 +1,3 @@
-
 ##################################################################################################################################################
 #                                                                                                                                                #
 #                                                                                                                                                #
@@ -14,6 +13,7 @@
 # @fxdParams fixed parameter (currently just for n in mosParamsP) - maybe update for multiple fixed parameters
 # @return conditions for E, L, P and M
 iState<-function(N,t,prms,rFx){
+<<<<<<< Updated upstream
 parms<-mosParamsP(uoE=prms[1],uoL = prms[2],uP=prms[3],Y=prms[4],n=prms[6],sf=prms[8],dE=prms[9],dL=prms[10],dP=prms[11],o=prms[12],tr=prms[13],uM=prms[14],Mg=prms[15],rF=rFx)
 z <- prms[7]#fitted (E-L)
 dE <- parms$dE
@@ -72,6 +72,75 @@ if (M < 1)
 conds <- cbind(E, L, P, M)
 conds <- conds[rep(seq_len(nrow(conds)), each = N),]
 return(round(conds, 0))
+=======
+  parms<-mosParamsP(uoE=prms[1],uoL = prms[2],uP=prms[3],Y=prms[4],n=prms[6],sf=prms[8],dE=prms[9],dL=prms[10],dP=prms[11],o=prms[12],tr=prms[13],uM=prms[14],Mg=prms[15],rF=rFx)
+  z <- prms[7]#fitted (E-L)
+  dE <- parms$dE
+  dL <- parms$dL
+  dP <- parms$dP
+  y <- parms$Y
+  S <- parms$S
+  sf <- parms$sf
+  n <- parms$n
+  UoE <- parms$uoE
+  UoL <- parms$uoL
+  rF <- parms$rF
+  uM <- parms$uM
+  uP <- parms$uP
+  tr <- parms$tr / delta
+  Mg<-parms$Mg
+  B<-parms$B
+  
+  if(tr>t)
+    K <- (1 + (sf * ((1 / tr) * (sum(
+      rF[0:(t - 1)]
+    )))))
+  else
+    K <- (1 + (sf * ((1 / tr) * (sum(
+      rF[(t - tr):(t - 1)]
+    )))))
+  
+  #power carrying cap
+  a = ((n / S) * dP * dL) / ((2 * uM) * (uP * dP))
+  	b = (UoE / (y * UoL)) * (dL + UoL) - dE - UoE
+  	c = -(UoE * dE) / (UoL * y)
+  	x = (-b + sqrt((b^2) * -4 * a * c)) / (2 * a)
+  
+  L = z
+  E =round(L / x)
+  P =round((dL * L) / (uP + dP))
+  M =round((dP * P) / (2 * uM))
+  
+  #exp carrying cap
+  # a=(1/2*dL*dP)/(uM*(dP+uP))
+  # 
+  # uE=UoE*exp(z/K)
+  # uL=UoL*exp(y*z/K)
+  # 
+  # 
+  # E=((B*a)*z)/(dE+(B*a)+uE)
+  # L=(dE*z)/(dE+dL+uL)
+  # M=(1/2*dL*dP*L)/uM*(dP+uP)
+  # P=2*uM*M/dP
+  
+  #linear carrying cap
+  #dE = 1 / dE
+  #dL = 1 / dL
+  #dP = 1 / dP
+  #M = z
+  #W = -0.5*(y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE) + sqrt(0.25*((y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE)^2) + y*((n*UoL*dE) / (2 * UoE*uM*dL*(1 + dP*uP))))
+  #E = round(2*W*uM*dL*(1+dP*uP)*M,0)
+  #L = round(2 * uM*dL*(1 + dP*uP)*M,0)
+  #P = round(2 * dP*uM*M,0)
+  
+
+  if (M < 1)
+    M = 1
+  
+  conds <- cbind(E, L, P, M)
+  conds <- conds[rep(seq_len(nrow(conds)), each = N),]
+  return(round(conds, 0))
+>>>>>>> Stashed changes
 }
 
 
@@ -100,6 +169,7 @@ nBgP <- function(x, n, p, log = F) {
 # @param w overdisperion parameter
 # @return log likelihood
 betaBinom <- function(k, n, p, w) {
+  n=n+100
   a <- p * ((1 / w) - 1)
   b <- (1 - p) * ((1 / w) - 1)
   lbeta(k + a, n - k + b) - lbeta(a, b) + lchoose(n, k)
@@ -107,6 +177,7 @@ betaBinom <- function(k, n, p, w) {
 
 g<-NULL
 for(i in seq(0.1,2,by=0.01)){
+<<<<<<< Updated upstream
 tP = 0.1#influence of historical rainfall on current ground water
 s=i#tolerance parameter if s is colse to zero more days of rain are included
 #time = day
@@ -115,6 +186,16 @@ tau=(time-tStar)#amount of time in calc
 wd = sum(rFx2[tau:time])*(exp(-((time-tau)/tP))/tP)
 g<-rbind(g,wd)
 print(g)
+=======
+  tP = 0.1#influence of historical rainfall on current ground water
+  s=i#tolerance parameter if s is colse to zero more days of rain are included
+  #time = day
+  tStar=tP*log(1/s)
+  tau=(time-tStar)#amount of time in calc
+  wd = sum(rFx2[tau:time])*(exp(-((time-tau)/tP))/tP)
+  g<-rbind(g,wd)
+  print(g)
+>>>>>>> Stashed changes
 }
 
 #likelihood function - obsolete?
@@ -135,6 +216,8 @@ dataLikFunc <- function(input)
   )##+1e-10 to stop INF if MH proposes a 0
   return (ll)
 }
+
+
 
 
 
@@ -183,7 +266,11 @@ modStep3 <- function(weightInput) {
       Y = pr[4],
       sf = pr[7],
       n = pr[5],
+<<<<<<< Updated upstream
       ,dE=pr[8],dL=pr[9],dP=pr[10],tr=pr[11],uM=pr[12],Mg=pr[13],o=pr[14],
+=======
+      dE=pr[8],dL=pr[9],dP=pr[10],tr=pr[11],uM=pr[12],Mg=pr[13],o=pr[14],
+>>>>>>> Stashed changes
       rF = rFc,
       time1 = currentTime,
       time2 = nextTime
@@ -214,6 +301,7 @@ modStep4 <- function(weightInput) {
   pr <- as.numeric(dataInput[, c(7:20)])#parameters
   fixed <- dataInput[13]#fixed parameters, currently just n
   #initialise model
+<<<<<<< Updated upstream
   if (dataInput[20] == 1)
     rFc <- rFx1
   if (dataInput[20] == 2)
@@ -229,6 +317,23 @@ modStep4 <- function(weightInput) {
   if (dataInput[20] == 7)
     rFc <- rFx7
   if (dataInput[20] == 8)
+=======
+  if (dataInput[21] == 1)
+    rFc <- rFx1
+  if (dataInput[21] == 2)
+    rFc <- rFx2
+  if (dataInput[21] == 3)
+    rFc <- rFx3
+  if (dataInput[21] == 4)
+    rFc <- rFx4
+  if (dataInput[21] == 5)
+    rFc <- rFx5
+  if (dataInput[21] == 6)
+    rFc <- rFx6
+  if (dataInput[21] == 7)
+    rFc <- rFx7
+  if (dataInput[21] == 8)
+>>>>>>> Stashed changes
     rFc <- rFx8
   
   params <-
@@ -243,14 +348,25 @@ modStep4 <- function(weightInput) {
       Y = pr[4],
       sf = pr[7],
       n = pr[5],
+<<<<<<< Updated upstream
       ,dE=pr[8],dL=pr[9],dP=pr[10],tr=pr[11],uM=pr[12],Mg=pr[13],o=pr[14],
+=======
+      dE=pr[8],dL=pr[9],dP=pr[10],tr=pr[11],uM=pr[12],Mg=pr[13],o=pr[14],
+>>>>>>> Stashed changes
       rF = rFc,
       time1 = currentTime,
       time2 = nextTime
     )
   #run model between two discrete time periods and return results
   modR <- larvalR(user = params)#run model
+<<<<<<< Updated upstream
   simDat <- as.data.frame(modR$run(seq(currentTime, nextTime)))
+=======
+  simDat <-
+    as.data.frame(modR$run(seq(
+      currentTime, nextTime, length.out = nextTime - currentTime
+    )))
+>>>>>>> Stashed changes
   
   return(as.data.frame(simDat))
 }
@@ -323,6 +439,7 @@ pFilt <-
           rFclust,#rainfall data set
           sep = ","
         )
+<<<<<<< Updated upstream
     if (cluster == F)
       particlesTemp = lapply(wp, stepFun) #use NULL for dide cluster, cl for local
     else
@@ -348,45 +465,78 @@ pFilt <-
     if (resM == T) {
       if (cluster == F)
         particlesTemp1 = lapply( wp, modStep4)
+=======
+      if (cluster == F)
+        particlesTemp = lapply(wp, stepFun) #use NULL for dide cluster, cl for local
+>>>>>>> Stashed changes
       else
-        particlesTemp1 = parLapply(NULL, wp, modStep4)
-      pt <- NULL
-      pt1<- NULL
-      pt2<- NULL
-      pt3<- NULL
-
-      for (j in 1:n) {
-        Mt <- (particlesTemp1[[j]]$M)
-        pt <- cbind(pt, Mt)
+        particlesTemp = lapply(wp, stepFun)
+      
+      particles <- data.frame(t(sapply(particlesTemp, `[`)))
+      
+      # fracPop<-obsData[i+1,2]/prms[7]
+      weights <-
+        betaBinom(obsData[i + 1, 2], (round(as.vector(
+          unlist(particles$M, 0)
+        ))), prms[16], prms[5])
+      ll = ll + mean(weights)
+      
+      #normalise weights
+      mxWeight<-max(weights)
+      weights<-weights-mxWeight
+      swP = sum(exp(weights))
+      weights = exp(weights) / swP
+      
+      
+      #used for outputting full runs from pF for model visualisations.
+      if (resM == T) {
+        if (cluster == F)
+          particlesTemp1 = lapply( wp, modStep4)
+        else
+          particlesTemp1 = parLapply(NULL, wp, modStep4)
+        pt <- NULL
+        pt1<- NULL
+        pt2<- NULL
+        pt3<- NULL
+        pt4<- NULL
         
-        Et <- (particlesTemp1[[j]]$E)
-        pt1 <- cbind(pt1, Et)
         
-        Lt <- (particlesTemp1[[j]]$L)
-        pt2 <- cbind(pt2, Lt)
-
-        Pt <- (particlesTemp1[[j]]$P)
-        pt3 <- cbind(pt3, Pt)
+        for (j in 1:n) {
+          Mt <- (particlesTemp1[[j]]$M)
+          pt <- cbind(pt, Mt)
+          
+          Et <- (particlesTemp1[[j]]$E)
+          pt1 <- cbind(pt1, Et)
+          
+          Lt <- (particlesTemp1[[j]]$L)
+          pt2 <- cbind(pt2, Lt)
+          
+          Pt <- (particlesTemp1[[j]]$P)
+          pt3 <- cbind(pt3, Pt)
+          
+          Pt <- (particlesTemp1[[j]]$rEff)
+          pt4 <- cbind(pt4, Pt)
+          
+        }
         
+        pt <- as.data.frame(rowMeans(pt))
+        pt1 <- as.data.frame(rowMeans(pt1))
+        pt2 <- as.data.frame(rowMeans(pt2))
+        pt3 <- as.data.frame(rowMeans(pt3))
+        pt4 <- as.data.frame(rowMeans(pt4))
+        
+        px<-cbind(pt1,pt2,pt3,pt,pt4)
+        rMeans <- rbind(rMeans, px)
       }
       
-      pt <- as.data.frame(rowMeans(pt))
-      pt1 <- as.data.frame(rowMeans(pt1))
-      pt2 <- as.data.frame(rowMeans(pt2))
-      pt3 <- as.data.frame(rowMeans(pt3))
-
-      px<-cbind(pt1,pt2,pt3,pt)
-      rMeans <- rbind(rMeans, px)
+      
+      rows = sample(1:n, n, replace = TRUE, prob = weights)
+      particles = particles[rows,]
     }
     
+    if (resM == T)
+      return (rMeans)
+    else
+      return (ll)
     
-    rows = sample(1:n, n, replace = TRUE, prob = weights)
-    particles = particles[rows,]
   }
-  
-  if (resM == T)
-    return (rMeans)
-  else
-    return (ll)
-  
-}
