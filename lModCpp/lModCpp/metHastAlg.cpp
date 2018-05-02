@@ -2,13 +2,13 @@
 boost::mt19937 rng(std::time(0));
 
 
-vector<double> rainfall_05 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf05.txt", 0.25);
-vector<double> rainfall_07 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf07.txt", 0.25);
-vector<double> rainfall_08 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf08.txt", 0.25);
-vector<double> rainfall_04 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf04.txt", 0.25);
-vector<double> rainfall_02 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf02.txt", 0.25);
-vector<double> rainfall_01 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf01.txt", 0.25);
-vector<double> rainfall_03 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf03.txt", 0.25);
+vector<double> rainfall_05 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf05.txt", 0.25);
+vector<double> rainfall_07 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf07.txt", 0.25);
+vector<double> rainfall_08 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf08.txt", 0.25);
+vector<double> rainfall_04 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf04.txt", 0.25);
+vector<double> rainfall_02 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf02.txt", 0.25);
+vector<double> rainfall_01 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf01.txt", 0.25);
+vector<double> rainfall_03 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf03.txt", 0.25);
 
 
 
@@ -102,24 +102,27 @@ modParms parmUpdt(modParms prms, string prmName, double propPrm) {
 @param obsDatX observed data
 @param fixedParam fixed parameters
 @return log likelihood value*/
-double llFunc(int particles, modParms prms, obsDatX obsDat, int fixedParam) {
+double llFunc(int particles, modParms prms, obsDatX obsDat, string dFunc) {
 	vector<double> pfiltRes;
 
 	for (auto j = 0; j != 4; ++j) {
+
 		vector<tuple<int, int>> oDat;
 		if (j == 0) {
 			oDat = obsDat.garki408;
 			prms.sf = pow(10, prms.sf1);
 			prms.z = pow(10, prms.z1);
 			prms.rF = rainfall_03;
+
 		}
-		//else if (j == 1) {
-		//	oDat = obsDat.garki202;
-		//	prms.sf = pow(10, prms.sf2);
-		//	prms.z = pow(10, prms.z2);
-		//	prms.rF = rainfall_04;
-		//}
+
 	/*	else if (j == 1) {
+			oDat = obsDat.garki202;
+			prms.sf = pow(10, prms.sf2);
+			prms.z = pow(10, prms.z2);
+			prms.rF = rainfall_04;
+		}
+		else if (j == 2) {
 			oDat = obsDat.garki218;
 			prms.sf = pow(10, prms.sf3);
 			prms.z = pow(10, prms.z3);
@@ -145,13 +148,14 @@ double llFunc(int particles, modParms prms, obsDatX obsDat, int fixedParam) {
 		}
 
 		//run particle filter
+
 		pfiltRes.emplace_back(pFilt(particles,
 			oDat,//garki data
 			prms,//parameters
 			false,//full output or just likelihood
-			fixedParam,//fixed parameters
-			"Q:\\Imperial\\fitPlots\\test.txt",
-			false
+			"\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\fitPlots\\test.txt",
+			false,
+			dFunc//density function 
 		));
 	}
 
@@ -194,7 +198,7 @@ double lprior(modParms prms) {
 	res = res + (log(pdf(uM1, prms.uM)));
 
 
-	boost::math::normal_distribution<double> d4(13.06, 4);//Y
+	boost::math::normal_distribution<double> d4(13.06, 3);//Y
 	res = res + (log(pdf(d4, prms.Y)));
 
 	boost::math::uniform_distribution<double> d4x(0.1, 70);//Y
@@ -281,7 +285,7 @@ double lprior(modParms prms) {
 @param oDat struct containing observed data@return struct containing results of pMMH*/
 pMMHres pMMHSampler(
 	modParms initParams,
-	int fixedParam,
+	string dFunc,
 	vector<double> sdProps,
 	vector<double> acptRs,
 	vector<tuple<string, double>> fitPrms,
@@ -302,9 +306,12 @@ pMMHres pMMHSampler(
 	modParms prms = initParams;
 	double propPrm; //proposed new parameter
 
-	prms.tr = prms.o;
+	if (dFunc != "exp" && dFunc != "linear" && dFunc != "power" && dFunc != "expClumped" && dFunc != "linearClumped" && dFunc != "powerClumped") {
+		cerr << "dFunc must equal correct value: linear, power, exp, linearClumped, powerClumped or expClumped";
+		cin.get();
+	}
 
-	llCur = llFunc(particles, prms, oDat, fixedParam) + lprior(prms); //get value for initial ll
+	llCur = llFunc(particles, prms, oDat, dFunc) + lprior(prms); //get value for initial ll
 	vector<double> acptRcur = acptRs;//current acceptance ratio
 	vector<double> acpts(acptRs.size(), 0.0);//number of acceptances (use acptRs to get correct vector length)
 	vector<int> parmIter(acptRs.size(), 0);//iteration number for specific parameters
@@ -318,7 +325,7 @@ pMMHres pMMHSampler(
 
 		if ((monitoring = true && iter % tell == 0)) {
 
-			cout << endl << "||-----------------------||" << endl;
+			cout << endl << "||-----------------------||" <<dFunc <<"||-----------------------||" << endl;
 			cout << "iteration " << iter << " of " << niter << endl;
 			cout << " uoE = " << prms.uoE << " uoL = " << prms.uoL << " uoP = " << prms.uP << " uM = " << prms.uM << " Y = " << prms.Y << " w = " << prms.w << " n = " << prms.n << " z1 = " << prms.z1 << endl
 			 << " z4 = " << prms.z4 << " z5 = " << prms.z5 << " z6 = " << prms.z6 << " sf1 = " << prms.sf1 << " sf4 = " << prms.sf4 << " sf5 = " << prms.sf5 << " sf6 = " << prms.sf6
@@ -345,7 +352,7 @@ pMMHres pMMHSampler(
 			myfile << " Mg = " << prms.Mg << endl;*/
 		
 
-		llProp = llFunc(particles, prms, oDat, fixedParam) + lprior(prms);//find log likelihood from particle filter
+		llProp = llFunc(particles, prms, oDat, dFunc) + lprior(prms);//find log likelihood from particle filter
 
 		//print outputs
 		if ((monitoring = true && iter % tell == 0)) {
@@ -381,11 +388,17 @@ pMMHres pMMHSampler(
 			results.w.emplace_back(prms.w);
 			results.n.emplace_back(prms.n);
 			results.z1.emplace_back(prms.z1);
+			//results.z2.emplace_back(prms.z2);
+			//results.z3.emplace_back(prms.z3);
+
 			results.z4.emplace_back(prms.z4);
 			results.z5.emplace_back(prms.z5);
 			results.z6.emplace_back(prms.z6);
 
 			results.sf1.emplace_back(prms.sf1);
+			//results.sf2.emplace_back(prms.sf2);
+			//results.sf3.emplace_back(prms.sf3);
+
 			results.sf4.emplace_back(prms.sf4);
 			results.sf5.emplace_back(prms.sf5);
 			results.sf6.emplace_back(prms.sf6);

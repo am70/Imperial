@@ -10,87 +10,89 @@ double m_pi = 3.14159265358979323846;
 @param prms model parameters
 @fxdParams fixed parameter (currently just for n in mosParamsP) - maybe update for multiple fixed parameters
 @return conditions for E, L, P and M, double is empty for addition of weight later. */
-vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParms, int fxdParm) {
+vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParms, string dFunc) {
+	try {
+		int z = iParms.z;
+		double dE = iParms.dE;
+		double dL = iParms.dL;
+		double dP = iParms.dP;
+		double y = iParms.Y;
+		double S = iParms.S;
+		double sf = iParms.sf;
+		double n = iParms.n;
+		double UoE = iParms.uoE;
+		double UoL = iParms.uoL;
+		vector<double> rF = iParms.rF;
+		double uM = iParms.uM;
+		double uP = iParms.uP;
+		double B = iParms.B;
+		double K;
+		double uE;
+		double uL;
+		int E;
+		double L;
+		int P;
+		int M;
+		double t = iParms.startTime;
+		double a;
+		double Mg = iParms.Mg;
+		//int t = iParms.startTime;
+		double trx = rint(iParms.tau / iParms.dt);
+		double rFsum;
 
-	int z = iParms.z;//fitted(E - L)
-	double dE = iParms.dE;
-	double dL = iParms.dL;
-	double dP = iParms.dP;
-	double y = iParms.Y;
-	double S = iParms.S;
-	double sf = iParms.sf;
-	double n = iParms.n;
-	double UoE = iParms.uoE;
-	double UoL = iParms.uoL;
-	vector<double> rF = iParms.rF;
-	double uM = iParms.uM;
-	double uP = iParms.uP;
-	double B = iParms.n;
-	double K;
-	double uE;
-	double uL;
-	int E;
-	double L;
-	int P;
-	int M;
-	double t = iParms.startTime;
-	double a;
-	double Mg = iParms.Mg;
-	//int t = iParms.startTime;
-	double trx = rint(iParms.tau / iParms.dt);
-	double rFsum;
+		if (t <= trx) {
+			rFsum = std::accumulate(rF.begin(), rF.begin() + t, 0);
+			K = ((sf*((1 / t)*rFsum)));
+		}
+		else {
+			rFsum = std::accumulate(rF.begin() + (t - trx), rF.begin() + t, 0);
+			K = ((sf*((1 / trx)*rFsum)));
+		}
+		//exp carrying cap
+		if (dFunc == "exp" || dFunc == "expClumped") {
+			a = (0.5 * dL*dP) / (uM*(dP + uP));
 
-	if (t<= trx) {
-		rFsum = std::accumulate(rF.begin(), rF.begin() + t, 0);
-		K = ((sf*((1 / t)*rFsum)));
+			uE = UoE * exp((z / K));
+			uL = UoL * exp((y*z / K));
+			E = round(((B*a)*z) / ((dE + (B*a) + uE)));
+			L = round((dE*z) / ((dE + dL + uL)));
+			M = round((0.5 * dL*dP*L) / (uM*(dP + uP)));
+			P = round((2 * uM*M) / dP);
+		}
+		else {
+			//power carrying cap
+			a = ((n / S) * dP * dL) / ((2 * uM) * (uP * dP));
+			double	b = (UoE / (y * UoL)) * (dL + UoL) - dE - UoE;
+			double	c = -(UoE * dE) / (UoL * y);
+			double	x = (-b + sqrt(pow(b, 2) * -4 * a * c)) / (2 * a);
+
+			L = z;
+			E = round(L / x);
+			P = round((dL * L) / (uP + dP));
+			M = round((dP * P) / (2 * uM));
+		}
+
+		//linear carrying cap
+		//dE = 1 / dE;
+		//dL = 1 / dL;
+		//dP = 1 / dP;
+		//M = z;
+		//double W = -0.5*(y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE) + sqrt(0.25*pow((y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE), 2) + y*((B*UoL*dE) / (2 * UoE*uM*dL*(1 + dP*uP))));
+		//E = rint(2*W*uM*dL*(1+dP*uP)*M);
+		//L = rint(2 * uM*dL*(1 + dP*uP)*M);
+		//P = rint(2 * dP*uM*M);
+
+		if (Mg > 1) {
+			boost::poisson_distribution<long unsigned int> distributionRp2(rint(Mg));
+			M = M + distributionRp2(mrand);
+		}
+		if (M < 1)
+			M = 1;
+		vector<tuple<int, int, int, int, double>> states = { { E, L, P, M ,0.0 } };
+		states.resize(N, { E, L, P, M, 0.0 });//return initial states, repeated to number of particles
+		return states;
 	}
-	else {
-		rFsum = std::accumulate(rF.begin() + (t - trx), rF.begin() + t, 0);
-		K = ((sf*((1 / trx)*rFsum)));
-	}
-
-	//exp carrying cap
-	//a = (0.5 * dL*dP) / (uM*(dP + uP));
-
-	//uE = UoE*exp((z / K));
-	//uL = UoL*exp((y*z / K));
-
-	//E = rint(((n*a)*z) / ((dE + (n*a) + uE)));
-	//L = rint((dE*z) / ((dE + dL + uL)));
-	//M = rint((0.5 * dL*dP*L) / (uM*(dP + uP)));
-	//P = rint((2 * uM*M) / dP);
-
-	//power carrying cap
-	//a = ((n / S) * dP * dL) / ((2 * uM) * (uP * dP));
-	//double	b = (UoE / (y * UoL)) * (dL + UoL) - dE - UoE;
-	//double	c = -(UoE * dE) / (UoL * y);
-	//double	x = (-b + sqrt(pow(b,2) * -4 * a * c)) / (2 * a);
-
-	//L = z;
-	//E =rint(L / x);
-	//P =rint((dL * L) / (uP + dP));
-	//M =rint((dP * P) / (2 * uM));
-
-
-	//linear carrying cap
-	dE = 1 / dE;
-	dL = 1 / dL;
-	dP = 1 / dP;
-	M = z;
-	double W = -0.5*(y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE) + sqrt(0.25*pow((y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE), 2) + y*((n*UoL*dE) / (2 * UoE*uM*dL*(1 + dP*uP))));
-	E = rint(2*W*uM*dL*(1+dP*uP)*M);
-	L = rint(2 * uM*dL*(1 + dP*uP)*M);
-	P = rint(2 * dP*uM*M);
-
-	if (Mg > 1) {
-		boost::poisson_distribution<long unsigned int> distributionRp2(rint(Mg));
-		M = M + distributionRp2(mrand);
-	}
-	if (M < 1)
-		M = 1;
-	vector<tuple<int, int, int, int, double>> states = { { E, L, P, M ,0.0 } };
-	states.resize(N, { E, L, P, M, 0.0 });//return initial states, repeated to number of particles
-	return states;
+	catch (...) { cerr << "error in initial states function, check input" << endl; }
 }
 
 
@@ -183,19 +185,24 @@ double dbinom(double k, double n, double p) {
 @param w overdisperion parameter
 @return log likelihood*/
 double betaBinom(double k, double n, double p, double w) {
-	//n = n + 10;
-	if (n >= k) {
-		if (k <= 0) k = 1;
-		if (k == n) n = n + 1;
-		double a = p * ((1 / w) - 1);
-		double b = (1 - p) * ((1 / w) - 1);
-		double logn = log(n);
-		double logk = log(k);
-		double lognk = log(n - k);
-		double res = lbeta(k + a, n - k + b) - lbeta(a, b) + boost::math::lgamma(n + 1) - (boost::math::lgamma(k + 1) + boost::math::lgamma(n - k + 1));
-		return res;
+	try {
+		//n = n + 10;
+		if (n >= k) {
+			if (k <= 0) k = 1;
+			if (k == n) n = n + 1;
+			double a = p * ((1 / w) - 1);
+			double b = (1 - p) * ((1 / w) - 1);
+			double logn = log(n);
+			double logk = log(k);
+			double lognk = log(n - k);
+			double res = lbeta(k + a, n - k + b) - lbeta(a, b) + boost::math::lgamma(n + 1) - (boost::math::lgamma(k + 1) + boost::math::lgamma(n - k + 1));
+			return res;
+		}
+		else return -1000;
 	}
-	else return -1000;
+	catch (...) { cerr << "betaBinom Func error, check input, currently:" << endl << "k = "<<k
+		<<endl << "n = " << n << endl << "p = " << p << endl << "w = " << w << endl; cin.get(); }
+
 }
 
 
@@ -204,11 +211,16 @@ double betaBinom(double k, double n, double p, double w) {
 @param obsData, observed data for calculating likelihood value
 @return tuple containing state ints for E, L, P, M and likelihood (non-log), at the end of 
 a model run with designated start and end times*/
-tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt19937 rd) {
+tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt19937 rd, string dFunc) {
 	vector<tuple<int, int, int, int,double>> modRun;
 	modRun.reserve(wp.endTime - wp.startTime);
 	double weight; 
-		modRun = mPmod(wp, rd);
+	try {
+		modRun = mPmod(wp, rd, dFunc);
+	}
+	catch (...) {
+		cerr << "error with model run in modStep func" << endl;
+	}
 	double sim = get<3>(modRun.back());
 	weight = betaBinom(obsData, sim, wp.p,wp.w); //add weights to tuple
 	tuple<int, int, int, int, double> res = { get<0>(modRun.back()),get<1>(modRun.back()),get<2>(modRun.back()),get<3>(modRun.back()), weight };
@@ -220,13 +232,17 @@ tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt
 @param obsData, observed data for calculating likelihood value
 @return tuple containing state ints for E, L, P, M and likelihood (non-log), at the end of
 a model run with designated start and end times*/
-vector<tuple<int, int, int, int, double,double>> modStepFncPlot(modParms wp, int obsData, boost::mt19937 rd) {
+vector<tuple<int, int, int, int, double,double>> modStepFncPlot(modParms wp, int obsData, boost::mt19937 rd, string dFunc) {
 	vector<tuple<int, int, int, int,double>> modRun;
 	modRun.reserve(wp.endTime - wp.startTime);
 	double weight;
-		modRun = mPmod(wp, rd);
-	double sim = get<3>(modRun.back());
-	weight = betaBinom(obsData, sim,wp.p,wp.w); //add weights to tuple
+	try {
+		modRun = mPmod(wp, rd, dFunc);
+	}
+	catch (...) {
+		cerr << "error with model run in modStepFncPlot func" << endl;
+	}	double sim = get<3>(modRun.back());
+	weight = betaBinom(obsData, sim,wp.p,wp.w);//add weights to tuple
 	tuple<int, int, int, int, double,double> res;
 	vector<tuple<int, int, int, int, double,double>> res2;
 	for (int j = 0; j < boost::size(modRun); j++) {
@@ -301,12 +317,13 @@ before using weighted re - sampling of model state at each step to start next
 @param fxedParams fixed parameters - currently just accepting tr but may expand to include more than one parameter
 @return log likelihood value*/
 double pFilt(int n,
-	vector< tuple<int, int> > obsData,
+	vector<tuple<int, int>> obsData,
 	modParms prms,
 	bool resM,
-	int fxdParams,
 	string outputFile,
-bool reff) {
+	bool reff,
+	string dFunc) 
+{
 	vector<int> times;
 	double ll; //log likelihood value
 	modParms wp;
@@ -325,7 +342,7 @@ bool reff) {
 	};
 	prms.startTime = times.at(0);
 	//get initial state of particles
-	particles = iState(n, times.front(), prms, fxdParams);
+	particles = iState(n, times.front(), prms, dFunc);
 
 		ll = (betaBinom(get<1>(obsData[0]), get<3>(particles[0]),prms.p,wp.w));
 		
@@ -340,6 +357,8 @@ bool reff) {
 			wp.uoE = prms.uoE;
 			wp.uoL = prms.uoL;
 			wp.uP = prms.uP;
+			wp.uM = prms.uM;
+
 			wp.Y = prms.Y;
 			wp.sf = prms.sf;
 			wp.z = prms.z;
@@ -348,11 +367,12 @@ bool reff) {
 			wp.rF = prms.rF;
 			wp.Mg = prms.Mg;
 			wp.p = prms.p;
+			if(dFunc == "exp" || dFunc == "linear" || dFunc == "expClumped" || dFunc == "linearClumped")
+				wp.o = 1;
+			else
 			wp.o = prms.o;
 			wp.tau = prms.tau;
 
-
-			wp.fxdPrm = prms.o;
 			wp.startTime = times.at(i);
 			wp.endTime = times.at(i + 1);
 			//run model in step and update particles in parallel
@@ -362,6 +382,7 @@ bool reff) {
 			if (resM == false) {
 
 #pragma omp parallel for schedule(static) reduction(+:lltemp)  //reduction needed due to problem with thread racing
+
 				for (int j = 0; j < boost::size(particles); j++){
 					boost::mt19937 mrandThread(std::random_device{}());
 					wp.E0 = get<0>(particles[j]);
@@ -370,19 +391,21 @@ bool reff) {
 					wp.M0 = get<3>(particles[j]);
 
 					int obsDatPoint = get<1>(obsData[i]);
-					particles.at(j) = modStepFnc(wp, obsDatPoint, mrandThread);
+					particles.at(j) = modStepFnc(wp, obsDatPoint, mrandThread,dFunc);
 					
 				   resMat[j][i] = get<4>(particles.at(j));
 
 					lltemp = lltemp + get<4>(particles.at(j));
 					//if (std::isnan(get<4>(particles.at(j))) == 0)  get<4>(particles.at(j)) = 0;
 				}
+
 				double llMean = lltemp / boost::size(particles);
 				ll = ll + llMean;//add start val for frst obs point
 				//normalise particle probabilities
 				particles = normalise(particles, lltemp);
 				//re-sample particles
 				particles = rSamp(particles);
+
 			}
 
 			//alternative loop for getting plot outputs from particle filter - could be coded better...
@@ -400,13 +423,12 @@ bool reff) {
 					wp.M0 = get<3>(particles[j]);
 
 					int obsDatPoint = get<1>(obsData[i]);
-					plotRes = modStepFncPlot(wp, obsDatPoint, mrandThread);
+					plotRes = modStepFncPlot(wp, obsDatPoint, mrandThread,dFunc);
 					for (int x = 0; x < boost::size(plotRes); x++) {
 							plotResTempReff.at(x)= plotResTempReff.at(x)+(get<5>(plotRes[x]));
 							plotResTemp.at(x) = plotResTemp.at(x) + (get<3>(plotRes[x]));
-
 					}
-					particles.at(j) = { get<0>(plotRes.back()),get<1>(plotRes.back()),get<2>(plotRes.back()),get<3>(plotRes.back()), get<4>(plotRes.back()) };;
+					particles.at(j) = { get<0>(plotRes.back()),get<1>(plotRes.back()),get<2>(plotRes.back()),get<3>(plotRes.back()), get<4>(plotRes.back()) };
 					lltemp = lltemp + get<4>(particles.at(j));
 				}
 				for (int g = 0; g < boost::size(plotResTemp); g++) {
@@ -426,9 +448,6 @@ bool reff) {
 	
 	}
 		if (resM == true) {
-
-		
-			
 			string opF = outputFile;
 			outputFile.append(".txt");
 			ofstream myfile;

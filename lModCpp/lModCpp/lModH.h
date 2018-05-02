@@ -30,9 +30,12 @@
 #include<thread>
 #include <windows.h>
 #include <stdio.h>
+#include <stdio.h>
 
 #endif
 using namespace std;
+using std::cerr;
+
 typedef long unsigned int luint;
 
 vector<double> txtReader(string, float);
@@ -70,24 +73,24 @@ int binom(int n, double p, boost::mt19937 rd);
 luint rpois(luint lambda, boost::mt19937 rd);
 double lbeta(double a, double b);
 double betaBinom(double k, double n, double p, double w);
-vector<tuple<int, int, int, int,double>> mPmod(modParms, boost::mt19937 rd);
-tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt19937 rd);
-double llFunc(int particles, modParms prms, obsDatX obsDat, int fixedParam);
+vector<tuple<int, int, int, int,double>> mPmod(modParms, boost::mt19937 rd, string dFunc);
+tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt19937 rd, string dFunc);
+double llFunc(int particles, modParms prms, obsDatX obsDat, string dFunc);
 double dbinom(double k, double n, double p);
 double nB(double k, double n, double r, double p);
 
-
 //pfilter
 double pFilt(int n,
-	vector< tuple<int, int> > obsData,
+	vector<tuple<int, int>> obsData,
 	modParms prms,
 	bool resM,
-	int fxdParams,
 	string outputFile,
-	bool reff);
+	bool reff,
+	string dFunc
+);
 
 //istate
-vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParms, int fxdParm);
+vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParms, string dFunc);
 
 //rand 0-1 generator
 double rn01(void);
@@ -128,7 +131,7 @@ struct pMMHres {
 //pMMH sampler 
 pMMHres pMMHSampler(
 	modParms initParams,
-	int fixedParam,
+	string dFunc,
 	vector<double> sdProps,
 	vector<double> acptRs,
 	vector<tuple<string, double>> fitPrms,
@@ -141,4 +144,21 @@ pMMHres pMMHSampler(
 	int	tell,
 	obsDatX	oDat);
 
-double pFitFunc(int particles, pMMHres results, obsDatX obsDat, int fixedParam, modParms prms, string outputFile);
+double pFitFunc(int particles, pMMHres results, obsDatX obsDat, modParms prms, string outputFile, string dFunc);
+
+double resultsWriter(string fileName, string outputFolder, pMMHres results);
+
+struct pmcmcOptions {
+	string outputFolder;
+	string dFunc;
+	int iterations;
+	int particles;
+	int nburn;
+	int monitoring;
+	int startAdapt;
+	int tell;
+};
+
+
+pmcmcOptions optionsReader(string optionsTextFile, pmcmcOptions pmcmcOpt);
+modParms initParamsReader(string initParamsTxtFile, modParms initParams);

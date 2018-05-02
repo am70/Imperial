@@ -2,8 +2,9 @@
 
 
 
-//text file reader
+//text file reader for rainfall
 //@param file text file location
+//@param dt discrete time period for division of daily rainfall
 //@return vector of ints from text file
 vector<double> txtReader(string file, float dt) {
 	vector<double>dat;
@@ -23,6 +24,62 @@ vector<double> txtReader(string file, float dt) {
 }
 
 
+
+
+//text file reader for rainfall
+//@param file text file location
+//@param dt discrete time period for division of daily rainfall
+//@return vector of ints from text file
+pmcmcOptions optionsReader(string optionsTextFile, pmcmcOptions pmcmcOpt) {
+	try {
+		std::ifstream in(optionsTextFile);
+		cout << "begin";
+		for (std::string parameter, value;
+			std::getline(in, parameter, ',') && std::getline(in, value);
+			)
+
+		{
+			cout << "Parameter " << parameter << endl;
+			if (parameter == "outputFolder") pmcmcOpt.outputFolder = value;
+			if (parameter == "dFunc") pmcmcOpt.dFunc = value;
+			if (parameter == "iterations") pmcmcOpt.iterations = stoi(value);
+			if (parameter == "particles") pmcmcOpt.particles = stoi(value);
+			if (parameter == "nburn") pmcmcOpt.nburn = stoi(value);
+			if (parameter == "monitoring") pmcmcOpt.monitoring = stoi(value);
+			if (parameter == "startAdapt") pmcmcOpt.startAdapt = stoi(value);
+			if (parameter == "tell") pmcmcOpt.tell = stoi(value);
+
+		}
+	}
+	catch(...)  { cerr << "problem with pMCMC options file, check input file"<<endl; cin.get();}
+	return (pmcmcOpt);
+}
+
+
+
+
+//text file reader for rainfall
+//@param file text file location
+//@param dt discrete time period for division of daily rainfall
+//@return vector of ints from text file
+modParms initParamsReader(string initParamsTxtFile, modParms initParams) {
+	try {
+		std::ifstream in(initParamsTxtFile);
+		cout << "begin";
+		for (std::string parameter, value;
+			std::getline(in, parameter, '=') && std::getline(in, value);
+			)
+
+		{
+			cout << parameter << " " << value << endl;
+			if (parameter == "initParms.uoE") initParams.uoE = stoi(value);
+
+
+		}
+	}
+	catch (...) { cerr << "problem with pMCMC options file, check input file" << endl; cin.get(); }
+	return (initParams);
+}
 
 
 //text file reader for mosquito data
@@ -70,17 +127,17 @@ double medianFnc(vector<double> vec) {
 
 
 ////plot fit function
-double pFitFunc(int particles, pMMHres results, obsDatX obsDat, int fixedParam, modParms prms, string outputFile) {
+double pFitFunc(int particles, pMMHres results, obsDatX obsDat, modParms prms, string outputFile, string dFunc) {
 
 	string orgFile = outputFile;
 
-	vector<double> rainfall_05 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf05.txt", prms.dt);
-	vector<double> rainfall_07 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf07.txt", prms.dt);
-	vector<double> rainfall_08 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf08.txt", prms.dt);
-	vector<double> rainfall_04 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf04.txt", prms.dt);
-	vector<double> rainfall_02 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf02.txt", prms.dt);
-	vector<double> rainfall_01 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf01.txt", prms.dt);
-	vector<double> rainfall_03 = txtReader("Q:\\Imperial\\lModCpp\\Data\\rf03.txt", prms.dt);
+	vector<double> rainfall_05 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf05.txt", prms.dt);
+	vector<double> rainfall_07 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf07.txt", prms.dt);
+	vector<double> rainfall_08 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf08.txt", prms.dt);
+	vector<double> rainfall_04 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf04.txt", prms.dt);
+	vector<double> rainfall_02 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf02.txt", prms.dt);
+	vector<double> rainfall_01 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf01.txt", prms.dt);
+	vector<double> rainfall_03 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf03.txt", prms.dt);
 
 
 	prms.uoE = medianFnc(results.uoE);
@@ -90,15 +147,15 @@ double pFitFunc(int particles, pMMHres results, obsDatX obsDat, int fixedParam, 
 	prms.uP = medianFnc(results.uP);
 	prms.Y = medianFnc(results.Y);
 	prms.z1 = medianFnc(results.z1);
-	/*prms.z2 = medianFnc(results.z2);
-	prms.z3 = medianFnc(results.z3);*/
+	//prms.z2 = medianFnc(results.z2);
+	//prms.z3 = medianFnc(results.z3);
 	prms.z4 = medianFnc(results.z4);
 	prms.z5 = medianFnc(results.z5);
 	prms.z6 = medianFnc(results.z6);
 	prms.w = medianFnc(results.w);
 	prms.sf1 = medianFnc(results.sf1);
-	/*prms.sf2 = medianFnc(results.sf2);
-	prms.sf3 = medianFnc(results.sf3);*/
+	//prms.sf2 = medianFnc(results.sf2);
+	//prms.sf3 = medianFnc(results.sf3);
 	prms.sf4 = medianFnc(results.sf4);
 	prms.sf5 = medianFnc(results.sf5);
 	prms.sf6 = medianFnc(results.sf6);
@@ -121,20 +178,22 @@ double pFitFunc(int particles, pMMHres results, obsDatX obsDat, int fixedParam, 
 			prms.rF = rainfall_03;
 			outputFile.append("\\garki408");
 		}
-	/*	else if (j == 1) {
-			oDat = obsDat.garki202;
-			prms.sf = pow(10, prms.sf2);
-			prms.z = pow(10, prms.z2);
-			prms.rF = rainfall_04;
-			outputFile = "Q:\\Imperial\\fitPlots\\garki202.txt";
-		}
-		else if (j == 2) {
-			oDat = obsDat.garki218;
-			prms.sf = pow(10, prms.sf3);
-			prms.z = pow(10, prms.z3);
-			prms.rF = rainfall_07;
-			outputFile = "Q:\\Imperial\\fitPlots\\garki218.txt";
-		}*/
+		//else if (j == 1) {
+		//	outputFile = orgFile;
+		//	oDat = obsDat.garki202;
+		//	prms.sf = pow(10, prms.sf2);
+		//	prms.z = pow(10, prms.z2);
+		//	prms.rF = rainfall_04;
+		//	outputFile.append("\\garki202");
+		//}
+		//else if (j == 2) {
+		//	outputFile = orgFile;
+		//	oDat = obsDat.garki218;
+		//	prms.sf = pow(10, prms.sf3);
+		//	prms.z = pow(10, prms.z3);
+		//	prms.rF = rainfall_07;
+		//	outputFile.append("\\garki218");
+		//}
 		else if (j == 1) {
 			outputFile = orgFile;
 			oDat = obsDat.garki801;
@@ -165,10 +224,40 @@ double pFitFunc(int particles, pMMHres results, obsDatX obsDat, int fixedParam, 
 			oDat,//garki data
 			prms,//parameters
 			true,//full output or just likelihood
-			fixedParam,//fixed parameters
 			outputFile,//name of output file for plots
-			false
+			false,
+			dFunc
 		);
 	}
+
+	orgFile.append("\\medianParms.txt");
+
+	ofstream myfile;
+	myfile.open(orgFile);
+
+		myfile << "initParms.uoE = "<<prms.uoE <<";"<< endl << "initParms.uoL  = " << prms.uoL << ";" << endl << " initParms.uP = " << prms.uP << ";" << endl << "initParms.Y = " << prms.Y << ";" << endl << "initParms.w = " << prms.w << ";" << endl
+			<< "initParms.n = " << prms.n << ";" << endl << "initParms.z1 = " << prms.z1 << ";" << endl << "initParms.z4 = " << prms.z4 << ";" << endl << "initParms.z5 = " << prms.z5 << ";" << endl << "initParms.z6 = " << prms.z6 << ";" << endl
+			<< "initParms.sf1 = " << prms.sf1 << ";" << endl << "initParms.sf4 = " << prms.sf4 << ";" << endl << "initParms.sf5 = " << prms.sf5 << ";" << endl << "initParms.sf6 = " << prms.sf6 << ";" << endl <<
+			"initParms.dE = " << prms.dE << ";" << endl << "initParms.dL = " << prms.dL << ";" << endl << "initParms.dP = " << prms.dP << ";" << endl << "initParms.o = " << prms.o << ";" << endl << "initParms.tau = " << prms.tau << ";" << endl << "initParms.uM = " << prms.uM << ";" << endl << "initParms.Mg = " << prms.Mg << ";" << endl << "initParms.p = " << prms.p << ";" << endl;
 	return 0.0;
+}
+
+
+double resultsWriter(string fileName, string outputFolder, pMMHres results) {
+
+	fileName.append(outputFolder);
+	fileName.append("\\results.txt");
+
+	ofstream myfile;
+	myfile.open(fileName);
+
+	for (auto iter = 0; iter != size(results.ll); ++iter) {
+		myfile << results.uoE.at(iter) << " " << results.uoL.at(iter) << " " << results.uP.at(iter) << " " << results.Y.at(iter) << " " << results.w.at(iter)
+			<< " " << results.n.at(iter) << " " << results.z1.at(iter) << " " << results.z4.at(iter) << " " << results.z5.at(iter) << " " << results.z6.at(iter)
+			<< " " << results.sf1.at(iter) << " " << results.sf4.at(iter) << " " << results.sf5.at(iter) << " " << results.sf6.at(iter) <<
+			" " << results.dE.at(iter) << " " << results.dL.at(iter) << " " << results.dP.at(iter) << " " << results.o.at(iter) << " " << results.tau.at(iter) << " " << results.uM.at(iter) << " " << results.Mg.at(iter) << " " << results.p.at(iter) << " " << results.ll.at(iter) << endl;
+	}
+
+	return 0.0;
+
 }
