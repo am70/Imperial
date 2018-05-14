@@ -13,66 +13,6 @@
 # @fxdParams fixed parameter (currently just for n in mosParamsP) - maybe update for multiple fixed parameters
 # @return conditions for E, L, P and M
 iState<-function(N,t,prms,rFx){
-<<<<<<< Updated upstream
-parms<-mosParamsP(uoE=prms[1],uoL = prms[2],uP=prms[3],Y=prms[4],n=prms[6],sf=prms[8],dE=prms[9],dL=prms[10],dP=prms[11],o=prms[12],tr=prms[13],uM=prms[14],Mg=prms[15],rF=rFx)
-z <- prms[7]#fitted (E-L)
-dE <- parms$dE
-dL <- parms$dL
-dP <- parms$dP
-y <- parms$Y
-S <- parms$S
-sf <- parms$sf
-n <- parms$n
-UoE <- parms$uoE
-UoL <- parms$uoL
-rF <- parms$rF
-uM <- parms$uM
-uP <- parms$uP
-tr <- parms$tr / delta
-Mg<-parms$Mg
-B<-parms$B
-
-if(tr>t)
-  K <- (1 + (sf * ((1 / tr) * (sum(
-    rF[0:(t - 1)]
-  )))))
-  else
-K <- (1 + (sf * ((1 / tr) * (sum(
-  rF[(t - tr):(t - 1)]
-)))))
-
-#exp carrying cap
-# a=(1/2*dL*dP)/(uM*(dP+uP))
-# 
-# uE=UoE*exp(z/K)
-# uL=UoL*exp(y*z/K)
-# 
-# 
-# E=((B*a)*z)/(dE+(B*a)+uE)
-# L=(dE*z)/(dE+dL+uL)
-# M=(1/2*dL*dP*L)/uM*(dP+uP)
-# P=2*uM*M/dP
-
-#linear carrying cap
-dE = 1 / dE
-dL = 1 / dL
-dP = 1 / dP
-M = z
-W = -0.5*(y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE) + sqrt(0.25*((y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE)^2) + y*((n*UoL*dE) / (2 * UoE*uM*dL*(1 + dP*uP))))
-E = round(2*W*uM*dL*(1+dP*uP)*M,0)
-L = round(2 * uM*dL*(1 + dP*uP)*M,0)
-P = round(2 * dP*uM*M,0)
-
-if (Mg > 1) {
-  M = M + rpois(1,Mg)
-}
-if (M < 1)
-  M = 1
-
-conds <- cbind(E, L, P, M)
-conds <- conds[rep(seq_len(nrow(conds)), each = N),]
-return(round(conds, 0))
-=======
   parms<-mosParamsP(uoE=prms[1],uoL = prms[2],uP=prms[3],Y=prms[4],n=prms[6],sf=prms[8],dE=prms[9],dL=prms[10],dP=prms[11],o=prms[12],tr=prms[13],uM=prms[14],Mg=prms[15],rF=rFx)
   z <- prms[7]#fitted (E-L)
   dE <- parms$dE
@@ -136,11 +76,11 @@ return(round(conds, 0))
 
   if (M < 1)
     M = 1
+  G=0
   
-  conds <- cbind(E, L, P, M)
+  conds <- cbind(E, L, P, M,G)
   conds <- conds[rep(seq_len(nrow(conds)), each = N),]
   return(round(conds, 0))
->>>>>>> Stashed changes
 }
 
 
@@ -177,16 +117,6 @@ betaBinom <- function(k, n, p, w) {
 
 g<-NULL
 for(i in seq(0.1,2,by=0.01)){
-<<<<<<< Updated upstream
-tP = 0.1#influence of historical rainfall on current ground water
-s=i#tolerance parameter if s is colse to zero more days of rain are included
-#time = day
-tStar=tP*log(1/s)
-tau=(time-tStar)#amount of time in calc
-wd = sum(rFx2[tau:time])*(exp(-((time-tau)/tP))/tP)
-g<-rbind(g,wd)
-print(g)
-=======
   tP = 0.1#influence of historical rainfall on current ground water
   s=i#tolerance parameter if s is colse to zero more days of rain are included
   #time = day
@@ -195,7 +125,6 @@ print(g)
   wd = sum(rFx2[tau:time])*(exp(-((time-tau)/tP))/tP)
   g<-rbind(g,wd)
   print(g)
->>>>>>> Stashed changes
 }
 
 #likelihood function - obsolete?
@@ -230,7 +159,7 @@ modStep3 <- function(weightInput) {
                sep = ",",
                colClasses = "numeric")
   initialState <-
-    as.numeric(dataInput[, c(1:4)])#state of E, L, P and M
+    as.numeric(dataInput[, c(1:4,26)])#state of E, L, P and M
   currentTime <-
     as.numeric(dataInput[, c(5)])#time in model to run from
   nextTime <- as.numeric(dataInput[, c(6)])#time in model to run to
@@ -260,29 +189,36 @@ modStep3 <- function(weightInput) {
       L0 = initialState[2],
       P0 = initialState[3],
       M0 = initialState[4],
+      G0=  initialState[5],
+      
       uoE = pr[1],
       uoL = pr[2],
       uP = pr[3],
       Y = pr[4],
       sf = pr[7],
       n = pr[5],
-<<<<<<< Updated upstream
-      ,dE=pr[8],dL=pr[9],dP=pr[10],tr=pr[11],uM=pr[12],Mg=pr[13],o=pr[14],
-=======
       dE=pr[8],dL=pr[9],dP=pr[10],tr=pr[11],uM=pr[12],Mg=pr[13],o=pr[14],
->>>>>>> Stashed changes
       rF = rFc,
       time1 = currentTime,
       time2 = nextTime
     )
+
   #run model between two discrete time periods and return results
-  modR <- larvalR(user = params)#run model
-  simDat <-
-    as.data.frame(modR$run(seq(
-      currentTime, nextTime, length.out = nextTime - currentTime
-    )))
+  inter<-  as.numeric(dataInput[22])#inter
+  interSize<- as.numeric( dataInput[23])#interSize
+  efficacy<- as.numeric( dataInput[24])#efficacy
+  clumped<-  as.numeric(dataInput[25])#clumped
+  
+  
+  #run model between two discrete time periods and return results
+  simDat <- as.data.frame(larvalWhileYdrive(params,interSize,inter,efficacy,clumped))#run model
+#  simDat <-
+ #   as.data.frame(modR$run(seq(
+  #    currentTime, nextTime, length.out = nextTime - currentTime
+   # )))
+
   res2 <- (simDat[simDat$step == nextTime, ])#return model state
-  return(as.data.frame(rbind(res2[, c(3:6)])))
+  return(as.data.frame(rbind(res2[, c(3:7)])))
 }
 
 
@@ -294,30 +230,13 @@ modStep4 <- function(weightInput) {
                sep = ",",
                colClasses = "numeric")
   initialState <-
-    as.numeric(dataInput[, c(1:4)])#state of E, L, P and M
+    as.numeric(dataInput[, c(1:4,26)])#state of E, L, P and M
   currentTime <-
     as.numeric(dataInput[, c(5)])#time in model to run from
   nextTime <- as.numeric(dataInput[, c(6)])#time in model to run to
   pr <- as.numeric(dataInput[, c(7:20)])#parameters
   fixed <- dataInput[13]#fixed parameters, currently just n
   #initialise model
-<<<<<<< Updated upstream
-  if (dataInput[20] == 1)
-    rFc <- rFx1
-  if (dataInput[20] == 2)
-    rFc <- rFx2
-  if (dataInput[20] == 3)
-    rFc <- rFx3
-  if (dataInput[20] == 4)
-    rFc <- rFx4
-  if (dataInput[20] == 5)
-    rFc <- rFx5
-  if (dataInput[20] == 6)
-    rFc <- rFx6
-  if (dataInput[20] == 7)
-    rFc <- rFx7
-  if (dataInput[20] == 8)
-=======
   if (dataInput[21] == 1)
     rFc <- rFx1
   if (dataInput[21] == 2)
@@ -333,7 +252,6 @@ modStep4 <- function(weightInput) {
   if (dataInput[21] == 7)
     rFc <- rFx7
   if (dataInput[21] == 8)
->>>>>>> Stashed changes
     rFc <- rFx8
   
   params <-
@@ -342,31 +260,30 @@ modStep4 <- function(weightInput) {
       L0 = initialState[2],
       P0 = initialState[3],
       M0 = initialState[4],
+      G0=  initialState[5],
+
       uoE = pr[1],
       uoL = pr[2],
       uP = pr[3],
       Y = pr[4],
       sf = pr[7],
       n = pr[5],
-<<<<<<< Updated upstream
-      ,dE=pr[8],dL=pr[9],dP=pr[10],tr=pr[11],uM=pr[12],Mg=pr[13],o=pr[14],
-=======
       dE=pr[8],dL=pr[9],dP=pr[10],tr=pr[11],uM=pr[12],Mg=pr[13],o=pr[14],
->>>>>>> Stashed changes
       rF = rFc,
       time1 = currentTime,
       time2 = nextTime
     )
+  inter<-  as.numeric(dataInput[22])#inter
+  interSize<- as.numeric( dataInput[23])#interSize
+  efficacy<- as.numeric( dataInput[24])#efficacy
+  clumped<-  as.numeric(dataInput[25])#clumped
+  
   #run model between two discrete time periods and return results
-  modR <- larvalR(user = params)#run model
-<<<<<<< Updated upstream
-  simDat <- as.data.frame(modR$run(seq(currentTime, nextTime)))
-=======
-  simDat <-
-    as.data.frame(modR$run(seq(
-      currentTime, nextTime, length.out = nextTime - currentTime
-    )))
->>>>>>> Stashed changes
+  simDat <- larvalWhileYdrive(params,interSize,inter,efficacy,clumped)#run model
+  #  simDat <-
+  #   as.data.frame(modR$run(seq(
+  #    currentTime, nextTime, length.out = nextTime - currentTime
+  # )))
   
   return(as.data.frame(simDat))
 }
@@ -403,7 +320,8 @@ pFilt <-
             resM = F,
             rFclust,
             rFx,
-            cluster = F)
+            cluster = F,
+            yDrvPrms)
   {
     times = c(obsData$time / delta) #/delta as model is running in discrete time steps
     
@@ -417,6 +335,7 @@ pFilt <-
           particles[, 2], #L
           particles[, 3], #P
           particles[, 4], #M
+          
           times[i], #Start time for model run
           times[i + 1], # End time for model run
           prms[1], #UoE
@@ -435,45 +354,22 @@ pFilt <-
           prms[15], #Mg
           prms[12], #o
           
-          
           rFclust,#rainfall data set
+          
+          yDrvPrms[1],#inter
+          yDrvPrms[2],#interSize
+          yDrvPrms[3],#efficacy
+          yDrvPrms[4],#clumped
+          particles[,5], #G
+          
           sep = ","
         )
-<<<<<<< Updated upstream
-    if (cluster == F)
-      particlesTemp = lapply(wp, stepFun) #use NULL for dide cluster, cl for local
-    else
-      particlesTemp = lapply(wp, stepFun)
-    
-    particles <- data.frame(t(sapply(particlesTemp, `[`)))
-
-    # fracPop<-obsData[i+1,2]/prms[7]
-    weights <-
-      betaBinom(obsData[i + 1, 2], (20 + round(as.vector(
-        unlist(particles$M, 0)
-      ))), prms[16], prms[5])
-    ll = ll + mean(weights)
-
-    #normalise weights
-    mxWeight<-max(weights)
-    weights<-weights-mxWeight
-    swP = sum(exp(weights))
-    weights = exp(weights) / swP
-
-    
-    #used for outputting full runs from pF for model visualisations.
-    if (resM == T) {
-      if (cluster == F)
-        particlesTemp1 = lapply( wp, modStep4)
-=======
       if (cluster == F)
         particlesTemp = lapply(wp, stepFun) #use NULL for dide cluster, cl for local
->>>>>>> Stashed changes
       else
         particlesTemp = lapply(wp, stepFun)
       
       particles <- data.frame(t(sapply(particlesTemp, `[`)))
-      
       # fracPop<-obsData[i+1,2]/prms[7]
       weights <-
         betaBinom(obsData[i + 1, 2], (round(as.vector(
@@ -486,8 +382,8 @@ pFilt <-
       weights<-weights-mxWeight
       swP = sum(exp(weights))
       weights = exp(weights) / swP
-      
-      
+      weights[is.na(weights)] <- 1e-50
+
       #used for outputting full runs from pF for model visualisations.
       if (resM == T) {
         if (cluster == F)
@@ -514,7 +410,7 @@ pFilt <-
           Pt <- (particlesTemp1[[j]]$P)
           pt3 <- cbind(pt3, Pt)
           
-          Pt <- (particlesTemp1[[j]]$rEff)
+          Pt <- (particlesTemp1[[j]]$G)
           pt4 <- cbind(pt4, Pt)
           
         }
