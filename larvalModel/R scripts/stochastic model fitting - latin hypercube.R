@@ -42,10 +42,7 @@ library(devtools)
 #   M0=7
 # )
 # return(as.list(environment()))
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 
 ##model in odin
 larvalR <- odin::odin({
@@ -82,16 +79,6 @@ larvalR <- odin::odin({
   initial(P) <- P0
   initial(M) <- M0
   initial(timeX)<-time1
-<<<<<<< Updated upstream
- 
-  tt<-round(trx)
-
-  K <-if (timeX<=tt) ((sf*((1/tt)*(sum(rF[0:(timeX-1)]))))) 
-  else ((sf*((1/tt)*(sum(rF[(timeX-tt):timeX-1])))))
-  
-  uE = uoE*(1+((E + L) / (K)))
-  uL = uoL*(1+(Y*((E + L) / (K))))
-=======
   initial(rEff)<-0
   
   tt<-round(trx)
@@ -101,7 +88,6 @@ larvalR <- odin::odin({
   
   uE = if (uoE*(1+(((E + L) / (K))^o))<0) 0 else uoE*(1+(((E + L) / (K))^o))
   uL = if (uoL*(1+(Y*(((E + L) / (K))^o)))<0) 0 else uoL*(1+(Y*(((E + L) / (K))^o)))
->>>>>>> Stashed changes
   
   update(timeX)<-timeX+1
   
@@ -110,33 +96,23 @@ larvalR <- odin::odin({
   Bp<-rbinom(P,(dP+uP)*dt)
   Bm<-rbinom(M,uM*dt)
   nt<-rbinom(M,(dt/S))
-<<<<<<< Updated upstream
-
-=======
   
->>>>>>> Stashed changes
   update(E)<-round(E-Be+rpois(nt*n)) #else rpois(nt*n)
   update(L)<-round(L-Bl+rbinom(Be,(dE/(uE+dE)))) #else rbinom(Be,(dE/(uE+dE)))
   update(P)<-round(P-Bp+rbinom(Bl,(dL/(uL+dL)))) #else rbinom(Bl,(dL/(uL+dL)))
-  mTemp =M+round(0.5*(rbinom(Bp,(dP/(uP+dP)))))-Bm+rpois(round(Mg))
-<<<<<<< Updated upstream
-  update(M)<-mTemp
-
-=======
+  mTemp =M+round(0.5*(rbinom(Bp,(dP/(uP+dP)))))-Bm+rpois(Mg)
   update(M)<- if (mTemp<1) 1 else mTemp
   
   update(rEff) <- 0.5*((n) / (exp(uM*S) - 1))*(1 / (1 + uE / dE))*(1 / (1 + uL / dL))*(1 / (1 + (uP) / dP))
   
   
->>>>>>> Stashed changes
 })
 
 
 
 
 ##model in odin
-larvalWhile <- function(parms,h,intervention,efficacy){
-  #param
+larvalWhile <- function(parms){
   dE <- parms$dE
   dL <- parms$dL
   dP <- parms$dP
@@ -168,121 +144,50 @@ larvalWhile <- function(parms,h,intervention,efficacy){
   A<-2*M0
   M<-M0
   Mm<-M0
+  H<-0
   
-timeX<-parms$time1
-endTime<-parms$time2
-res<-NULL
+  timeX<-parms$time1
+  endTime<-parms$time2
+  res<-NULL
   
 while(timeX < endTime){
   tt<-round(trx,0)
   
   
-  K <-if (timeX<=tt) {
-    rFsum = sum(rF[0:(timeX-1)])
-    ((sf*((1/tt)*(rFsum)))) }
+  K <-if (timeX<=tt) ((sf*((1/tt)*(sum(rF[0:(timeX-1)])))))
+  else ((sf*((1/tt)*(sum(rF[(timeX-tt):(timeX-1)])))))
   
-  
-  else {
-    rFsum = sum(rF[(timeX-tt):(timeX-1)])
-    ((sf*((1/tt)*(rFsum))))
-  }
-  
-  
+
   uE = if(K==0 && E+L==0) 0 else uoE*(1+(((E + L) / (K))^o))
   uL = if(K==0 && E+L==0) 0 else uoL*(1+(Y*(((E + L) / (K))^o)))
-  
+  #uEn = if(K==0 && n==0) 0 else uoE*(1+(((n) / (K))^o))
+  #uLn = if(K==0 && n==0) 0 else uoL*(1+(Y*(((n) / (K))^o)))
 
   if (uL < 0)
     uL = 0
   if (uE < 0)
     uE = 0
   
+  Be<-if((dE+uE)*dt<1) rbinom(1,E,(dE+uE)*dt) else rbinom(1,E,1)
+  Bl<-if ((dL+uL)*dt<1) rbinom(1,L, (dL+uL)*dt) else rbinom(1,L,1)
+  Bp<-rbinom(1,P,(dP+uP)*dt)
+  Bm<-rbinom(1,M,uM*dt)
+  nt<-rbinom(1,M,(dt/S))
   
-    if ((dE + uE)*dt < 1) {
-      Be = rbinom(1,E, (dE + uE)*dt)
-    }
-    else {
-      Be = rbinom(1,E, 1)
-    }
+ E<-round(E-Be+rpois(1,nt*n)) #else rpois(nt*n)
+  L<-round(L-Bl+rbinom(1,Be,(dE/(uE+dE)))) #else rbinom(Be,(dE/(uE+dE)))
+  P<-round(P-Bp+rbinom(1,Bl,(dL/(uL+dL)))) #else rbinom(Bl,(dL/(uL+dL)))
+  
 
-
-    if ((dL + uL)*dt < 1) {
-      
-      Bl = rbinom(1,L, (dL + uL)*dt)
-    }
-    else {
-      Bl = rbinom(1,L,1)
-    }
-
-
-    if ((dP + uP)*dt < 1) {
-      
-      Bp = rbinom(1,P, (dP + uP)*dt)
-    }
-    else {
-      Bp = rbinom(1,P, 1)
-    }
-
-  
-  if (M >= 1) {
-    nt = rbinom(1,M, (dt / S))
-  }
-  else nt = 0
-  
-  
-  if (n*nt > 0) {
-    E = round(E - Be +    rpois(1,n*nt))
-  }
-  else E = round(E - Be);
-  
-  
-  
-  if (Be >= 1) {
-    L = round(L - Bl +rbinom(1,Be, (dE / (uE + dE))))
-  }
-  else 
-    L = round(L - Bl)
-  
-  
-  
-  if (Bl >= 1) {
-    P =   round(P - Bp +rbinom(1,Bl, (dL / (uL + dL))))
-  }
-  else 
-    P = round(P - Bp)
-  
-  
-  
-  if (Bp >= 1) {
-    mRan = rbinom(1,Bp, (dP / (uP + dP)))
-  }
-  else
-    mRan = 0
-  
-  
-  
   ###########Adults#########
 
+  mTemp =M+round(0.5*(rbinom(1,Bp,(dP/(uP+dP)))))-Bm+rpois(1,Mg)
+  M<- if (mTemp<1) 1 else mTemp
   
-  if (M >= 1) {
-    Bm =   rbinom(1,round(0.5*M), uM*dt)
-  }
-  else Bm = 0
+  rEff<- 0.5*((n) / (exp(uM*S) - 1))*(1 / (1 + uE / dE))*(1 / (1 + uL / dL))*(1 / (1 + (uP) / dP))
 
 
-  if (Mg > 0) {
-
-    M = round( 0.5*M +(mRan)- Bm +  round(rpois(1,0.5*Mg)))
-    
-  }
-  else 
-    M = round( 0.5*M+(mRan)- Bm)
-  
-
-  
-
-
-  
+  print(M)
 timeX<-timeX+1
 res<-rbind(res,cbind(timeX,timeX,E,L,P,M))
 
@@ -297,8 +202,8 @@ return(res)
 
 
 #model in odin
-larvalWhileYdrive <- function(parms,h,intervention,efficacy){
-  #param
+larvalWhileYdrive <- function(parms,g,intervention,efficacy,clumped=1){
+
   dE <- parms$dE
   dL <- parms$dL
   dP <- parms$dP
@@ -319,6 +224,7 @@ larvalWhileYdrive <- function(parms,h,intervention,efficacy){
   L0<-parms$L0
   P0<-parms$P0
   M0<-parms$M0
+  G0<-parms$G0
   time1<-parms$time1
   o<-parms$o
   Mg<-parms$Mg
@@ -327,9 +233,14 @@ larvalWhileYdrive <- function(parms,h,intervention,efficacy){
   E <- E0
   L <- L0
   P <- P0
-  A<-2*M0
   M<-M0
   Mm<-M0
+  G<-G0
+  Ga<-0
+  Rj<-0
+  R<-0
+  Rg<-0
+  resP<-0
   
   timeX<-parms$time1
   endTime<-parms$time2
@@ -339,143 +250,70 @@ larvalWhileYdrive <- function(parms,h,intervention,efficacy){
     tt<-round(trx,0)
     
     
-    K <-if (timeX<=tt) {
-      rFsum = sum(rF[0:(timeX-1)])
-      ((sf*((1/tt)*(rFsum)))) }
-    
-    
-    else {
-      rFsum = sum(rF[(timeX-tt):(timeX-1)])
-      ((sf*((1/tt)*(rFsum))))
-    }
+    K <-if (timeX<=tt) ((sf*((1/tt)*(sum(rF[0:(timeX-1)])))))
+    else ((sf*((1/tt)*(sum(rF[(timeX-tt):(timeX-1)])))))
     
     
     uE = if(K==0 && E+L==0) 0 else uoE*(1+(((E + L) / (K))^o))
     uL = if(K==0 && E+L==0) 0 else uoL*(1+(Y*(((E + L) / (K))^o)))
-    
+    #uEn = if(K==0 && n==0) 0 else uoE*(1+(((n) / (K))^o))
+    #uLn = if(K==0 && n==0) 0 else uoL*(1+(Y*(((n) / (K))^o)))
     
     if (uL < 0)
       uL = 0
     if (uE < 0)
       uE = 0
     
+    Be<-if((dE+uE)*dt<1) rbinom(1,E,(dE+uE)*dt) else rbinom(1,E,1)
+    Bl<-if ((dL+uL)*dt<1) rbinom(1,L, (dL+uL)*dt) else rbinom(1,L,1)
+    Bp<-rbinom(1,P,(dP+uP)*dt)
     
-    if ((dE + uE)*dt < 1) {
-      Be = rbinom(1,E, (dE + uE)*dt)
-    }
+    nt<-rbinom(1,M,(dt/S))
+    
+    if(clumped==1){
+    E<-round(E-Be+rpois(1,nt*n))} #else rpois(nt*n)
+    
     else {
-      Be = rbinom(1,E, 1)
-    }
-    
-    
-    if ((dL + uL)*dt < 1) {
-      
-      Bl = rbinom(1,L, (dL + uL)*dt)
-    }
-    else {
-      Bl = rbinom(1,L,1)
-    }
-    
-    
-    if ((dP + uP)*dt < 1) {
-      
-      Bp = rbinom(1,P, (dP + uP)*dt)
-    }
-    else {
-      Bp = rbinom(1,P, 1)
-    }
-    
-    
-    if (M >= 1) {
-      nt = rbinom(1,M, (dt / S))
-    }
-    else nt = 0
-    
-    
-    if (n*nt > 0) {
-      E = round(E - Be +    rpois(1,n*nt))
-    }
-    else E = round(E - Be);
-    
-    
-    
-    if (Be >= 1) {
-      L = round(L - Bl +rbinom(1,Be, (dE / (uE + dE))))
-    }
-    else 
-      L = round(L - Bl)
-    
-    
-    
-    if (Bl >= 1) {
-      P =   round(P - Bp +rbinom(1,Bl, (dL / (uL + dL))))
-    }
-    else 
-      P = round(P - Bp)
-    
-    
-    
-    if (Bp >= 1) {
-      mRan = rbinom(1,Bp, (dP / (uP + dP)))
-    }
-    else
-      mRan = 0
-    
+      E<-round(E-Be+M * (n*dt))}
+    L<-round(L-Bl+rbinom(1,Be,(dE/(uE+dE)))) #else rbinom(Be,(dE/(uE+dE)))
+    P<-round(P-Bp+rbinom(1,Bl,(dL/(uL+dL)))) #else rbinom(Bl,(dL/(uL+dL)))
     
     
     ###########Adults#########
-    if (A < 1) A=0
-    if (M < 1) M=0
-    if (Mm < 1) Mm=0
-    if (E < 1) E=0
-    if (H<1) H =0
-    if(timeX==intervention) H=h
+  
+    if(timeX == intervention) G=g
+
+    Ga = if(M+G>0) rbinom(1,M,efficacy*(G/(M+G))) else 0
+    #Rj = rbinom(1,G,resP)
+   # Rg = if(M+G+R+Rj>0) rbinom(1,M,mutEfficacy*((R+Rj)/(M+G+R+Rj))) else 0
+    
+    Bm<-rbinom(1,round(M),uM*dt)
+    #BMm<-rbinom(1,round(0.5*A),2*uM*dt)
+
+    
+    M =M+round(0.5*(rbinom(1,Bp,(dP/(uP+dP)))))-Bm - Ga+ rpois(1,Mg) # - R
+    G= G + Ga - rbinom(1,round(G),uM*dt) #- R
+    #R = R + Rg - rbinom(1,R,uM*dt)
+    
+    if(G<=0) G=0
+    if(M<0) M=0
+    if(R<=1) R=0
     
     
-    if (A >= 1) {
-      Bm =   rbinom(1,round(0.5*A), uM*dt)
-      BmM =   rbinom(1,round(0.5*A), 2*uM*dt)
+    #M=M+round(0.5*A)
+    
+if(clumped==TRUE){
+    rEff<- 0.5*((n) / (exp(uM*S) - 1))*(1 / (1 + uE / dE))*(1 / (1 + uL / dL))*(1 / (1 + (uP) / dP))
+}
+    else{
+      Es = n * (exp(S*uM) - 1) / uM
+      rEff<- 0.5*((Es) / (exp(uM*S) - 1))*(1 / (1 + uE / dE))*(1 / (1 + uL / dL))*(1 / (1 + (uP) / dP))
       
     }
-    else {Bm = 0
-    BmM = 0}
-    
-    if(timeX >= intervention && H > 0){
-      
-      HM = if ((H/(A+H))*efficacy< 1) rbinom(1,A,(H/(A+H))*efficacy) else rbinom(1,A,1)
-    }
-    else HM = 0
-    
-    A = round(A + (mRan)- Bm - BmM - HM)
-    
-    if (Mg > 0) {
-      
-      M = round( 0.5*A  +  round(rpois(1,0.5*Mg)))
-      
-    }
-    else 
-      M = round( 0.5*A)
-    
-    
-    if (Mg > 0) {
-      Mm = round(0.5*A  +  round(rpois(1,0.5*Mg)))
-    }
-    else 
-      Mm = round(0.5*A)
-    
-    if(timeX>=intervention){
-      if(H>=1){
-        H = round(H - rbinom(1,H, 2*uM*dt)  + HM)
-      }
-      else 
-        H = H + HM
-    } 
-    else H = 0
-    
-    
     
     timeX<-timeX+1
-    res<-rbind(res,cbind(timeX,timeX,E,L,P,A,Mm,M,H,HM))
+    step<-timeX
+    res<-rbind(res,cbind(step,timeX,E,L,P,M,G))
     
   }
   

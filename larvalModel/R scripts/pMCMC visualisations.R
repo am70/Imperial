@@ -1,4 +1,5 @@
 
+
 #########################################################################################################################################
 #                                                                                                                                       #
 #                                                     visualise results and extract C.I.                                                #
@@ -32,87 +33,14 @@ iqrFunc<-function(x){
   iqrRes[,-1]
 }
 
-<<<<<<< Updated upstream
-plotMod<-function(n,mcmcRes,obsDat,rf,sf,rFx,z){
-=======
 
 
 plotMod<-function(n,mcmcRes,obsDat,rf,sf,rFxs,z){
->>>>>>> Stashed changes
   parms<-colMedians(mcmcRes)
   #cI<-cIfunc(mcmcRes)
   #iqr<-iqrFunc(mcmcRes)
   startTime<-min(obsDat$time)/delta
   endTime<-max(obsDat$time)/delta
-<<<<<<< Updated upstream
-  
-  
-  #  crosscorr.plot(g$results[,-13])
-  
-  ####95% CI####
-  par(mfrow=c(1,1))
-  mid<- pFilt(2,iState,modStep3,dataLikFunc,obsDat,pr=c(parms[1:6],10^parms[z],10^parms[sf],parms[15:22]),rFclust=3,resM=T,rFx=rFx3,cluster=F)
-  colnames(mid)<-c("E","L","P","M")
-  mid <- mid$M[seq(1, length(mid$M), 4)]
-  plot(mid,col="white")
-  lines(mid,col="blue")
-  points(obsDat$`408`/parms[22]~obsDat$time,col="red")
-  
-  
-  #for(i in 1:nrow(g)){
-  #fs<-betaBinom(g[i, 3], g[i,2], 0.01, parms[6])
-  
-  # print(fs)
-  # }
-  
-  
-  low<- pFilt(n,iState,modStep3,dataLikFunc,obsDat,pr=c(cI[1,1],cI[1,2],cI[1,3],
-                                                        cI[1,4],cI[2,z],cI[2,9],cI[2,sf],cI[1,14]),rFclust=rf,resM=T,fxdParams=fxd)
-  colnames(low)<-c("E","L","P","M")
-  
-  high<- pFilt(n,iState,modStep3,dataLikFunc,obsDat,pr=c(cI[2,1],cI[2,2],cI[2,3],
-                                                         cI[2,4],cI[2,z],cI[1,9],cI[1,sf],cI[2,14]),rFclust=rf,resM=T,fxdParams=fxd)
-  colnames(high)<-c("E","L","P","M")
-  
-  ####IQR####
-  
-  lowIqr<- pFilt(n,iState,modStep3,dataLikFunc,obsDat,pr=c(iqr[1,1],iqr[1,2],iqr[1,3],
-                                                           iqr[1,4],iqr[2,5],iqr[2,9],iqr[2,sf],iqr[1,14]),rFclust=rf,resM=T,fxdParams=fxd)
-  colnames(lowIqr)<-c("E","L","P","M")
-  
-  highIqr<- pFilt(n,iState,modStep3,dataLikFunc,obsDat,pr=c(iqr[2,1],iqr[2,2],iqr[2,3],
-                                                            iqr[2,4],cI[2,z],iqr[1,9],iqr[1,sf],iqr[2,14]),rFclust=rf,resM=T,fxdParams=fxd)
-  colnames(highIqr)<-c("E","L","P","M")
-  
-  mid$time<-1:nrow(mid)*0.25
-  
-  timeX<-as.data.frame(1:nrow(mid))*delta
-  colnames(timeX)<-c("time")
-  obsDat$time<-obsDat$time-min(obsDat$time)
-  timeX<-merge(obsDat,timeX,all=T)
-  colnames(timeX)<-c("time","M")
-  timeX<-timeX[-1,]
-  #timeX[is.na(timeX)]<-0
-  print(as.numeric(max(timeX$M,na.rm=T))/0.01)
-  
-  ggplot(data = mid,aes(x=mid$time,y=timeX$M/0.01))+
-    expand_limits(y=c(0,(as.numeric(max(timeX$M,na.rm=T))/0.01)))+
-    # geom_ribbon(aes(x=mid$time, ymax=highIqr$M, ymin=lowIqr$M), fill="dark grey", alpha=.5)+
-    #geom_ribbon(aes(x=mid$time, ymax=high$M, ymin=low$M), fill="grey", alpha=.5)+
-    #geom_line(aes(x=mid$time,y = low$M), colour = 'dark grey')+
-    # geom_line(aes(x=mid$time,y = high$M), colour = 'dark grey')+
-    # geom_line(aes(x=mid$time,y = lowIqr$M), colour = 'dark grey')+
-    # geom_line(aes(x=mid$time,y = highIqr$M), colour = 'dark grey')+
-    geom_point(x=timeX$time,y=timeX$M/0.01,col="red")+
-    geom_line(aes(x=mid$time,mid$M))+
-    xlab("time")+
-    ylab("M")+
-    theme_bw()
-  
-}
-
-hh1<-plotMod(44,cTest,garkiObs154,1,10,4,5)
-=======
 
 ####95% CI####
 
@@ -172,33 +100,7 @@ hh1<-plotMod(44,cTest,garkiObs154,1,10,4,5)
   
 }
 
-hh1<-plotMod(44,cTest,garkiObs408,3,11,rFx3,7)
->>>>>>> Stashed changes
-hh2<-plotMod(44,pp$results,garkiObs104,1,11,7,6)
-hh3<-plotMod(44,pp$results,garkiObs219,2,12,7,7)
-hh4<-plotMod(44,pp$results,garkiObs220,2,13,7,8)
 
-grid.arrange(hh1,hh2,hh3,hh4)
-
-
-<<<<<<< Updated upstream
-simX<-c(1:964)
-for (i in 1:100){
-  
-  mod <- odinPackage::larvalModP(user=mosParamsP(uoE=parms[1],uoL=parms[2],uP=parms[3],
-                                                 Y=parms[4],n=10,sf=parms[13],o=parms[9],tr=14,time1=1244,E0=f[1],L0=f[2],P0=f[3],M0=f[4]))
-  sim <- as.data.frame(mod$run(1:964))
-  simX<-cbind(simX,sim$M)
-  
-}
-# 101  ,   104   ,  108  ,   113
-simMean<-rowMeans(simX[,-1])
-plot(simMean~sim$timeX,ylim=c(0,50),col="white")
-lines(simMean~sim$timeX)
-points(garkiObs220$time/delta,(garkiObs220$`220`/parms[8]),col="red")
-=======
-
->>>>>>> Stashed changes
 #########################################################################################################################################
 #                                                                                                                                       #
 #                                                     density plots                                                                     #
@@ -219,21 +121,9 @@ dEprior<-rnorm( nrow(mcmc),mean=0.150602,sd=0.04)
 dLprior<-rnorm( nrow(mcmc),mean=0.268812,sd=0.06)
 dPprior<-rnorm( nrow(mcmc),mean=1,sd=0.1)
 
-<<<<<<< Updated upstream
-plotDens<-function(mcmc){
-  uoEprior<-rnorm( nrow(mcmc),mean=0.035,sd=0.009)
-  uoLprior<-rnorm( nrow(mcmc),mean=0.035,sd=0.009)
-  uPprior<-rnorm( nrow(mcmc),mean=0.25,sd=0.0557)
-  Yprior<-rnorm( nrow(mcmc),mean=13.06,sd=2)
-  dEprior<-rnorm( nrow(mcmc),mean=0.150602,sd=0.01)
-  dLprior<-rnorm( nrow(mcmc),mean=0.268812,sd=0.055)
-  dPprior<-rnorm( nrow(mcmc),mean=1.563,sd=0.05)
-  #p0prior<-rnorm(94999,mean=0.5,sd=0.015)
-=======
 tauprior<-rnorm( nrow(mcmc),mean=7,sd=1.5)
 uMprior<-rnorm( nrow(mcmc),mean=0.091,sd=0.005)
     #p0prior<-rnorm(94999,mean=0.5,sd=0.015)
->>>>>>> Stashed changes
   
   
   p1<-ggplot(data = mcmc,aes(uoE))+
@@ -257,15 +147,9 @@ uMprior<-rnorm( nrow(mcmc),mean=0.091,sd=0.005)
     scale_colour_manual(values=c("Posterior"="red", "Prior"="blue"), name="Densities")+
     theme_bw()
   p5<-ggplot(data = mcmc,aes(dE))+
-<<<<<<< Updated upstream
-    geom_density(kernel = "gaussian", adjust = 7, aes(colour="Posterior"),fill="red", size=1,alpha=0.1)+
-    geom_density(kernel = "gaussian", adjust = 1, aes(dEprior,colour="Prior"), size=1,fill="blue",alpha=0.1)+
-    scale_colour_manual(values=c("Posterior"="red", "Prior"="blue"), name="Densities")+
-=======
    geom_density(kernel = "gaussian", adjust = 7, aes(colour="Posterior"),fill="red", size=1,alpha=0.1)+
     geom_density(kernel = "gaussian", adjust = 1, aes(dEprior,colour="Prior"), size=1,fill="blue",alpha=0.1)+
    scale_colour_manual(values=c("Posterior"="red", "Prior"="blue"), name="Densities")+
->>>>>>> Stashed changes
     theme_bw()
   p6<-ggplot(data = mcmc,aes(dL))+
     geom_density(kernel = "gaussian", adjust = 7, aes(colour="Posterior"),fill="red", size=1,alpha=0.1)+
@@ -277,52 +161,6 @@ uMprior<-rnorm( nrow(mcmc),mean=0.091,sd=0.005)
     geom_density(kernel = "gaussian", adjust = 1, aes(dPprior,colour="Prior"), size=1,fill="blue",alpha=0.1)+
     scale_colour_manual(values=c("Posterior"="red", "Prior"="blue"), name="Densities")+
     theme_bw()
-<<<<<<< Updated upstream
-  
-  
-  grid.arrange(p1, p2, p3, p4,p5,p6,p7)
-}
-
-
-
-
-
-#########################################################################################################################################
-#                                                                                                                                       #
-#                                                     likelihood test                                                                   #
-#                                                                                                                                       #
-#########################################################################################################################################
-
-
-lk<-function(fitParams,f){
-  ll<-0
-  pX<-NULL
-  for (i in 1:4){
-    globalParms<-fitParams[c(1:10)]
-    globalParms[10]<-fitParams[c(i+9)]#i+6 to fit the scaling factor specific for each village
-    garkDat<-garkiObsX[,c(1,i+1)]#i+1 as first column is "time"
-    
-    simX<-c(1:2440)
-    for (j in 1:100){
-      
-      mod <- odinPackage::larvalModP(user=mosParamsP(uoE=globalParms[1],uoL=globalParms[2],uP=globalParms[3],
-                                                     Y=globalParms[4],n=globalParms[5],sf=globalParms[10],o=globalParms[9],tr=14,time1=3110,E0=f[1],L0=f[2],P0=f[3],M0=f[4]))
-      sim <- as.data.frame(mod$run(1:2440))
-      simX<-cbind(simX,sim$M)
-      
-    }
-    # 101  ,   104   ,  108  ,   113
-    simMean<-rowMeans(simX[,-1])
-    simMean
-    simMeanT<-cbind(simMean,sim$timeX/10)
-    colnames(simMeanT)<-c("M","time")
-    
-    lDat<-merge(garkiObsX,simMeanT,by.x="time",by.y="time")
-    print(lDat[i+1])
-    
-    ll<-ll+sum(dnbinom(as.numeric(unlist(lDat[i+1])),lDat$M,p=globalParms[6],log=T))+lprior(globalParms)
-    
-=======
   p8<-ggplot(data = mcmc,aes(tau))+
     geom_density(kernel = "gaussian", adjust = 7, aes(colour="Posterior"),fill="red", size=1,alpha=0.1)+
     geom_density(kernel = "gaussian", adjust = 1, aes(tauprior,colour="Prior"), size=1,fill="blue",alpha=0.1)+
@@ -389,7 +227,6 @@ lk<-function(fitParams,f){
       theme_bw()
     grid.arrange(p1, p2, p3, p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,main=textGrob(title,gp=gpar(fontsize=20,font=3)))
                  
->>>>>>> Stashed changes
   }
 else
   grid.arrange(p1, p2, p3, p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16,p17,main=textGrob(title,gp=gpar(fontsize=20,font=3))
@@ -412,16 +249,12 @@ plotDensLL<-function(mcmc,mcmc2){
 
 ##########plot and record
 
-<<<<<<< Updated upstream
-plotRec<-function(clustRes,name,tr){
-=======
 plotRec<-function(clustRes,clustRes2,name,tr){
->>>>>>> Stashed changes
   res<-clustRes
   w=1800
   h=1200
   
-  fileName<-paste0("C:\\Imperial\\larvalModel\\Figures\\pMMH figures\\",name)
+  fileName<-paste0("Q:\\Imperial\\larvalModel\\Figures\\pMMH figures\\",name)
   dir.create(fileName)
   
   #write.table(res,paste0(fileName,"\\mcmcRes.csv"))
@@ -447,31 +280,11 @@ plotRec<-function(clustRes,clustRes2,name,tr){
   png(filename=paste0(fileName,"\\fig5.png"),width = w, height = h,pointsize=30)
   plot(res[,c(13:15)])
   dev.off()
-<<<<<<< Updated upstream
-  png(filename=paste0(fileName,"\\fig5.png"),width = w, height = h,pointsize=30)
-  plot(res[,c(15:18)])
-  dev.off()
-  png(filename=paste0(fileName,"\\fig6.png"),width = w, height = h,pointsize=30)
-  plot(res[,c(19:21)])
-  dev.off()
-  png(filename=paste0(fileName,"\\fig7.png"),width = w, height = h,pointsize=30)
-  plot(res[,c(22:23)])
-  dev.off()
-  
-  hh1<-plotMod(44,res,garkiObs101,1,10,tr,5)
-  hh2<-plotMod(44,res,garkiObs104,1,11,tr,6)
-  hh3<-plotMod(44,res,garkiObs219,2,12,tr,7)
-  hh4<-plotMod(44,res,garkiObs220,2,13,tr,8)
-  
-  png(filename=paste0(fileName,"\\fits.png"),width = w, height = h)
-  plot(grid.arrange(hh1,hh2,hh3,hh4))
-=======
   png(filename=paste0(fileName,"\\fig6.png"),width = w, height = h,pointsize=30)
  plot(res[,c(16:18)])
   dev.off()
   png(filename=paste0(fileName,"\\fig7.png"),width = w, height = h,pointsize=30)
   plot(res[,c(19:21)])
->>>>>>> Stashed changes
   dev.off()
   png(filename=paste0(fileName,"\\fig8.png"),width = w, height = h,pointsize=30)
   plot(res[,c(22)])
@@ -483,14 +296,6 @@ plotRec<-function(clustRes,clustRes2,name,tr){
   crosscorr.plot(res)
   dev.off()
   
-<<<<<<< Updated upstream
-  png(filename=paste0(fileName,"\\density.png"),width = w, height = h)
-  plotDens(as.data.frame(res))
-  dev.off()
-  dev.off()
-  
-  
-=======
   #hh1<-plotMod(44,res,garkiObs101,1,10,tr,5)
   #hh2<-plotMod(44,res,garkiObs104,1,11,tr,6)
   #hh3<-plotMod(44,res,garkiObs219,2,12,tr,7)
@@ -499,122 +304,27 @@ plotRec<-function(clustRes,clustRes2,name,tr){
   #png(filename=paste0(fileName,"\\fits.png"),width = w, height = h)
   #plot(grid.arrange(hh1,hh2,hh3,hh4))
 
->>>>>>> Stashed changes
   
   print(colMedians(res))
   
   
 }
 
-<<<<<<< Updated upstream
-cTest<-read.csv("C:\\Imperial\\particleTestLinearN\\35\\results.txt", sep = " ",head =F)
-colnames(cTest)<-c("uoE","uoL","uP","Y","w","n","z1","z4","z5","z6"
-                   ,"sf1","sf4","sf5","sf6","dE","dL","dP","o","tau","uM","Mg","p","ll")
-colMedians(cTest)
-mcmcRes<-cTest
-
-
-par(mfrow=c(2,2))
-p=0.0201241
-
-test<-scan("C:\\Imperial\\particleTestLinearN\\35\\garki408.txt",sep=",")
-test <- test[seq(1, length(test), 4)]
-plot(test,col="white",xlab="time",ylab="M")
-lines(test)
-points(garkiObs408$time,garkiObs408$`408`/p,col="red")
-
-test<-scan("C:\\Imperial\\particleTest\\results2\\4\\garki202.txt",sep=",")
-test <- test[seq(1, length(test), 4)]
-#plot(test,col="white",xlab="time",ylab="M")
-#lines(test)
-#points(garkiObs202$time,garkiObs202$`202`/0.01,col="red")
-
-test<-scan("C:\\Imperial\\particleTest\\results2\\4\\garki218.txt",sep=",")
-test <- test[seq(1, length(test), 4)]
-#plot(test,col="white",xlab="time",ylab="M")
-#lines(test)
-#points(garkiObs218$time,garkiObs218$`218`/0.001,col="red")
-
-test<-scan("C:\\Imperial\\particleTest\\results2\\4\\garki801.txt",sep=",")
-test <- test[seq(1, length(test), 4)]
-plot(test,col="white",xlab="time",ylab="M")
-lines(test)
-points(garkiObs801$time,garkiObs801$`801`/p,col="red")
-
-test<-scan("C:\\Imperial\\particleTest\\results2\\4\\garki553.txt",sep=",")
-test <- test[seq(1, length(test), 4)]
-plot(test,col="white",xlab="time",ylab="M",ylim=c(0,70000))
-lines(test)
-points(garkiObs553$time,garkiObs553$`553`/p,col="red")
-
-test<-scan("C:\\Imperial\\particleTest\\results2\\4\\garki802.txt",sep=",")
-test <- test[seq(1, length(test), 4)]
-plot(test,col="white",xlab="time",ylab="M")
-lines(test)
-points(garkiObs802$time,garkiObs802$`802`/p,col="red")
-
-
-
-par(mfrow=c(2,2))
-p=0.0121101
-
-test<-scan("C:\\Imperial\\particleTestLinearN\\35\\garki408Reff.txt",sep=",")
-#test <- test[seq(1, length(test), 4)]
-max(test)
-plot(test,col="white",xlab="time",ylab="M")
-lines(test)
-#points(garkiObs408$time,garkiObs408$`408`/p,col="red")
-
-test<-scan("C:\\Imperial\\particleTestLinearN\\35\\garki202Reff.txt",sep=",")
-test <- test[seq(1, length(test), 4)]
-#plot(test,col="white",xlab="time",ylab="M")
-#lines(test)
-#points(garkiObs202$time,garkiObs202$`202`/0.01,col="red")
-
-test<-scan("C:\\Imperial\\particleTestLinearN\\35\\garki218Reff.txt",sep=",")
-test <- test[seq(1, length(test), 4)]
-#plot(test,col="white",xlab="time",ylab="M")
-#lines(test)
-#points(garkiObs218$time,garkiObs218$`218`/0.001,col="red")
-
-test<-scan("C:\\Imperial\\particleTestLinearN\\35\\garki801Reff.txt",sep=",")
-#test <- test[seq(1, length(test), 4)]
-max(test)
-plot(test,col="white",xlab="time",ylab="M")
-lines(test)
-#points(garkiObs801$time,garkiObs801$`801`/p,col="red")
-
-test<-scan("C:\\Imperial\\particleTestLinearN\\35\\garki553Reff.txt",sep=",")
-#test <- test[seq(1, length(test), 4)]
-max(test)
-plot(test,col="white",xlab="time",ylab="M")
-lines(test)
-#points(garkiObs553$time,garkiObs553$`553`/p,col="red")
-
-test<-scan("C:\\Imperial\\particleTestLinearN\\35\\garki802Reff.txt",sep=",")
-#test <- test[seq(1, length(test), 4)]
-max(test)
-plot(test,col="white",xlab="time",ylab="M")
-lines(test)
-#points(garkiObs802$time,garkiObs802$`802`/p,col="red")
-
-
-=======
 #test<-read.csv("Q:\\Imperial\\fitPlots\\sTest3.txt",head=F,sep=",")
  #plot(test$V5[26:nrow(test)],col="white")
  #lines(test$V5[26:nrow(test)])
 
 #plotRec(as.mcmc(cTest),as.mcmc(cTest2),"betaBinom 1.5mil power NEW",7)
 
-for (i in c("power")){
+for (i in c("2.5MilResults\\linear","2.5MilResults\\power","2.5MilResults\\exp")){
 fN=i
 
-cTest<-read.csv(paste0("Q:\\Imperial\\particleTestLinearN\\",fN,"\\results.txt"), sep = " ",head =T)
+cTest<-read.csv(paste0("Q:\\Imperial\\particleTestLinearN\\",fN,"NoClumped","\\results.txt"), sep = " ",head =T)
 colnames(cTest)<-c("uoE","uoL","uP","Y","w","n","z1","z4","z5","z6"
                    ,"sf1","sf4","sf5","sf6","dE","dL","dP","o","tau","uM","Mg","p","ll")
 ff<-colMedians(cTest)
 
-cTest2<-read.csv(paste0("Q:\\Imperial\\particleTestLinearN\\",fN,"Clumped","\\results.txt"), sep = " ",head =T)
+cTest2<-read.csv(paste0("Q:\\Imperial\\particleTestLinearN\\",fN,"Clumped\\results.txt"), sep = " ",head =T)
 colnames(cTest2)<-c("uoE","uoL","uP","Y","w","n","z1","z4","z5","z6"
                    ,"sf1","sf4","sf5","sf6","dE","dL","dP","o","tau","uM","Mg","p","ll")
 ss<-colMedians(cTest2)
@@ -627,15 +337,15 @@ ss<-colMedians(cTest2)
 #plotDensLL(as.data.frame(cTest),as.data.frame(cTest2))
 #dev.off()
 
-#plotRec(as.mcmc(cTest),as.mcmc(cTest2),fN,7)
-#plotRec(as.mcmc(cTest2),as.mcmc(cTest1),paste0(fN,"Clumped"),7)
+plotRec(as.mcmc(cTest),as.mcmc(cTest2),paste0(fN,"NoClumped"),7)
+plotRec(as.mcmc(cTest2),as.mcmc(cTest1),paste0(fN,"Clumped"),7)
 
 
 
 par(mfrow=c(2,2))
 dtt=4
 w=    ff[22]
-test<-scan(paste0("Q:\\Imperial\\particleTestLinearN\\",fN,"\\garki408.txt"),sep=",")
+test<-scan(paste0("Q:\\Imperial\\particleTestLinearN\\",fN,"NoClumped","\\garki408.txt"),sep=",")
 test <- test[seq(1, length(test), dtt)]#current discrete time period is 0.25
 res<-0
 plot(test*w,col="white",xlab="time (days)",ylab="M",bty="n",xlim=c(0,200),main="Village 1",cex.lab=1.6,cex.main=1.5,cex.axis=1.5)
@@ -664,7 +374,7 @@ lines(test*w,col=rgb(0,136,55,maxColorValue=255, alpha=200),lwd=2)
 
 
 w=    ff[22]
-test<-scan(paste0("Q:\\Imperial\\particleTestLinearN\\",fN,"\\garki801.txt"),sep=",")
+test<-scan(paste0("Q:\\Imperial\\particleTestLinearN\\",fN,"NoClumped","\\garki801.txt"),sep=",")
 test <- test[seq(1, length(test), dtt)]
 plot(test*w,col="white",xlab="time (days)",ylab="M",bty="n",main="Village 2",cex.lab=1.6,cex.main=1.5,cex.axis=1.5)
 lines(test*w, col=rgb(123,50,148,maxColorValue=255, alpha=200),lwd=2)
@@ -680,7 +390,7 @@ lines(test*w,col=rgb(0,136,55,maxColorValue=255, alpha=200),lwd=2)
 
 
 w=    ff[22]
-test<-scan(paste0("Q:\\Imperial\\particleTestLinearN\\",fN,"\\garki553.txt"),sep=",")
+test<-scan(paste0("Q:\\Imperial\\particleTestLinearN\\",fN,"NoClumped","\\garki553.txt"),sep=",")
 test <- test[seq(1, length(test), dtt)]
 plot(test*w,col="white",xlab="time (days)",ylab="M",ylim=c(0,2100),bty="n",main="Village 3",cex.lab=1.6,cex.main=1.5,cex.axis=1.5)
 lines(test*w, col=rgb(123,50,148,maxColorValue=255, alpha=200),lwd=2)
@@ -696,7 +406,7 @@ lines(test*w,col=rgb(0,136,55,maxColorValue=255, alpha=200),lwd=2)
 
 
 w=    ff[22]
-test<-scan(paste0("Q:\\Imperial\\particleTestLinearN\\",fN,"\\garki802.txt"),sep=",")
+test<-scan(paste0("Q:\\Imperial\\particleTestLinearN\\",fN,"NoClumped","\\garki802.txt"),sep=",")
 test <- test[seq(1, length(test), dtt)]
 plot(test*w,col="white",xlab="time (days)",ylab="M",ylim=c(0,200),bty="n",main="Village 4",cex.lab=1.6,cex.main=1.5,cex.axis=1.5)
 lines(test*w, col=rgb(123,50,148,maxColorValue=255, alpha=200),lwd=2)
@@ -716,7 +426,7 @@ lines(test*w,col=rgb(0,136,55,maxColorValue=255, alpha=200),lwd=2)
 #####Rm test calcs #################################
 
 
-xt<-(colMedians(cTest))
+xt<-(colMedians(cTest2))
 UoE = xt[1]
 UoL =xt[2]
 dE=xt[15]
@@ -740,7 +450,8 @@ n=21.19
 uP =0.25 
 dP = 0.64 
 Y=13.25 
-uM = 0.096 
+uM = 0.096
+E=n*(exp(S*uM)-1)/uM
 0.5*((E) / (exp(uM*S) - 1))*(1 / (1 + UoE * dE)) * (1 / (1 + UoL * dL)) * (1 / (1 + uP * dP))
 
 
@@ -764,11 +475,11 @@ plot(r)
 
 ####################plot Rm from c++#################################
 
-for(i in c( "1.5milResults\\power")){
+for(i in c( "linear","power","exp")){
   fN=i
   
 par(mfrow=c(2,2))
-test<-read.csv(paste0("Q:\\Imperial\\particleTestLinearN\\",fN,"\\garki408Reff.txt"),head=F)
+test<-read.csv(paste0("Q:\\Imperial\\particleTestLinearN\\",fN,"NoClumped","\\garki408Reff.txt"),head=F)
 test[test == "-nan(ind)"] <- 0
 test<-as.vector(as.factor(test$V1))
 test<-as.numeric(test)
@@ -787,8 +498,8 @@ if(i=="linear"){
 }
 
 if(i=="power"){
-  legend("topright", legend=c("Non-clumped", "Clumped","Observed"),
-         col=c(rgb(123,50,148,maxColorValue=255, alpha=200), rgb(0,136,55,maxColorValue=255, alpha=200),"black"), lty=c(1,1,NA),lwd=c(2,2,NA),pch=c(NA,NA,19),cex=1,bty="n")
+  legend(400,30,  legend=c("Non-clumped", "Clumped"),
+         col=c(rgb(123,50,148,maxColorValue=255, alpha=200), rgb(0,136,55,maxColorValue=255, alpha=200)), lty=c(1,1,NA),lwd=c(2,2,NA),cex=1,bty="n")
 }
 
 test<-read.csv(paste0("Q:\\Imperial\\particleTestLinearN\\",fN,"Clumped","\\garki408Reff.txt"),head=F)
@@ -801,7 +512,7 @@ lines(test,col=rgb(0,136,55,maxColorValue=255, alpha=200),lwd=2)
 abline(h=c(1),lty="dashed")
 
 
-test<-read.csv(paste0("Q:\\Imperial\\particleTestLinearN\\",fN,"\\garki801Reff.txt"),sep=",",head=F)
+test<-read.csv(paste0("Q:\\Imperial\\particleTestLinearN\\",fN,"NoClumped","\\garki801Reff.txt"),sep=",",head=F)
 test[test == "-nan(ind)"] <- 0
 test<-as.vector(as.factor(test$V1))
 test<-as.numeric(test)
@@ -819,7 +530,7 @@ lines(test,col=rgb(0,136,55,maxColorValue=255, alpha=200),lwd=2)
 abline(h=c(1),lty="dashed")
 
 
-test<-read.csv(paste0("Q:\\Imperial\\particleTestLinearN\\",fN,"\\garki553Reff.txt"),sep=",",head=F)
+test<-read.csv(paste0("Q:\\Imperial\\particleTestLinearN\\",fN,"NoClumped","\\garki553Reff.txt"),sep=",",head=F)
 test[test == "-nan(ind)"] <- 0
 test<-as.vector(as.factor(test$V1))
 test<-as.numeric(test)
@@ -838,7 +549,7 @@ lines(test,col=rgb(0,136,55,maxColorValue=255, alpha=200),lwd=2)
 abline(h=c(1),lty="dashed")
 
 
-test<-read.csv(paste0("Q:\\Imperial\\particleTestLinearN\\",fN,"\\garki802Reff.txt"),sep=",",head=F)
+test<-read.csv(paste0("Q:\\Imperial\\particleTestLinearN\\",fN,"NoClumped","\\garki802Reff.txt"),sep=",",head=F)
 test[test == "-nan(ind)"] <- 0
 test<-as.vector(as.factor(test$V1))
 test<-as.numeric(test)
@@ -855,48 +566,195 @@ res<-0
 lines(test,col=rgb(0,136,55,maxColorValue=255, alpha=200),lwd=2)
 abline(h=c(1),lty="dashed",lwd=1)
 }
->>>>>>> Stashed changes
 
 
 
 
-<<<<<<< Updated upstream
+cTest<-read.csv(paste0("C:\\Users\\ALM210\\Documents\\OverflowResults\\1milResultsFittedTau\\",fN,"NoClumped","\\results.txt"), sep = " ",head =F)
+colnames(cTest)<-c("uoE","uoL","uP","Y","w","n","z1","z4","z5","z6"
+                   ,"sf1","sf4","sf5","sf6","dE","dL","dP","o","tau","uM","Mg","p","ll")
+ff<-colMedians(cTest)
+
+cTest2<-read.csv(paste0("C:\\Users\\ALM210\\Documents\\OverflowResults\\1milResultsFittedTau\\",fN,"Clumped\\results.txt"), sep = " ",head =F)
+colnames(cTest2)<-c("uoE","uoL","uP","Y","w","n","z1","z4","z5","z6"
+                    ,"sf1","sf4","sf5","sf6","dE","dL","dP","o","tau","uM","Mg","p","ll")
+ss<-colMedians(cTest2)
 
 
+initialP<-function(ff){
+z <- ff[7]#fitted (E-L)
+uoE = ff[1]
+uoL = ff[2]
+uP = ff[3]
+y = ff[4]
+sf = 10^ff[11]
+n = ff[6]
+dE=ff[15]
+dL=ff[16]
+dP=ff[17]
+tr=ff[19]
+uM= ff[20]
+Mg=ff[21]
+o=ff[18]
+B=21
+rF = rFx3
+t = 5/0.25
 
-
-
-
-res<-NULL
-for (i in 1:100){
-  print(i)
-  o=30
-  E=i
-  L=10
-  K=1000
-  uoE=0.035
-  uE = uoE*(1+(E + L) / (K))^o;
-  
-  res<-rbind(res,uE)
+if(tr>t){
+  K <- (1 + (sf * ((1 / tr) * (sum(
+    rF[0:(t - 1)]
+  )))))}else{
+  K <- (1 + (sf * ((1 / tr) * (sum(
+    rF[(t - tr):(t - 1)]
+  )))))
 }
-=======
-params <-
+#power carrying cap
+a = ((n / S) * dP * dL) / ((2 * uM) * (uP * dP))
+b = (UoE / (y * UoL)) * (dL + UoL) - dE - UoE
+c = -(UoE * dE) / (UoL * y)
+x = (-b + sqrt((b^2) * -4 * a * c)) / (2 * a)
+
+L = z
+E =round(L / x)
+P =round((dL * L) / (uP + dP))
+M =round((dP * P) / (2 * uM))
+
+if (M < 1)
+  M = 1
+return(round(c(E,L,P,M)))
+}
+
+startingClumped<-initialP(ss)
+startingNoClumped<-initialP(ff)
+
+
+paramsNoClump <-
   mosParamsP(
-    E0 = 24361,
-    L0 = 244,
-    P0 = 47,
-    M0 = 252,
-    uoE = 0.03496090 ,
-    uoL = 0.03529590 ,
-    uP = 0.25343600,
-    Y = 13.39410000,
-    sf = 10^4.52356000,
-    n = 23,
-    dE=0.14850950,dL=0.24706200,dP=0.99235600,tr=7.61548000,uM= 0.08081660,Mg=2.65532000,o=0.45936300,
+    E0 = startingNoClumped[1],
+    L0 = startingNoClumped[2],
+    P0 = startingNoClumped[3],
+    M0 = startingNoClumped[4],
+    uoE = ff[1] ,
+    uoL = ff[2] ,
+    uP = ff[3],
+    Y = ff[4],
+    sf = 10^ff[11],
+    n = ff[6],
+    dE=ff[15],dL=ff[16],dP=ff[17],tr=ff[19],uM= ff[20],Mg=ff[21],o=ff[18],
     rF = rFx3,
     time1 = 5/0.25,
-    time2 = 186 / 0.25
+    time2 = 250 / 0.25
   )
+
+
+
+paramsClump <-
+  mosParamsP(
+    E0 = startingClumped[1],
+    L0 = startingClumped[2],
+    P0 = startingClumped[3],
+    M0 = startingClumped[4],
+    uoE = ss[1] ,
+    uoL = ss[2] ,
+    uP = ss[3],
+    Y = ss[4],
+    sf = 10^ss[11],
+    n = ss[6],
+    dE=ss[15],dL=ss[16],dP=ss[17],tr=ss[19],uM= ss[20],Mg=ss[21],o=ss[18],
+    rF = rFx3,
+    time1 = 5/0.25,
+    time2 = 250 / 0.25
+  )
+
+
+
+inter<-250
+interSizeClump = round(10/8.38098e-03)
+interSizeNoClump = round(10/1.01411e-02)
+
+par(mfrow=c(3,3))
+for (i in seq(0.1,0.9,by=0.1)){
+  
+  yDrvPrms<-as.list(c(inter=inter,interSizeClump=0,efficacy=i,clumped=1))
+  simDatClump<- pFilt(25,iState,modStep3,dataLikFunc,obsDat,pr=c(ss[1:6],10^ss[7],10^ss[11],ss[15:22]),rFclust=rf,resM=T,rFx=rFxs,cluster=F,yDrvPrms)
+  colnames(simDatClump)<-c("E","L","P","M","G")
+  
+  yDrvPrms<-as.list(c(inter=inter,interSizeNoClump=0,efficacy=i,clumped=0))
+  simDatNoClump<- pFilt(25,iState,modStep3,dataLikFunc,obsDat,pr=c(ff[1:6],10^ff[7],10^ff[11],ff[15:22]),rFclust=rf,resM=T,rFx=rFxs,cluster=F,yDrvPrms)
+  colnames(simDatNoClump)<-c("E","L","P","M","G")
+  
+  simDatNoClumpM <- simDatNoClump$M[seq(1, length(simDatNoClump$M), 4)]
+  simDatClumpM <- simDatClump$M[seq(1, length(simDatClump$M), 4)]
+  plot(simDatClumpM,col="white",main=paste0("intervention efficacy =",i),ylab="M",xlab="time (days)")
+  lines(simDatClumpM,col="cadetblue1")
+  lines(simDatNoClumpM,col="salmon")
+  
+  yDrvPrms<-as.list(c(inter=inter,interSizeClump=interSizeClump,efficacy=i,clumped=1))
+  simDatClump<- pFilt(25,iState,modStep3,dataLikFunc,obsDat,pr=c(ss[1:6],10^ss[7],10^ss[11],ss[15:22]),rFclust=rf,resM=T,rFx=rFxs,cluster=F,yDrvPrms)
+  colnames(simDatClump)<-c("E","L","P","M","G")
+  
+  yDrvPrms<-as.list(c(inter=inter,interSizeNoClump=interSizeNoClump,efficacy=i,clumped=0))
+  simDatNoClump<- pFilt(25,iState,modStep3,dataLikFunc,obsDat,pr=c(ff[1:6],10^ff[7],10^ff[11],ff[15:22]),rFclust=rf,resM=T,rFx=rFxs,cluster=F,yDrvPrms)
+  colnames(simDatNoClump)<-c("E","L","P","M","G")
+  
+  simDatNoClumpM <- simDatNoClump$M[seq(1, length(simDatNoClump$M), 4)]
+  simDatClumpM <- simDatClump$M[seq(1, length(simDatClump$M), 4)]
+  
+  lines(simDatClumpM,col="blue")
+  lines(simDatNoClumpM,col="red")
+  abline(v=c(inter*0.25-((5/0.25)/4)),lty="dashed")
+  
+  #simDatNoClumpM <- simDatNoClump$G[seq(1, length(simDatNoClump$G), 4)]
+  #simDatClumpM <- simDatClump$G[seq(1, length(simDatClump$G), 4)]
+  #lines(simDatClumpM,col="purple")
+  #lines(simDatNoClumpM,col="orange")
+  
+}
+
+
+clumpRes<-NULL
+noClumpRes<-NULL
+for (i in seq(0.01,0.9,by=0.001)){
+clumpMG<-ss[21]/0.25
+noClumpMg<-ff[21]/0.25
+yDrvPrms<-as.list(c(inter=inter,interSizeClump=interSizeClump,efficacy=i,clumped=1))
+simDatClump<- pFilt(25,iState,modStep3,dataLikFunc,obsDat,pr=c(ss[1:6],10^ss[7],10^ss[11],ss[15:22]),rFclust=rf,resM=T,rFx=rFxs,cluster=F,yDrvPrms)
+colnames(simDatClump)<-c("E","L","P","M","G")
+
+yDrvPrms<-as.list(c(inter=inter,interSizeNoClump=interSizeNoClump,efficacy=i,clumped=0))
+simDatNoClump<- pFilt(25,iState,modStep3,dataLikFunc,obsDat,pr=c(ff[1:6],10^ff[7],10^ff[11],ff[15:22]),rFclust=rf,resM=T,rFx=rFxs,cluster=F,yDrvPrms)
+colnames(simDatNoClump)<-c("E","L","P","M","G")
+
+simDatNoClumpM <- simDatNoClump$M[seq(1, length(simDatNoClump$M), 4)]
+simDatClumpM <- simDatClump$M[seq(1, length(simDatClump$M), 4)]
+
+eradClumped<-min(which(simDatClumpM[round(inter*0.25):length(simDatClumpM)] < clumpMG))
+eradNoClumped<-min(which(simDatNoClumpM[round(inter*0.25):length(simDatNoClumpM)] < noClumpMg))
+if(eradClumped==Inf) eradClumped = 0
+if(eradNoClumped==Inf) eradNoClumped = 0
+
+clumpRes<-rbind(clumpRes,eradClumped)
+print(eradClumped)
+noClumpRes<-rbind(noClumpRes,eradNoClumped)
+}
+par(mfrow=c(1,1))
+plot(noClumpRes,col="white")
+lines(noClumpRes,col="red")
+lines(clumpRes,col="blue")
+
+
+simDatClump <- as.data.frame(larvalWhileYdrive(paramsClump,10/8.38098e-03,inter,0.1,1,0,TRUE))#run model
+simDatNoClump <- as.data.frame(larvalWhileYdrive(paramsNoClump,10/1.01411e-02,inter,0.1,1,0,FALSE))#run model
+par(mfrow=c(1,1))
+
+lines(simDatNoClump$rEff,col="red")
+abline(v=c(inter-5/0.25),lty="dashed")
+plot(simDatClump$M,col="white")
+lines(simDatClump$M,col="blue")
+lines(simDatNoClump$M,col="red")
+abline(v=c(inter-5/0.25),lty="dashed")
+
+
 
 modR <- larvalR(user = params)#run model
 simDat <-
@@ -913,12 +771,8 @@ plot(test,col="white",xlab="time",ylab="M")
 lines(test,col="green")
 
 
-simDat <- as.data.frame(larvalWhile(params,10,1,0.1))#run model
-#simDatH <- simDat$H[seq(1, length(simDat$H), 4)]
-#simDatM <- simDat$M[seq(1, length(simDat$M), 4)]
-plot(simDat$M,col="white")
-lines(simDat$M,col="red")
-lines(simDat$H,col="blue")
+
+
 
 
 
@@ -931,5 +785,4 @@ ggplot(data = cTest2,aes(ll))+
   theme_bw()
 
 
->>>>>>> Stashed changes
 
