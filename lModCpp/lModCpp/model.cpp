@@ -37,8 +37,11 @@ vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937 r
 	double mRan;
 	double dP = parmsx.dP;
 	double Mg = parmsx.Mg;
+	double uEn;
+	double uLn;
 	vector<double> rF = parmsx.rF;
 	vector<tuple<int, int, int, int,double>> r;
+
 
 	while (t < time) {
 
@@ -55,13 +58,17 @@ vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937 r
 
 	
 	
-		if (dFunc == "power" || dFunc == "linear" || dFunc == "powerClumped" || dFunc == "linearClumped") {
+		if (dFunc == "powerNoClumped" || dFunc == "linearNoClumped" || dFunc == "powerClumped" || dFunc == "linearClumped") {
 			uE = uoE * (1 + pow(((E + L) / (K)), o));
 			uL = uoL * (1 + (Y*pow(((E + L) / (K)), o)));
+			 uEn = uoE * (1 + pow(((n) / (K)), o));
+			 uLn = uoL * (1 + (Y*pow(((n) / (K)), o)));
 		}
 		else {
 			uE = uoE * exp(((E + L) / (K)));
 			uL = uoL * exp(Y*(((E + L) / (K))));
+			 uEn = uoE * exp(((n) / (K)));
+			 uLn = uoL * exp(Y*(((n) / (K))));
 		}
 
 
@@ -162,13 +169,12 @@ vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937 r
 			rEff = 0.5*((n) / (exp(uM*S) - 1))*(1 / (1 + uE / dE))*(1 / (1 + uL / dL))*(1 / (1 + (uP) / dP));
 
 		} else { 
-			
 			double Es = n * (exp(S*uM) - 1) / uM;//calculate value for oviposition cycle from daily rate
-
 			rEff = 0.5*((Es) / (exp(uM*S) - 1))*(1 / (1 + uE / dE))*(1 / (1 + uL / dL))*(1 / (1 + (uP) / dP));}
 
 		t++;
 		r.emplace_back(make_tuple(E, L, P, M, rEff));
+
 	}
 
 	//ofstream myfile2;

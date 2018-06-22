@@ -1,4 +1,5 @@
 #include"lModH.h"
+#include <algorithm>
 boost::mt19937 rng(std::time(0));
 
 
@@ -12,13 +13,13 @@ vector<double> rainfall_03 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\
 
 
 
-/* proposal sd tuning function
+/*proposal sd tuning function
 @param current s.d.
 @param target acceptance ratio
 @param current acceptance ratio
 @param maximum proposal s.d.
 @return tuned s.d.*/
-double tuner(double curSd, double acptR, double curAcptR, double maxSd) {
+double tuner(double curSd, double acptR, double curAcptR, double maxSd){
 	boost::math::normal dist(0.0, 1.0);
 	if (curAcptR == 1)
 		curAcptR = 0.99;
@@ -102,45 +103,44 @@ modParms parmUpdt(modParms prms, string prmName, double propPrm) {
 @param obsDatX observed data
 @param fixedParam fixed parameters
 @return log likelihood value*/
-double llFunc(int particles, modParms prms, obsDatX obsDat, string dFunc) {
+double llFunc(int particles, modParms prms, obsDatX obsDat, string dFunc, std::vector<int> seeds) {
 	vector<double> pfiltRes;
 
-	for (auto j = 0; j != 4; ++j) {
+	for (auto j = 0; j != 3; ++j) {
 
 		vector<tuple<int, int>> oDat;
-		if (j == 0) {
-			oDat = obsDat.garki408;
-			prms.sf = pow(10, prms.sf1);
-			prms.z = pow(10, prms.z1);
-			prms.rF = rainfall_03;
+		//if (j == 0) {
+		//	oDat = obsDat.garki408;
+		//	prms.sf = pow(10, prms.sf1);
+		//	prms.z = pow(10, prms.z1);
+		//	prms.rF = rainfall_03;
 
-		}
-
-	/*	else if (j == 1) {
-			oDat = obsDat.garki202;
-			prms.sf = pow(10, prms.sf2);
-			prms.z = pow(10, prms.z2);
-			prms.rF = rainfall_04;
-		}
-		else if (j == 2) {
-			oDat = obsDat.garki218;
-			prms.sf = pow(10, prms.sf3);
-			prms.z = pow(10, prms.z3);
-			prms.rF = rainfall_07;
-		}*/
-		else if (j == 1) {
+		//}
+		//else if (j == 1) {
+		//	oDat = obsDat.garki154;
+		//	prms.sf = pow(10, prms.sf2);
+		//	prms.z = pow(10, prms.z2);
+		//	prms.rF = rainfall_05;
+		//}
+		// if (j == 0) {
+		//	oDat = obsDat.garki408;
+		//	prms.sf = pow(10, prms.sf3);
+		//	prms.z = pow(10, prms.z3);
+		//	prms.rF = rainfall_03;
+		//}
+		 if (j == 0) {
 			oDat = obsDat.garki801;
 			prms.sf = pow(10, prms.sf4);
 			prms.z = pow(10, prms.z4);
 			prms.rF = rainfall_01;
 		}
-		else if (j == 2) {
+		else if (j == 1) {
 			oDat = obsDat.garki553;
 			prms.sf = pow(10, prms.sf5);
 			prms.z = pow(10, prms.z5);
 			prms.rF = rainfall_02;
 		}
-		else if (j == 3) {
+		else if (j == 2) {
 			oDat = obsDat.garki802;
 			prms.sf = pow(10, prms.sf6);
 			prms.z = pow(10, prms.z6);
@@ -156,6 +156,7 @@ double llFunc(int particles, modParms prms, obsDatX obsDat, string dFunc) {
 			"\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\fitPlots\\test.txt",
 			false,
 			dFunc//density function 
+			,seeds
 		));
 	}
 
@@ -198,7 +199,7 @@ double lprior(modParms prms) {
 	res = res + (log(pdf(uM1, prms.uM)));
 
 
-	boost::math::normal_distribution<double> d4(13.06, 3);//Y
+	boost::math::normal_distribution<double> d4(13.06, 4);//Y
 	res = res + (log(pdf(d4, prms.Y)));
 
 	boost::math::uniform_distribution<double> d4x(0.1, 70);//Y
@@ -208,15 +209,15 @@ double lprior(modParms prms) {
 	//res = res + (log(pdf(u5, prms.w)));
 	
 	boost::math::uniform_distribution<double> u61(1, 15);//z1 unif
-	//boost::math::uniform_distribution<double> u62(1, 15);//z2 unif
-	//boost::math::uniform_distribution<double> u63(1, 10);//z3 unif
+	boost::math::uniform_distribution<double> u62(1, 15);//z2 unif
+	boost::math::uniform_distribution<double> u63(1, 10);//z3 unif
 	boost::math::uniform_distribution<double> u64(1, 15);//z4 unif
 	boost::math::uniform_distribution<double> u65(1, 10);//z5 unif
 	boost::math::uniform_distribution<double> u66(1, 15);//z6 unif
 
 	res = res + (log(pdf(u61, prms.z1)));
-	//res = res + (log(pdf(u62, prms.z2)));
-	//res = res + (log(pdf(u63, prms.z3)));
+	res = res + (log(pdf(u62, prms.z2)));
+	res = res + (log(pdf(u63, prms.z3)));
 	res = res + (log(pdf(u64, prms.z4)));
 	res = res + (log(pdf(u65, prms.z5)));
 	res = res + (log(pdf(u66, prms.z6)));
@@ -224,15 +225,15 @@ double lprior(modParms prms) {
 
 
 	boost::math::uniform_distribution<double> u71(1, 10);//sf1 unif
-	//boost::math::uniform_distribution<double> u72(1, 10);//sf2 unif
-	//boost::math::uniform_distribution<double> u73(1, 10);//sf3 unif
+	boost::math::uniform_distribution<double> u72(1, 10);//sf2 unif
+	boost::math::uniform_distribution<double> u73(1, 10);//sf3 unif
 	boost::math::uniform_distribution<double> u74(1, 10);//sf4 unif
 	boost::math::uniform_distribution<double> u75(1, 10);//sf5 unif
 	boost::math::uniform_distribution<double> u76(1, 10);//sf6 unif
 
 	res = res + (log(pdf(u71, prms.sf1)));
-	//res = res + (log(pdf(u72, prms.sf2)));
-	//res = res + (log(pdf(u73, prms.sf3)));
+	res = res + (log(pdf(u72, prms.sf2)));
+	res = res + (log(pdf(u73, prms.sf3)));
 	res = res + (log(pdf(u74, prms.sf4)));
 	res = res + (log(pdf(u75, prms.sf5)));
 	res = res + (log(pdf(u76, prms.sf6)));
@@ -257,16 +258,31 @@ double lprior(modParms prms) {
 	res = res + (log(pdf(dtau, rint(prms.tau))));
 
 
-	boost::math::uniform_distribution<double> d8(0.001,5);//o
+	boost::math::uniform_distribution<double> d8(0.001,10);//o
 	res = res + (log(pdf(d8, prms.o)));
 
 
-	boost::math::uniform_distribution<double> mm(1, 50);//mg
+	boost::math::uniform_distribution<double> mm(1, 10);//mg
 	res = res + (log(pdf(mm, prms.Mg)));
 
 	return(res);
 }
 
+
+
+std::vector<int> gen_seeds(int num) {
+	// start by stuffing them into a set to guarantee uniqueness.
+	std::set<int> s;
+
+	std::random_device g;
+
+	while (s.size() < num)
+		s.insert(g());
+
+	// then return them in a vector to give random access:
+	std::vector<int> seeds(s.begin(), s.end());
+	return seeds;
+}
 
 
 
@@ -305,122 +321,150 @@ pMMHres pMMHSampler(
 	double llRatio; //ratio between proposed and current ll
 	modParms prms = initParams;
 	double propPrm; //proposed new parameter
+	int seedIter;
 
-	if (dFunc != "exp" && dFunc != "linear" && dFunc != "power" && dFunc != "expClumped" && dFunc != "linearClumped" && dFunc != "powerClumped") {
-		cerr << "dFunc must equal correct value: linear, power, exp, linearClumped, powerClumped or expClumped";
+	if (dFunc != "expNoClumped" && dFunc != "linearNoClumped" && dFunc != "powerNoClumped" && dFunc != "expClumped" && dFunc != "linearClumped" && dFunc != "powerClumped") {
+		cerr << "dFunc must equal correct value: linearNoClumped, powerNoClumped, expNoClumped, linearClumped, powerClumped or expClumped";
 		cin.get();
 	}
 
-	llCur = llFunc(particles, prms, oDat, dFunc) + lprior(prms); //get value for initial ll
+	std::vector<int> seedStore = gen_seeds(particles*niter);
+	vector<int> seeds(seedStore.begin(), seedStore.begin() + particles);
+
+	llCur = llFunc(particles, prms, oDat, dFunc, seeds) + lprior(prms); //get value for initial ll
 	vector<double> acptRcur = acptRs;//current acceptance ratio
 	vector<double> acpts(acptRs.size(), 0.0);//number of acceptances (use acptRs to get correct vector length)
 	vector<int> parmIter(acptRs.size(), 0);//iteration number for specific parameters
 	pMMHres results;
 
 
+
 	for (auto iter = 0; iter != niter; ++iter) {
-		propPrm = propPrmFunc(sdProps[parmNum], get<1>(fitPrms[parmNum]));//propose new parameter
 
-		prms = parmUpdt(prms, get<0>(fitPrms[parmNum]), propPrm);//update parameter struct
+		if (maxSdProps[parmNum] != 0) {
 
-		if ((monitoring = true && iter % tell == 0)) {
+			propPrm = propPrmFunc(sdProps[parmNum], get<1>(fitPrms[parmNum]));//propose new parameter
 
-			cout << endl << "||-----------------------||" <<dFunc <<"||-----------------------||" << endl;
-			cout << "iteration " << iter << " of " << niter << endl;
-			cout << " uoE = " << prms.uoE << " uoL = " << prms.uoL << " uoP = " << prms.uP << " uM = " << prms.uM << " Y = " << prms.Y << " w = " << prms.w << " n = " << prms.n << " z1 = " << prms.z1 << endl
-			 << " z4 = " << prms.z4 << " z5 = " << prms.z5 << " z6 = " << prms.z6 << " sf1 = " << prms.sf1 << " sf4 = " << prms.sf4 << " sf5 = " << prms.sf5 << " sf6 = " << prms.sf6
-				<< "dE = " << prms.dE << " dL = " << prms.dL << " dP = " << prms.dP << " o = " << prms.o << " Mg = " << prms.Mg << " p = " << prms.p << " tau = " << prms.tau << endl;
-			cout << "||---------aratio--------||" << endl;
+			prms = parmUpdt(prms, get<0>(fitPrms[parmNum]), propPrm);//update parameter struct
 
-			for (auto iter = 0; iter != size(sdProps); ++iter) {
-				cout << get<0>(fitPrms[iter]) << " = " << acptRcur[iter] << " ";
+			if ((monitoring = true && iter % tell == 0)) {
+
+				cout << endl << "||-----------------------||" << dFunc << "||-----------------------||" << endl;
+				cout << "iteration " << iter << " of " << niter << endl;
+				cout << " uoE = " << prms.uoE << " uoL = " << prms.uoL << " uP = " << prms.uP << " uM = " << prms.uM << " Y = " << prms.Y << " w = " << prms.w << " n = " << prms.n << " z1 = " << prms.z1 << endl
+					<< " z2 = " << prms.z2 << " z3 = " << prms.z3
+					<< " z4 = " << prms.z4 << " z5 = " << prms.z5 << " z6 = " << prms.z6 << " sf1 = " << prms.sf1 << " sf2 = " << prms.sf2 << " sf3 = " << prms.sf3 << " sf4 = " << prms.sf4 << " sf5 = " << prms.sf5 << " sf6 = " << prms.sf6
+					<< "dE = " << prms.dE << " dL = " << prms.dL << " dP = " << prms.dP << " o = " << prms.o << " Mg = " << prms.Mg << " p = " << prms.p << " tau = " << prms.tau << endl;
+				cout << "||---------aratio--------||" << endl;
+
+
+				for (auto iter = 0; iter != size(sdProps); ++iter) {
+					cout << get<0>(fitPrms[iter]) << " = " << acptRcur[iter] << " ";
+				}
+				cout << endl << "||---------aNum--------||" << endl;
+				for (auto iter = 0; iter != size(sdProps); ++iter) {
+					cout << get<0>(fitPrms[iter]) << " = " << acpts[iter] << " ";
+				}
+				cout << endl << "||---------sd--------||" << endl;
+				for (auto iter = 0; iter != size(sdProps); ++iter) {
+					cout << get<0>(fitPrms[iter]) << " = " << sdProps[iter] << " ";
+				}
+				cout << endl << "||-----------------------||" << endl;
 			}
-			cout << endl << "||---------aNum--------||" << endl;
-			for (auto iter = 0; iter != size(sdProps); ++iter) {
-				cout << get<0>(fitPrms[iter]) << " = " << acpts[iter] << " ";
+
+
+			/*ofstream myfile;
+			myfile.open("Q:\\test.csv");
+				myfile << " Mg = " << prms.Mg << endl;*/
+
+			vector<int> seeds(seedStore.begin()+ seedIter, seedStore.begin()+ seedIter + particles);
+			llProp = llFunc(particles, prms, oDat, dFunc, seeds) + lprior(prms);//find log likelihood from particle filter
+			seedIter = seedIter + particles;
+
+			//boost::math::normal_distribution<double> curr(get<1>(fitPrms[parmNum]), sdProps[parmNum]);//normal dist for metHast 
+			//boost::math::normal_distribution<double> prp(propPrm, sdProps[parmNum]);//normal dist for metHast 
+
+			//llRatio = (llProp -log(pdf(curr, propPrm))) - (llCur- log(pdf(prp, get<1>(fitPrms[parmNum]))));//ratio between previous ll and proposed ll
+			double llRatio = llProp - llCur;//ratio between previous ll and proposed ll
+
+
+			//print outputs
+			if ((monitoring = true && iter % tell == 0)) {
+				cout << "current = " << llCur << endl;
+				cout << "proposed = " << llProp << endl;
+				cout << "llratio = " << llRatio << endl;
+				cout << "current parameter = " << get<0>(fitPrms[parmNum]) << endl;
+
 			}
-			cout << endl << "||---------sd--------||" << endl;
-			for (auto iter = 0; iter != size(sdProps); ++iter) {
-				cout << get<0>(fitPrms[iter]) << " = " << sdProps[iter] << " ";
+
+
+			if (llRatio >= 0 || rn01() <= exp(llRatio)) {
+				llCur = llProp; //update current ll if ll is accepted
+				acpts[parmNum] = acpts[parmNum] + 1;
+				get<1>(fitPrms[parmNum]) = propPrm;
 			}
-			cout << endl << "||-----------------------||" << endl;
-		}
+			else {
+				prms = parmUpdt(prms, get<0>(fitPrms[parmNum]), get<1>(fitPrms[parmNum])); //change parameter back if not accepted
+			}
+
+			if (iter > startAdapt) {
+				//start adapting with tuner 
+				acptRcur[parmNum] = (acpts[parmNum] / parmIter[parmNum]); //calc current acceptance ratio for parameter
+				sdProps[parmNum] = tuner(sdProps[parmNum], acptRs[parmNum], acptRcur[parmNum], maxSdProps[parmNum]);
+			}
+
+			//if passed burn-in, start adding to results
+			if (iter > nburn) {
+				results.uoE.emplace_back(prms.uoE);
+				results.uoL.emplace_back(prms.uoL);
+				results.uP.emplace_back(prms.uP);
+				results.uM.emplace_back(prms.uM);
+
+				results.Y.emplace_back(prms.Y);
+				results.w.emplace_back(prms.w);
+				results.n.emplace_back(prms.n);
+				results.z1.emplace_back(prms.z1);
+				results.z2.emplace_back(prms.z2);
+				results.z3.emplace_back(prms.z3);
+
+				results.z4.emplace_back(prms.z4);
+				results.z5.emplace_back(prms.z5);
+				results.z6.emplace_back(prms.z6);
+
+				results.sf1.emplace_back(prms.sf1);
+				results.sf2.emplace_back(prms.sf2);
+				results.sf3.emplace_back(prms.sf3);
+
+				results.sf4.emplace_back(prms.sf4);
+				results.sf5.emplace_back(prms.sf5);
+				results.sf6.emplace_back(prms.sf6);
+
+				results.dE.emplace_back(prms.dE);
+				results.dL.emplace_back(prms.dL);
+				results.dP.emplace_back(prms.dP);
+				results.o.emplace_back(prms.o);
+				results.Mg.emplace_back(prms.Mg);
+				results.p.emplace_back(prms.p);
+				results.tau.emplace_back(prms.tau);
 
 
-		/*ofstream myfile;
-		myfile.open("Q:\\test.csv");
-			myfile << " Mg = " << prms.Mg << endl;*/
-		
+				results.ll.emplace_back(llCur);
+			}
 
-		llProp = llFunc(particles, prms, oDat, dFunc) + lprior(prms);//find log likelihood from particle filter
+			parmNum++;
 
-		//print outputs
-		if ((monitoring = true && iter % tell == 0)) {
-			cout << "current = " << llCur << endl;
-			cout << "proposed = " << llProp << endl;
-		}
-				
-		llRatio = llProp - llCur;//ratio between previous ll and proposed ll
+			; //parameter number, if greater than number of parms, revert back to 0
+			if (parmNum >= boost::size(sdProps)) {
+				parmNum = 0;
+			}
 
-		if (llRatio >= 0 || rn01() <= exp(llRatio)) {
-			llCur = llProp; //update current ll if ll is accepted
-			acpts[parmNum] = acpts[parmNum] + 1;
-			get<1>(fitPrms[parmNum]) = propPrm;
+			parmIter[parmNum]++;
 		}
 		else {
-			prms = parmUpdt(prms, get<0>(fitPrms[parmNum]), get<1>(fitPrms[parmNum])); //change parameter back if not accepted
+			parmNum++;
+			parmIter[parmNum]++;
 		}
 
-		if (iter > startAdapt) {
-			//start adapting with tuner 
-			acptRcur[parmNum] = (acpts[parmNum] / parmIter[parmNum]); //calc current acceptance ratio for parameter
-			sdProps[parmNum] = tuner(sdProps[parmNum], acptRs[parmNum], acptRcur[parmNum], maxSdProps[parmNum]);
-		}
-
-		//if passed burn-in, start adding to results
-		if (iter > nburn) {
-			results.uoE.emplace_back(prms.uoE);
-			results.uoL.emplace_back(prms.uoL);
-			results.uP.emplace_back(prms.uP);
-			results.uM.emplace_back(prms.uM);
-
-			results.Y.emplace_back(prms.Y);
-			results.w.emplace_back(prms.w);
-			results.n.emplace_back(prms.n);
-			results.z1.emplace_back(prms.z1);
-			//results.z2.emplace_back(prms.z2);
-			//results.z3.emplace_back(prms.z3);
-
-			results.z4.emplace_back(prms.z4);
-			results.z5.emplace_back(prms.z5);
-			results.z6.emplace_back(prms.z6);
-
-			results.sf1.emplace_back(prms.sf1);
-			//results.sf2.emplace_back(prms.sf2);
-			//results.sf3.emplace_back(prms.sf3);
-
-			results.sf4.emplace_back(prms.sf4);
-			results.sf5.emplace_back(prms.sf5);
-			results.sf6.emplace_back(prms.sf6);
-
-			results.dE.emplace_back(prms.dE);
-			results.dL.emplace_back(prms.dL);
-			results.dP.emplace_back(prms.dP);
-			results.o.emplace_back(prms.o);
-			results.Mg.emplace_back(prms.Mg);
-			results.p.emplace_back(prms.p);
-			results.tau.emplace_back(prms.tau);
-
-
-			results.ll.emplace_back(llCur);
-		}
-
-		parmNum++; //parameter number, if greater than number of parms, revert back to 0
-		if (parmNum >= boost::size(sdProps)) {
-			parmNum = 0;
-		}
-
-		parmIter[parmNum]++;
 	}
 
 	return results;

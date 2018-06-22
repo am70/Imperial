@@ -12,14 +12,13 @@ double m_pi = 3.14159265358979323846;
 @return conditions for E, L, P and M, double is empty for addition of weight later. */
 vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParms, string dFunc) {
 	try {
-		int z = iParms.z;
+		double z = iParms.z;
 		double dE = iParms.dE;
 		double dL = iParms.dL;
 		double dP = iParms.dP;
 		double y = iParms.Y;
 		double S = iParms.S;
 		double sf = iParms.sf;
-		double n = iParms.n;
 		double UoE = iParms.uoE;
 		double UoL = iParms.uoL;
 		vector<double> rF = iParms.rF;
@@ -39,6 +38,14 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 		//int t = iParms.startTime;
 		double trx = rint(iParms.tau / iParms.dt);
 		double rFsum;
+		double n;
+
+		if (dFunc == "powerNoClumped" || dFunc == "expNoClumped" || dFunc == "linearNoClumped") {
+			 n = iParms.n * (exp(S*uM) - 1) / uM;
+		}
+		else  n = iParms.n;
+
+
 
 		if (t <= trx) {
 			rFsum = std::accumulate(rF.begin(), rF.begin() + t, 0);
@@ -49,7 +56,7 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 			K = ((sf*((1 / trx)*rFsum)));
 		}
 		//exp carrying cap
-		if (dFunc == "exp" || dFunc == "expClumped") {
+		if (dFunc == "expNoClumped" || dFunc == "expClumped") {
 			a = (0.5 * dL*dP) / (uM*(dP + uP));
 
 			uE = UoE * exp((z / K));
@@ -92,7 +99,8 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 		states.resize(N, { E, L, P, M, 0.0 });//return initial states, repeated to number of particles
 		return states;
 	}
-	catch (...) { cerr << "error in initial states function, check input" << endl; }
+	catch (...) { cerr << "error in initial states function, check input" << endl;  cin.get();
+	}
 }
 
 
@@ -219,36 +227,41 @@ tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt
 		modRun = mPmod(wp, rd, dFunc);
 	}
 	catch (...) {
-		cerr << "error with model run in modStep func" << endl;
+		cerr << "error with model run in modStep func" << endl; cin.get();
 	}
 	double sim = get<3>(modRun.back());
 	weight = betaBinom(obsData, sim, wp.p,wp.w); //add weights to tuple
-	tuple<int, int, int, int, double> res = { get<0>(modRun.back()),get<1>(modRun.back()),get<2>(modRun.back()),get<3>(modRun.back()), weight };
+	tuple<int, int, int, int, double> res = { get<0>(modRun.back()),get<1>(modRun.back()),get<2>(modRun.back()),get<3>(modRun.back()), weight};
 	return res;
 }
 
 /*model step function for plotting
 @param wp a structure containing start times and states for model step
 @param obsData, observed data for calculating likelihood value
-@return tuple containing state ints for E, L, P, M and likelihood (non-log), at the end of
+@return tuple containing state ints for E, L, P, M and likelihood, at the end of
 a model run with designated start and end times*/
 vector<tuple<int, int, int, int, double,double>> modStepFncPlot(modParms wp, int obsData, boost::mt19937 rd, string dFunc) {
 	vector<tuple<int, int, int, int,double>> modRun;
 	modRun.reserve(wp.endTime - wp.startTime);
 	double weight;
+	
 	try {
 		modRun = mPmod(wp, rd, dFunc);
 	}
 	catch (...) {
-		cerr << "error with model run in modStepFncPlot func" << endl;
-	}	double sim = get<3>(modRun.back());
+		cerr << "error with model run in modStepFncPlot func" << endl; cin.get();
+	}	
+	
+	double sim = get<3>(modRun.back());
 	weight = betaBinom(obsData, sim,wp.p,wp.w);//add weights to tuple
 	tuple<int, int, int, int, double,double> res;
 	vector<tuple<int, int, int, int, double,double>> res2;
+
 	for (int j = 0; j < boost::size(modRun); j++) {
-		res = { get<0>(modRun[j]),get<1>(modRun[j]),get<2>(modRun[j]),get<3>(modRun[j]), weight,get<4>(modRun[j]) };
+		res = { get<0>(modRun[j]),get<1>(modRun[j]),get<2>(modRun[j]),get<3>(modRun[j]), weight,get<4>(modRun[j])};
 		res2.emplace_back(res);
 	}
+
 	return res2;
 }
 
@@ -290,7 +303,7 @@ double rSampMat(vector<vector<double>> vP) {
 @param llsum current sum of log likelihoods in particles*/
 vector<tuple<int, int, int, int, double>> normalise(vector<tuple<int, int, int, int, double>> particles, double llSum) {
 	const auto pComp = [](const auto& lhs, const auto& rhs)
-	{ return get<4>(lhs) < get<4>(rhs); };
+	{ return get<4>(lhs) < get<4>(rhs);};
 	const double maxVal = get<4>(*std::max_element(particles.begin(), particles.end(), pComp));
 	double sum = 0;
 	for (int i = 0; i != boost::size(particles); i++) {
@@ -307,6 +320,9 @@ vector<tuple<int, int, int, int, double>> normalise(vector<tuple<int, int, int, 
 	return particles;
 }
 
+
+
+
 /* Particle filter function - runs model in steps between each observed data point
 before using weighted re - sampling of model state at each step to start next
 @param n number of particles 
@@ -322,30 +338,32 @@ double pFilt(int n,
 	bool resM,
 	string outputFile,
 	bool reff,
-	string dFunc) 
+	string dFunc,
+	std::vector<int> seeds)
 {
-	vector<int> times;
-	double ll; //log likelihood value
-	modParms wp;
-	vector<tuple<int, int, int, int, double>>  particles;
-	particles.reserve(n);
-	vector<double> modPlotRes;
-	vector<double> modPlot;
-	vector<double> modPlotReff;
-	vector<double> plotResTemp;
-	vector<double> plotResTempReff;
+
+		vector<int> times;
+		double ll; //log likelihood value
+		modParms wp;
+		vector<tuple<int, int, int, int, double>>  particles;
+		particles.reserve(n);
+		vector<double> modPlotRes;
+		vector<double> modPlot;
+		vector<double> modPlotReff;
+		vector<double> plotResTemp;
+		vector<double> plotResTempReff;
 
 
-	//calculate discreet time steps for observed data
-	for (auto i = begin(obsData); i != end(obsData); ++i) {
-		times.emplace_back((get<0>(*i)) / prms.dt);
-	};
-	prms.startTime = times.at(0);
-	//get initial state of particles
-	particles = iState(n, times.front(), prms, dFunc);
+		//calculate discreet time steps for observed data
+		for (auto i = begin(obsData); i != end(obsData); ++i) {
+			times.emplace_back((get<0>(*i)) / prms.dt);
+		};
+		prms.startTime = times.at(0);
+		//get initial state of particles
+		particles = iState(n, times.front(), prms, dFunc);
 
-		ll = (betaBinom(get<1>(obsData[0]), get<3>(particles[0]),prms.p,wp.w));
-		
+		ll = (betaBinom(get<1>(obsData[0]), get<3>(particles[0]), prms.p, wp.w));
+
 		vector<vector<double>> resMat(size(particles), vector<double>(size(obsData)));
 
 		for (auto i = 0; i != times.size() - 1; ++i) {
@@ -367,10 +385,10 @@ double pFilt(int n,
 			wp.rF = prms.rF;
 			wp.Mg = prms.Mg;
 			wp.p = prms.p;
-			if(dFunc == "exp" || dFunc == "linear" || dFunc == "expClumped" || dFunc == "linearClumped")
+			if (dFunc == "expNoClumped" || dFunc == "linearNoClumped" || dFunc == "expClumped" || dFunc == "linearClumped")
 				wp.o = 1;
 			else
-			wp.o = prms.o;
+				wp.o = prms.o;
 			wp.tau = prms.tau;
 
 			wp.startTime = times.at(i);
@@ -381,19 +399,21 @@ double pFilt(int n,
 
 			if (resM == false) {
 
-#pragma omp parallel for schedule(static) reduction(+:lltemp)  //reduction needed due to problem with thread racing
 
-				for (int j = 0; j < boost::size(particles); j++){
-					boost::mt19937 mrandThread(std::random_device{}());
+#pragma omp parallel for schedule(static) reduction(+:lltemp) //reduction needed due to problem with thread racing
+				for (int j = 0; j < boost::size(particles); j++) {
+
+
+					boost::mt19937 mrandThread(seeds.at(j));
 					wp.E0 = get<0>(particles[j]);
 					wp.L0 = get<1>(particles[j]);
 					wp.P0 = get<2>(particles[j]);
 					wp.M0 = get<3>(particles[j]);
 
 					int obsDatPoint = get<1>(obsData[i]);
-					particles.at(j) = modStepFnc(wp, obsDatPoint, mrandThread,dFunc);
-					
-				   resMat[j][i] = get<4>(particles.at(j));
+					particles.at(j) = modStepFnc(wp, obsDatPoint, mrandThread, dFunc);
+
+					resMat[j][i] = get<4>(particles.at(j));
 
 					lltemp = lltemp + get<4>(particles.at(j));
 					//if (std::isnan(get<4>(particles.at(j))) == 0)  get<4>(particles.at(j)) = 0;
@@ -410,7 +430,7 @@ double pFilt(int n,
 
 			//alternative loop for getting plot outputs from particle filter - could be coded better...
 			if (resM == true) {
-				vector < tuple<int, int, int, int, double,double>> plotRes;
+				vector < tuple<int, int, int, int, double, double>> plotRes;
 				plotResTemp.clear();
 				plotResTemp.resize(wp.endTime - wp.startTime);
 				plotResTempReff.clear();
@@ -423,10 +443,10 @@ double pFilt(int n,
 					wp.M0 = get<3>(particles[j]);
 
 					int obsDatPoint = get<1>(obsData[i]);
-					plotRes = modStepFncPlot(wp, obsDatPoint, mrandThread,dFunc);
+					plotRes = modStepFncPlot(wp, obsDatPoint, mrandThread, dFunc);
 					for (int x = 0; x < boost::size(plotRes); x++) {
-							plotResTempReff.at(x)= plotResTempReff.at(x)+(get<5>(plotRes[x]));
-							plotResTemp.at(x) = plotResTemp.at(x) + (get<3>(plotRes[x]));
+						plotResTempReff.at(x) = plotResTempReff.at(x) + (get<5>(plotRes[x]));
+						plotResTemp.at(x) = plotResTemp.at(x) + (get<3>(plotRes[x]));
 					}
 					particles.at(j) = { get<0>(plotRes.back()),get<1>(plotRes.back()),get<2>(plotRes.back()),get<3>(plotRes.back()), get<4>(plotRes.back()) };
 					lltemp = lltemp + get<4>(particles.at(j));
@@ -436,24 +456,24 @@ double pFilt(int n,
 					modPlotReff.emplace_back(plotResTempReff.at(g) / boost::size(particles));
 				}
 				//take mean of likelihoods from particles
-				//double llMean = lltemp / boost::size(particles);
+				double llMean = lltemp / boost::size(particles);
 				//normalise particle probabilities
 				particles = normalise(particles, lltemp);
 				//re-sample particles
 				particles = rSamp(particles);
-				//ll = ll + llMean;//add start val for frst obs point
+				ll = ll + llMean;
 
 			}
 
-	
-	}
+
+		}
 		if (resM == true) {
 			string opF = outputFile;
 			outputFile.append(".txt");
 			ofstream myfile;
 			myfile.open(outputFile);
 			for (int j = 0; j < boost::size(modPlot); j++) {
-				myfile << modPlot.at(j) <<endl;
+				myfile << modPlot.at(j) << endl;
 			}
 
 			opF.append("Reff.txt");
@@ -465,7 +485,8 @@ double pFilt(int n,
 		}
 
 		//take random sample at end of resMat
-		double resNum = rSampMat(resMat);
+		//double resNum = rSampMat(resMat);
 
-	return resNum;
+		return ll;
+	
 }

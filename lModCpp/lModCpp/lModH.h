@@ -38,7 +38,7 @@ using std::cerr;
 
 typedef long unsigned int luint;
 
-vector<double> txtReader(string, float);
+vector<double> txtReader(string, double);
 double medianFnc(vector<double> vec );
 
 //model parameters
@@ -86,7 +86,8 @@ double pFilt(int n,
 	bool resM,
 	string outputFile,
 	bool reff,
-	string dFunc
+	string dFunc,
+	std::vector<int>
 );
 
 //istate
@@ -144,7 +145,7 @@ pMMHres pMMHSampler(
 	int	tell,
 	obsDatX	oDat);
 
-double pFitFunc(int particles, pMMHres results, obsDatX obsDat, modParms prms, string outputFile, string dFunc);
+void pFitFunc(int particles, pMMHres results, obsDatX obsDat, modParms prms, string outputFile, string dFunc);
 
 double resultsWriter(string fileName, string outputFolder, pMMHres results);
 
@@ -157,6 +158,7 @@ struct pmcmcOptions {
 	int monitoring;
 	int startAdapt;
 	int tell;
+	string initParamsLoc;
 };
 
 
