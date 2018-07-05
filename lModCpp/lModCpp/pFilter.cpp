@@ -219,7 +219,7 @@ double betaBinom(double k, double n, double p, double w) {
 @param obsData, observed data for calculating likelihood value
 @return tuple containing state ints for E, L, P, M and likelihood (non-log), at the end of 
 a model run with designated start and end times*/
-tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt19937 rd, string dFunc) {
+tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt19937_64 rd, string dFunc) {
 	vector<tuple<int, int, int, int,double>> modRun;
 	modRun.reserve(wp.endTime - wp.startTime);
 	double weight; 
@@ -240,7 +240,7 @@ tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt
 @param obsData, observed data for calculating likelihood value
 @return tuple containing state ints for E, L, P, M and likelihood, at the end of
 a model run with designated start and end times*/
-vector<tuple<int, int, int, int, double,double>> modStepFncPlot(modParms wp, int obsData, boost::mt19937 rd, string dFunc) {
+vector<tuple<int, int, int, int, double,double>> modStepFncPlot(modParms wp, int obsData, boost::mt19937_64 rd, string dFunc) {
 	vector<tuple<int, int, int, int,double>> modRun;
 	modRun.reserve(wp.endTime - wp.startTime);
 	double weight;
@@ -338,8 +338,8 @@ double pFilt(int n,
 	bool resM,
 	string outputFile,
 	bool reff,
-	string dFunc,
-	std::vector<int> seeds)
+	string dFunc
+	)
 {
 
 		vector<int> times;
@@ -403,8 +403,10 @@ double pFilt(int n,
 #pragma omp parallel for schedule(static) reduction(+:lltemp) //reduction needed due to problem with thread racing
 				for (int j = 0; j < boost::size(particles); j++) {
 
+					std::random_device rdev;
+					uint64_t seed = (uint64_t(rdev()) << 32) | rdev();
 
-					boost::mt19937 mrandThread(seeds.at(j));
+					boost::mt19937_64 mrandThread(seed);
 					wp.E0 = get<0>(particles[j]);
 					wp.L0 = get<1>(particles[j]);
 					wp.P0 = get<2>(particles[j]);
@@ -420,7 +422,7 @@ double pFilt(int n,
 				}
 
 				double llMean = lltemp / boost::size(particles);
-				ll = ll + llMean;//add start val for frst obs point
+				//ll = ll + llMean;//add start val for frst obs point
 				//normalise particle probabilities
 				particles = normalise(particles, lltemp);
 				//re-sample particles
@@ -436,7 +438,9 @@ double pFilt(int n,
 				plotResTempReff.clear();
 				plotResTempReff.resize(wp.endTime - wp.startTime);
 				for (int j = 0; j < boost::size(particles); j++) {
-					boost::mt19937 mrandThread(std::random_device{}());
+					std::random_device rdev;
+					uint64_t seed = (uint64_t(rdev()) << 32) | rdev();
+					boost::mt19937_64 mrandThread(seed);
 					wp.E0 = get<0>(particles[j]);
 					wp.L0 = get<1>(particles[j]);
 					wp.P0 = get<2>(particles[j]);
@@ -461,7 +465,7 @@ double pFilt(int n,
 				particles = normalise(particles, lltemp);
 				//re-sample particles
 				particles = rSamp(particles);
-				ll = ll + llMean;
+				//ll = ll + llMean;
 
 			}
 
@@ -485,8 +489,8 @@ double pFilt(int n,
 		}
 
 		//take random sample at end of resMat
-		//double resNum = rSampMat(resMat);
+		double resNum = rSampMat(resMat);
 
-		return ll;
+		return resNum;
 	
 }

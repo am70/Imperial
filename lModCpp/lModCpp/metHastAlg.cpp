@@ -103,7 +103,7 @@ modParms parmUpdt(modParms prms, string prmName, double propPrm) {
 @param obsDatX observed data
 @param fixedParam fixed parameters
 @return log likelihood value*/
-double llFunc(int particles, modParms prms, obsDatX obsDat, string dFunc, std::vector<int> seeds) {
+double llFunc(int particles, modParms prms, obsDatX obsDat, string dFunc) {
 	vector<double> pfiltRes;
 
 	for (auto j = 0; j != 3; ++j) {
@@ -156,7 +156,6 @@ double llFunc(int particles, modParms prms, obsDatX obsDat, string dFunc, std::v
 			"\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\fitPlots\\test.txt",
 			false,
 			dFunc//density function 
-			,seeds
 		));
 	}
 
@@ -240,7 +239,7 @@ double lprior(modParms prms) {
 
 	//dE = 0.15, dL = 0.269, dP = 1.563
 
-	boost::math::uniform_distribution<double> u8(0.01, 93);//n unif
+	boost::math::uniform_distribution<double> u8(0.01, 40);//n unif
 	res = res + (log(pdf(u8, prms.n)));
 
 
@@ -258,7 +257,7 @@ double lprior(modParms prms) {
 	res = res + (log(pdf(dtau, rint(prms.tau))));
 
 
-	boost::math::uniform_distribution<double> d8(0.001,10);//o
+	boost::math::uniform_distribution<double> d8(0.001,20);//o
 	res = res + (log(pdf(d8, prms.o)));
 
 
@@ -271,15 +270,10 @@ double lprior(modParms prms) {
 
 
 std::vector<int> gen_seeds(int num) {
-	// start by stuffing them into a set to guarantee uniqueness.
 	std::set<int> s;
-
 	std::random_device g;
-
 	while (s.size() < num)
 		s.insert(g());
-
-	// then return them in a vector to give random access:
 	std::vector<int> seeds(s.begin(), s.end());
 	return seeds;
 }
@@ -321,17 +315,17 @@ pMMHres pMMHSampler(
 	double llRatio; //ratio between proposed and current ll
 	modParms prms = initParams;
 	double propPrm; //proposed new parameter
-	int seedIter;
+	//int seedIter;
 
 	if (dFunc != "expNoClumped" && dFunc != "linearNoClumped" && dFunc != "powerNoClumped" && dFunc != "expClumped" && dFunc != "linearClumped" && dFunc != "powerClumped") {
 		cerr << "dFunc must equal correct value: linearNoClumped, powerNoClumped, expNoClumped, linearClumped, powerClumped or expClumped";
 		cin.get();
 	}
 
-	std::vector<int> seedStore = gen_seeds(particles*niter);
-	vector<int> seeds(seedStore.begin(), seedStore.begin() + particles);
+	//std::vector<int> seedStore = gen_seeds(particles*niter);
+	//vector<int> seeds(seedStore.begin(), seedStore.begin() + particles);
 
-	llCur = llFunc(particles, prms, oDat, dFunc, seeds) + lprior(prms); //get value for initial ll
+	llCur = llFunc(particles, prms, oDat, dFunc) + lprior(prms); //get value for initial ll
 	vector<double> acptRcur = acptRs;//current acceptance ratio
 	vector<double> acpts(acptRs.size(), 0.0);//number of acceptances (use acptRs to get correct vector length)
 	vector<int> parmIter(acptRs.size(), 0);//iteration number for specific parameters
@@ -377,9 +371,9 @@ pMMHres pMMHSampler(
 			myfile.open("Q:\\test.csv");
 				myfile << " Mg = " << prms.Mg << endl;*/
 
-			vector<int> seeds(seedStore.begin()+ seedIter, seedStore.begin()+ seedIter + particles);
-			llProp = llFunc(particles, prms, oDat, dFunc, seeds) + lprior(prms);//find log likelihood from particle filter
-			seedIter = seedIter + particles;
+			//vector<int> seeds(seedStore.begin()+ seedIter, seedStore.begin()+ seedIter + particles);
+			llProp = llFunc(particles, prms, oDat, dFunc) + lprior(prms);//find log likelihood from particle filter
+			//seedIter = seedIter + particles;
 
 			//boost::math::normal_distribution<double> curr(get<1>(fitPrms[parmNum]), sdProps[parmNum]);//normal dist for metHast 
 			//boost::math::normal_distribution<double> prp(propPrm, sdProps[parmNum]);//normal dist for metHast 

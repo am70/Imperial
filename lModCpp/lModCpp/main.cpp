@@ -11,7 +11,6 @@
 int main()
 {
 
-
 	
 	//lay eggs into empty system then simulate forwards, but only simulate one generation forward, have eggs, they mature, mating happens, they lay eggs but the eggs they lay don't go further, keep track of how many laid, run few thousand times with set of parameters will give an estimate of Rm.
 	//Same can be done for continuous model - starting position you have single female, one they lay clustered eggs, larvae compete, then you get adults again...can do this for both models.run lots of simulations...
@@ -29,10 +28,10 @@ int main()
 	{ 235,0 },{ 249,1 },{ 263,2 },{ 276,1 },{ 291,0 },{ 304,3 },{ 319,0 },{ 333,4 },{ 347,17 },{ 362,33 },{ 376,110 },{ 390,122 },{ 404,44 },{ 418,48 } ,{ 434,144 },{ 448,139 },{ 462,20 },{ 476,13 } ,{ 490,0 },{ 504,1 },
 	{ 518, 0 }, { 532,0 }, { 546,0 }, { 560,1 }, { 588,0 }, { 602,0 }, { 616,0 }, { 630,1 }, { 644,1 }, { 658,0 }, { 672,2 }, { 686,0 }, { 700,1 }, { 714,1 }, { 728,3 }, { 742,12 }, { 756,39 }, { 770,171 }, { 784,740 }, { 798,544 } , { 812,305 }, { 826,60 }, { 840,3 }, { 854,1 } };
 	garkiDatGam.garki802 = { { 4,9 },{ 18,69 },{ 32,285 },{ 46,66 },{ 60,20 },{ 74,103 },{ 88,67 },{ 102,6 },{ 116,8 },{ 130,3 },{ 144,2 },{ 158,0 },{ 171,2 } ,{ 185,0 },{ 199,0 },{ 212,0 },{ 227,0 },{ 241,0 },
-	{ 255,0 },{ 269,0 },{ 283, 2 },{ 297,0 },{ 311,2 },{ 325,3 },{ 339,2 },{ 353,7 } ,{ 368,39 },{ 382,17 },{ 396,13 },{ 410,13 },{ 424,21 },{ 440,24 },{ 454,12 },{ 468,0 },{ 482,3 },{ 496,0 },{ 510,0 }, { 524,0 }, { 538,0 }, { 552,0 }
-	,{ 566,0 },{ 580,0 },{ 594,0 },{ 608,0 },{ 622,0 },{ 636,0 },{ 650,0 },{663,0},{678,0},{ 692,1 } ,{ 706,4 } ,{ 720,11 },{ 734,6 },{ 748,7 },{ 762,76 },{ 776,221 },{ 790,213 },{ 804,44 },{ 818,35 },{ 832,3 },{ 846,0 } };
+	{ 255,0 },{ 269,0 },{ 283, 2 },{ 297,0 },{ 311,2 },{ 325,3 },{ 339,2 },{ 353,7 } ,{ 368,39 },{ 382,17 },{ 396,13 },{ 410,13 },{ 424,21 },{ 440,24 },{ 454,12 },{ 468,0 },{ 482,3 },{ 496,0 },{ 510,0 }, { 524,0 }, { 538,0 }, { 552,0 },
+	{ 566,0 },{ 580,0 },{ 594,0 },{ 608,0 },{ 622,0 },{ 636,0 },{ 650,0 },{663,0},{678,0},{ 692,1 } ,{ 706,4 } ,{ 720,11 },{ 734,6 },{ 748,7 },{ 762,76 },{ 776,221 },{ 790,213 },{ 804,44 },{ 818,35 },{ 832,3 },{ 846,0 } };
 	garkiDatGam.garki801 = { { 4,8 },{ 18,36 },{ 32,249 },{ 46,118 },{ 60,69 },{ 74,250 },{ 88,93 },{ 102,68 },{ 116,24 },{ 130,11 },{ 144,5 },{ 158,0 } ,{ 171,0 } ,{ 185,0 },{ 199,0 },{ 212,0 },{ 227,0 },{ 241,0 },
-	{ 255,0 },{ 269,1 },{ 283, 1 },{ 297,1 },{ 311,0 },{ 325,3 },{ 339,5 },{ 353,6 } ,{ 368,83 },{ 382,23 },{ 396,24 },{ 410,41 },{ 424,61 },{ 440,63 },{ 454,14 },{ 468,5 },{ 482,4 },{ 496,0 },{ 510,0 }, { 524,0 }, { 538,1 }, { 552,0 }
+	{ 255,0 },{ 269,1 },{ 283, 1 },{ 297,1 },{ 311,0 },{ 325,3 },{ 339,5 },{ 353,6 } ,{ 368,83 },{ 382,23 },{ 396,24 },{ 410,41 },{ 424,61 },{ 440,63 },{ 454,14 },{ 468,5 },{ 482,4 },{ 496,0 },{ 510,0 }, { 524,0 }, { 538,1 }, { 552,0 } 
 	,{ 566,0 },{ 580,0 },{ 594,0 },{ 608,0 },{ 622,0 },{ 636,0 },{ 650,0 },{ 663,0 },{ 678,1 },{ 692,1 } ,{ 706,3 } ,{ 720,8 },{ 734,24 },{ 748,25 },{ 762,175 },{ 776,221 },{ 790,777 },{ 804,329 },{ 818,167 },{ 832,21 },{ 846,1 } };
 		
 
@@ -63,8 +62,8 @@ int main()
 
 		//Read in pMCMC options from text file to enable multiple instances to run on the cluster with differing setups
 		pmcmcOptions pmcmcOpt;
-		pmcmcOpt = optionsReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\x64\\expClumpedLong\\paramOptions.txt", pmcmcOpt);//read in pMCMC options
-		string outputFolder = pmcmcOpt.outputFolder; //output folder for results
+		pmcmcOpt = optionsReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\x64\\expNoClumpLong\\paramOptions.txt", pmcmcOpt);//read in pMCMC options
+		string outputFolder ="tempResults"; //output folder for results
 		string dFunc = pmcmcOpt.dFunc; //Which density/egg laying functions to use: "expClumped", "linearClumped","powerClumped","expNoClumped", "linearNoClumped" or "powerNoClumped"
 
 		string initParamsLoc = pmcmcOpt.initParamsLoc; //location of initial parameter values - taken from previous pMCMC run and found in pMCMC options text file
@@ -78,13 +77,13 @@ int main()
 		pMMHres results = pMMHSampler(
 			initParms,//initial parameters
 			dFunc,//density function to use: "expClumped", "linearClumped","powerClumped","expNoClumped", "linearNoClumped" or "powerNoClumped"
-			sdProps,//initial sd for param proposals
+			sdProps2,//initial sd for param proposals
 			acptRs,//acceptance ratios
 			fitPrms,//tuple of initial parm values plus names - needed as no reflection...
 			maxSdProps,//max sd for each parameter proposal in tuner
-		500000,//iterations
+			100,//iterations
 			pmcmcOpt.particles,//particles
-			pmcmcOpt.nburn,//nburn 
+			10,//nburn 
 			pmcmcOpt.monitoring,//monitoring
 			pmcmcOpt.startAdapt,//start adapt
 			pmcmcOpt.tell,//tell

@@ -1,6 +1,6 @@
 #include "lModH.h"
 
-vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937 rd, string dFunc) {
+vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937_64 rd, string dFunc) {
 
 	int t = parmsx.startTime;
 	int time = parmsx.endTime;

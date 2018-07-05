@@ -73,8 +73,8 @@ int binom(int n, double p, boost::mt19937 rd);
 luint rpois(luint lambda, boost::mt19937 rd);
 double lbeta(double a, double b);
 double betaBinom(double k, double n, double p, double w);
-vector<tuple<int, int, int, int,double>> mPmod(modParms, boost::mt19937 rd, string dFunc);
-tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt19937 rd, string dFunc);
+vector<tuple<int, int, int, int,double>> mPmod(modParms, boost::mt19937_64 rd, string dFunc);
+tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt19937_64 rd, string dFunc);
 double llFunc(int particles, modParms prms, obsDatX obsDat, string dFunc);
 double dbinom(double k, double n, double p);
 double nB(double k, double n, double r, double p);
@@ -86,8 +86,7 @@ double pFilt(int n,
 	bool resM,
 	string outputFile,
 	bool reff,
-	string dFunc,
-	std::vector<int>
+	string dFunc
 );
 
 //istate
