@@ -40,7 +40,7 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 		double rFsum;
 		double n;
 
-		if (dFunc == "powerNoClumped" || dFunc == "expNoClumped" || dFunc == "linearNoClumped") {
+		if (dFunc == "powerNoClumped" || dFunc == "expNoClumped" || dFunc == "linearNoClumped" ||"logisticNoClumped") {
 			 n = iParms.n * (exp(S*uM) - 1) / uM;
 		}
 		else  n = iParms.n;
@@ -385,10 +385,16 @@ double pFilt(int n,
 			wp.rF = prms.rF;
 			wp.Mg = prms.Mg;
 			wp.p = prms.p;
+			wp.lK = prms.lK;
+
 			if (dFunc == "expNoClumped" || dFunc == "linearNoClumped" || dFunc == "expClumped" || dFunc == "linearClumped")
 				wp.o = 1;
 			else
 				wp.o = prms.o;
+
+			//if (dFunc != "logisticClumped" || "logisticNoClumped")
+				//wp.lK == 0;
+
 			wp.tau = prms.tau;
 
 			wp.startTime = times.at(i);
@@ -422,7 +428,7 @@ double pFilt(int n,
 				}
 
 				double llMean = lltemp / boost::size(particles);
-				//ll = ll + llMean;//add start val for frst obs point
+				ll = ll + llMean;//add start val for frst obs point
 				//normalise particle probabilities
 				particles = normalise(particles, lltemp);
 				//re-sample particles
@@ -465,7 +471,7 @@ double pFilt(int n,
 				particles = normalise(particles, lltemp);
 				//re-sample particles
 				particles = rSamp(particles);
-				//ll = ll + llMean;
+				ll = ll + llMean;
 
 			}
 
@@ -489,7 +495,8 @@ double pFilt(int n,
 		}
 
 		//take random sample at end of resMat
-		double resNum = rSampMat(resMat);
+		double resNum = ll;//rSampMat(resMat);
+		cout << "ll = " << ll;
 
 		return resNum;
 	

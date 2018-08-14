@@ -39,6 +39,7 @@ vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937_6
 	double Mg = parmsx.Mg;
 	double uEn;
 	double uLn;
+	double lK = parmsx.lK;
 	vector<double> rF = parmsx.rF;
 	vector<tuple<int, int, int, int,double>> r;
 
@@ -54,11 +55,14 @@ vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937_6
 			K =  ((sf*((1 / trx)*rFsum)));
 		}
 
+		// K = K+-lK*pow(K,2);
+
+
 		//((sf*(1 / (trx*(1 - exp(-time / trx))))*rFsum)); exp rainfall carrying cap
 
 	
 	
-		if (dFunc == "powerNoClumped" || dFunc == "linearNoClumped" || dFunc == "powerClumped" || dFunc == "linearClumped") {
+		if (dFunc == "powerNoClumped" || dFunc == "linearNoClumped" || dFunc == "powerClumped" || dFunc == "linearClumped" || dFunc == "logisticClumped"|| dFunc == "logisticNoClumped") {
 			uE = uoE * (1 + pow(((E + L) / (K)), o));
 			uL = uoL * (1 + (Y*pow(((E + L) / (K)), o)));
 			 uEn = uoE * (1 + pow(((n) / (K)), o));
@@ -116,7 +120,7 @@ vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937_6
 			else Bm = 0;
 
 
-			if (dFunc == "expClumped"|| dFunc == "linearClumped"|| dFunc == "powerClumped") {
+			if (dFunc == "expClumped"|| dFunc == "linearClumped"|| dFunc == "powerClumped" || dFunc == "logisticClumped") {
 				if (M >= 1) {
 					boost::binomial_distribution<int> distributionNt(M, (dt / S));
 					nt = distributionNt(rd);
@@ -165,7 +169,7 @@ vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937_6
 		if (M < 1)
 			M = 1;
 
-		if (dFunc == "expClumped" || dFunc == "linearClumped" || dFunc == "powerClumped") {
+		if (dFunc == "expClumped" || dFunc == "linearClumped" || dFunc == "powerClumped" || dFunc == "logisticClumped") {
 			rEff = 0.5*((n) / (exp(uM*S) - 1))*(1 / (1 + uE / dE))*(1 / (1 + uL / dL))*(1 / (1 + (uP) / dP));
 
 		} else { 

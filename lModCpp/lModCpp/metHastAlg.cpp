@@ -3,13 +3,13 @@
 boost::mt19937 rng(std::time(0));
 
 
-vector<double> rainfall_05 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf05.txt", 0.25);
-vector<double> rainfall_07 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf07.txt", 0.25);
-vector<double> rainfall_08 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf08.txt", 0.25);
-vector<double> rainfall_04 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf04.txt", 0.25);
-vector<double> rainfall_02 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf02.txt", 0.25);
-vector<double> rainfall_01 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf01.txt", 0.25);
-vector<double> rainfall_03 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf03.txt", 0.25);
+vector<double> rainfall_05 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf05.txt", 0.1);
+vector<double> rainfall_07 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf07.txt", 0.1);
+vector<double> rainfall_08 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf08.txt", 0.1);
+vector<double> rainfall_04 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf04.txt", 0.1);
+vector<double> rainfall_02 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf02.txt", 0.1);
+vector<double> rainfall_01 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf01.txt", 0.1);
+vector<double> rainfall_03 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf03.txt", 0.1);
 
 
 
@@ -62,6 +62,10 @@ modParms parmUpdt(modParms prms, string prmName, double propPrm) {
 		prms.z5 = propPrm;
 	if (prmName == "z6")
 		prms.z6 = propPrm;
+	if (prmName == "z7")
+		prms.z7 = propPrm;
+	if (prmName == "z8")
+		prms.z8 = propPrm;
 	if (prmName == "w")
 		prms.w = propPrm;
 	if (prmName == "sf1")
@@ -76,6 +80,10 @@ modParms parmUpdt(modParms prms, string prmName, double propPrm) {
 		prms.sf5 = propPrm;
 	if (prmName == "sf6")
 		prms.sf6 = propPrm;
+	if (prmName == "sf7")
+		prms.sf7 = propPrm;
+	if (prmName == "sf8")
+		prms.sf8 = propPrm;
 	if (prmName == "n")
 		prms.n = propPrm;
 	if (prmName == "dE")
@@ -94,6 +102,8 @@ modParms parmUpdt(modParms prms, string prmName, double propPrm) {
 		prms.p = propPrm;
 	if (prmName == "tau")
 		prms.tau = propPrm;
+	if (prmName == "lK")
+		prms.lK = propPrm;
 	return prms;
 }
 
@@ -106,45 +116,57 @@ modParms parmUpdt(modParms prms, string prmName, double propPrm) {
 double llFunc(int particles, modParms prms, obsDatX obsDat, string dFunc) {
 	vector<double> pfiltRes;
 
-	for (auto j = 0; j != 3; ++j) {
+	for (auto j = 0; j != 8; ++j) {
 
 		vector<tuple<int, int>> oDat;
-		//if (j == 0) {
-		//	oDat = obsDat.garki408;
-		//	prms.sf = pow(10, prms.sf1);
-		//	prms.z = pow(10, prms.z1);
-		//	prms.rF = rainfall_03;
+		if (j == 0) {
+			oDat = obsDat.garki408;
+			prms.sf = pow(10, prms.sf1);
+			prms.z = pow(10, prms.z1);
+			prms.rF = rainfall_03;
 
-		//}
-		//else if (j == 1) {
-		//	oDat = obsDat.garki154;
-		//	prms.sf = pow(10, prms.sf2);
-		//	prms.z = pow(10, prms.z2);
-		//	prms.rF = rainfall_05;
-		//}
-		// if (j == 0) {
-		//	oDat = obsDat.garki408;
-		//	prms.sf = pow(10, prms.sf3);
-		//	prms.z = pow(10, prms.z3);
-		//	prms.rF = rainfall_03;
-		//}
-		 if (j == 0) {
+		}
+		else if (j == 1) {
+			oDat = obsDat.garki154;
+			prms.sf = pow(10, prms.sf2);
+			prms.z = pow(10, prms.z2);
+			prms.rF = rainfall_05;
+		}
+		else if (j == 2) {
 			oDat = obsDat.garki801;
+			prms.sf = pow(10, prms.sf3);
+			prms.z = pow(10, prms.z3);
+			prms.rF = rainfall_01;
+		}
+		else if (j == 3) {
+			oDat = obsDat.garki802;
 			prms.sf = pow(10, prms.sf4);
 			prms.z = pow(10, prms.z4);
 			prms.rF = rainfall_01;
 		}
-		else if (j == 1) {
+		else if (j == 4) {
 			oDat = obsDat.garki553;
 			prms.sf = pow(10, prms.sf5);
 			prms.z = pow(10, prms.z5);
 			prms.rF = rainfall_02;
 		}
-		else if (j == 2) {
-			oDat = obsDat.garki802;
+		else if (j == 5) {
+			oDat = obsDat.garki801_2;
 			prms.sf = pow(10, prms.sf6);
 			prms.z = pow(10, prms.z6);
 			prms.rF = rainfall_01;
+		}
+		else if (j == 6) {
+			oDat = obsDat.garki802_2;
+			prms.sf = pow(10, prms.sf7);
+			prms.z = pow(10, prms.z7);
+			prms.rF = rainfall_01;
+		}
+		else if (j == 7) {
+			oDat = obsDat.garki553_2;
+			prms.sf = pow(10, prms.sf8);
+			prms.z = pow(10, prms.z8);
+			prms.rF = rainfall_02;
 		}
 
 		//run particle filter
@@ -207,12 +229,14 @@ double lprior(modParms prms) {
 	//boost::math::uniform_distribution<double> u5(0.000001, 1);//w unif
 	//res = res + (log(pdf(u5, prms.w)));
 	
-	boost::math::uniform_distribution<double> u61(1, 15);//z1 unif
-	boost::math::uniform_distribution<double> u62(1, 15);//z2 unif
+	boost::math::uniform_distribution<double> u61(1, 10);//z1 unif
+	boost::math::uniform_distribution<double> u62(1, 10);//z2 unif
 	boost::math::uniform_distribution<double> u63(1, 10);//z3 unif
-	boost::math::uniform_distribution<double> u64(1, 15);//z4 unif
+	boost::math::uniform_distribution<double> u64(1, 10);//z4 unif
 	boost::math::uniform_distribution<double> u65(1, 10);//z5 unif
-	boost::math::uniform_distribution<double> u66(1, 15);//z6 unif
+	boost::math::uniform_distribution<double> u66(1, 10);//z6 unif
+	boost::math::uniform_distribution<double> u67(1, 10);//z7 unif
+	boost::math::uniform_distribution<double> u68(1, 10);//z8 unif
 
 	res = res + (log(pdf(u61, prms.z1)));
 	res = res + (log(pdf(u62, prms.z2)));
@@ -220,7 +244,8 @@ double lprior(modParms prms) {
 	res = res + (log(pdf(u64, prms.z4)));
 	res = res + (log(pdf(u65, prms.z5)));
 	res = res + (log(pdf(u66, prms.z6)));
-
+	res = res + (log(pdf(u65, prms.z7)));
+	res = res + (log(pdf(u66, prms.z8)));
 
 
 	boost::math::uniform_distribution<double> u71(1, 10);//sf1 unif
@@ -229,6 +254,8 @@ double lprior(modParms prms) {
 	boost::math::uniform_distribution<double> u74(1, 10);//sf4 unif
 	boost::math::uniform_distribution<double> u75(1, 10);//sf5 unif
 	boost::math::uniform_distribution<double> u76(1, 10);//sf6 unif
+	boost::math::uniform_distribution<double> u77(1, 10);//sf7 unif
+	boost::math::uniform_distribution<double> u78(1, 10);//sf8 unif
 
 	res = res + (log(pdf(u71, prms.sf1)));
 	res = res + (log(pdf(u72, prms.sf2)));
@@ -236,13 +263,13 @@ double lprior(modParms prms) {
 	res = res + (log(pdf(u74, prms.sf4)));
 	res = res + (log(pdf(u75, prms.sf5)));
 	res = res + (log(pdf(u76, prms.sf6)));
+	res = res + (log(pdf(u77, prms.sf7)));
+	res = res + (log(pdf(u78, prms.sf8)));
 
 	//dE = 0.15, dL = 0.269, dP = 1.563
 
 	boost::math::uniform_distribution<double> u8(0.01, 40);//n unif
 	res = res + (log(pdf(u8, prms.n)));
-
-
 
 	boost::math::normal_distribution<double> d5(0.150602, 0.04);//dE
 	res = res + (log(pdf(d5, prms.dE)));
@@ -263,6 +290,10 @@ double lprior(modParms prms) {
 
 	boost::math::uniform_distribution<double> mm(1, 10);//mg
 	res = res + (log(pdf(mm, prms.Mg)));
+
+
+	boost::math::uniform_distribution<double> lk(0.0000001, 1);//mg
+	res = res + (log(pdf(lk, prms.lK)));
 
 	return(res);
 }
@@ -317,7 +348,7 @@ pMMHres pMMHSampler(
 	double propPrm; //proposed new parameter
 	//int seedIter;
 
-	if (dFunc != "expNoClumped" && dFunc != "linearNoClumped" && dFunc != "powerNoClumped" && dFunc != "expClumped" && dFunc != "linearClumped" && dFunc != "powerClumped") {
+	if (dFunc != "expNoClumped" && dFunc != "linearNoClumped" && dFunc != "powerNoClumped" && dFunc != "expClumped" && dFunc != "linearClumped" && dFunc != "powerClumped" && dFunc != "logisticClumped" && dFunc != "logisticNoClumped") {
 		cerr << "dFunc must equal correct value: linearNoClumped, powerNoClumped, expNoClumped, linearClumped, powerClumped or expClumped";
 		cin.get();
 	}
@@ -346,9 +377,9 @@ pMMHres pMMHSampler(
 				cout << endl << "||-----------------------||" << dFunc << "||-----------------------||" << endl;
 				cout << "iteration " << iter << " of " << niter << endl;
 				cout << " uoE = " << prms.uoE << " uoL = " << prms.uoL << " uP = " << prms.uP << " uM = " << prms.uM << " Y = " << prms.Y << " w = " << prms.w << " n = " << prms.n << " z1 = " << prms.z1 << endl
-					<< " z2 = " << prms.z2 << " z3 = " << prms.z3
-					<< " z4 = " << prms.z4 << " z5 = " << prms.z5 << " z6 = " << prms.z6 << " sf1 = " << prms.sf1 << " sf2 = " << prms.sf2 << " sf3 = " << prms.sf3 << " sf4 = " << prms.sf4 << " sf5 = " << prms.sf5 << " sf6 = " << prms.sf6
-					<< "dE = " << prms.dE << " dL = " << prms.dL << " dP = " << prms.dP << " o = " << prms.o << " Mg = " << prms.Mg << " p = " << prms.p << " tau = " << prms.tau << endl;
+					<< " z2 = " << prms.z2 << " z3 = " << prms.z3 << " z4 = " << prms.z4 << " z5 = " << prms.z5 << " z6 = " << prms.z6 << " z7 = " << prms.z7 << " z8 = " << prms.z8
+					<< " sf1 = " << prms.sf1 << " sf2 = " << prms.sf2 << " sf3 = " << prms.sf3 << " sf4 = " << prms.sf4 << " sf5 = " << prms.sf5 << " sf6 = " << prms.sf6 << " sf7 = " << prms.sf7 << " sf8 = " << prms.sf8
+					<< "dE = " << prms.dE << " dL = " << prms.dL << " dP = " << prms.dP << " o = " << prms.o << " Mg = " << prms.Mg << " p = " << prms.p << " tau = " << prms.tau << " lK = " << prms.lK << endl;
 				cout << "||---------aratio--------||" << endl;
 
 
@@ -420,18 +451,20 @@ pMMHres pMMHSampler(
 				results.z1.emplace_back(prms.z1);
 				results.z2.emplace_back(prms.z2);
 				results.z3.emplace_back(prms.z3);
-
 				results.z4.emplace_back(prms.z4);
 				results.z5.emplace_back(prms.z5);
 				results.z6.emplace_back(prms.z6);
+				results.z7.emplace_back(prms.z7);
+				results.z8.emplace_back(prms.z8);
 
 				results.sf1.emplace_back(prms.sf1);
 				results.sf2.emplace_back(prms.sf2);
 				results.sf3.emplace_back(prms.sf3);
-
 				results.sf4.emplace_back(prms.sf4);
 				results.sf5.emplace_back(prms.sf5);
 				results.sf6.emplace_back(prms.sf6);
+				results.sf7.emplace_back(prms.sf7);
+				results.sf8.emplace_back(prms.sf8);
 
 				results.dE.emplace_back(prms.dE);
 				results.dL.emplace_back(prms.dL);
@@ -440,6 +473,7 @@ pMMHres pMMHSampler(
 				results.Mg.emplace_back(prms.Mg);
 				results.p.emplace_back(prms.p);
 				results.tau.emplace_back(prms.tau);
+				results.lK.emplace_back(prms.lK);
 
 
 				results.ll.emplace_back(llCur);
@@ -456,7 +490,11 @@ pMMHres pMMHSampler(
 		}
 		else {
 			parmNum++;
+			if (parmNum >= boost::size(sdProps)) {
+				parmNum = 0;
+			}
 			parmIter[parmNum]++;
+
 		}
 
 	}
