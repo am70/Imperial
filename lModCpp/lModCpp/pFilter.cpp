@@ -10,7 +10,7 @@ double m_pi = 3.14159265358979323846;
 @param prms model parameters
 @fxdParams fixed parameter (currently just for n in mosParamsP) - maybe update for multiple fixed parameters
 @return conditions for E, L, P and M, double is empty for addition of weight later. */
-vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParms, string dFunc) {
+vector<tuple<double, double, double, double, double>> iState(int N, int time, modParms iParms, string dFunc) {
 	try {
 		double z = iParms.z;
 		double dE = iParms.dE;
@@ -28,33 +28,32 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 		double K;
 		double uE;
 		double uL;
-		int E;
+		double E;
 		double L;
-		int P;
-		int M;
+		double P;
+		double M;
 		double t = iParms.startTime;
 		double a;
 		double Mg = iParms.Mg;
 		//int t = iParms.startTime;
 		double trx = rint(iParms.tau / iParms.dt);
 		double rFsum;
-		double n;
-
-		if (dFunc == "powerNoClumped" || dFunc == "expNoClumped" || dFunc == "linearNoClumped" ||"logisticNoClumped") {
-			 n = iParms.n * (exp(S*uM) - 1) / uM;
-		}
-		else  n = iParms.n;
+		double n = iParms.n;
+		
 
 
+		if (dFunc == "powerNoClumped" || dFunc == "expNoClumped" || dFunc == "linearNoClumped" || dFunc == "logisticNoClumped") n = iParms.n * (exp(S*uM) - 1) / uM;
+		
 
 		if (t <= trx) {
-			rFsum = std::accumulate(rF.begin(), rF.begin() + t, 0);
-			K = ((sf*((1 / t)*rFsum)));
+			rFsum = std::accumulate(rF.begin(), rF.begin() + (t - 1), 0.0);
+			K = ((sf*(1 / (trx*(1 - exp(-time / trx))))*rFsum));
 		}
 		else {
-			rFsum = std::accumulate(rF.begin() + (t - trx), rF.begin() + t, 0);
-			K = ((sf*((1 / trx)*rFsum)));
+			rFsum = std::accumulate(rF.begin() + ((t - 1) - trx), rF.begin() + (t - 1), 0.0);//t-1 at begining as c++ starts on 0
+			K = ((sf*(1 / (trx*(1 - exp(-time / trx))))*rFsum));
 		}
+
 		//exp carrying cap
 		if (dFunc == "expNoClumped" || dFunc == "expClumped") {
 			a = (0.5 * dL*dP) / (uM*(dP + uP));
@@ -68,10 +67,10 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 		}
 		else {
 			//power carrying cap
-			a = ((n / S) * dP * dL) / ((2 * uM) * (uP * dP));
-			double	b = (UoE / (y * UoL)) * (dL + UoL) - dE - UoE;
-			double	c = -(UoE * dE) / (UoL * y);
-			double	x = (-b + sqrt(pow(b, 2) * -4 * a * c)) / (2 * a);
+			a = ((n / S) * dP * dL) / ((2 * uM) * (uP + dP));
+			double b = (UoE / (y * UoL)) * (dL + UoL) - dE - UoE;
+			double c = -(UoE * dE) / (UoL * y);
+			double x = (-b + sqrt(pow(b, 2) - 4 * a * c)) / (2 * a);
 
 			L = z;
 			E = round(L / x);
@@ -90,12 +89,12 @@ vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParm
 		//P = rint(2 * dP*uM*M);
 
 		if (Mg > 1) {
-			boost::poisson_distribution<long unsigned int> distributionRp2(rint(Mg));
+			boost::poisson_distribution<long unsigned int> distributionRp2(round(Mg));
 			M = M + distributionRp2(mrand);
 		}
 		if (M < 1)
 			M = 1;
-		vector<tuple<int, int, int, int, double>> states = { { E, L, P, M ,0.0 } };
+		vector<tuple<double, double, double, double, double>> states = { { E, L, P, M ,0.0 } };
 		states.resize(N, { E, L, P, M, 0.0 });//return initial states, repeated to number of particles
 		return states;
 	}
@@ -194,17 +193,20 @@ double dbinom(double k, double n, double p) {
 @return log likelihood*/
 double betaBinom(double k, double n, double p, double w) {
 	try {
-		//n = n + 10;
+		n = n;
 		if (n >= k) {
-			if (k <= 0) k = 1;
-			if (k == n) n = n + 1;
-			double a = p * ((1 / w) - 1);
-			double b = (1 - p) * ((1 / w) - 1);
-			double logn = log(n);
-			double logk = log(k);
-			double lognk = log(n - k);
-			double res = lbeta(k + a, n - k + b) - lbeta(a, b) + boost::math::lgamma(n + 1) - (boost::math::lgamma(k + 1) + boost::math::lgamma(n - k + 1));
-			return res;
+			if (n <= 0) return -1000;
+			else {
+				if (k <= 0) k = 1;
+				if (k == n) n = n + 1;
+				double a = p * ((1 / w) - 1);
+				double b = (1 - p) * ((1 / w) - 1);
+				double logn = log(n);
+				double logk = log(k);
+				double lognk = log(n - k);
+				double res = lbeta(k + a, n - k + b) - lbeta(a, b) + boost::math::lgamma(n + 1) - (boost::math::lgamma(k + 1) + boost::math::lgamma(n - k + 1));
+				return res;
+			}
 		}
 		else return -1000;
 	}
@@ -219,8 +221,8 @@ double betaBinom(double k, double n, double p, double w) {
 @param obsData, observed data for calculating likelihood value
 @return tuple containing state ints for E, L, P, M and likelihood (non-log), at the end of 
 a model run with designated start and end times*/
-tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt19937_64 rd, string dFunc) {
-	vector<tuple<int, int, int, int,double>> modRun;
+tuple<double, double, double, double, double> modStepFnc(modParms wp, int obsData, boost::mt19937_64 rd, string dFunc) {
+	vector<tuple<double, double, double, double,double>> modRun;
 	modRun.reserve(wp.endTime - wp.startTime);
 	double weight; 
 	try {
@@ -231,7 +233,7 @@ tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt
 	}
 	double sim = get<3>(modRun.back());
 	weight = betaBinom(obsData, sim, wp.p,wp.w); //add weights to tuple
-	tuple<int, int, int, int, double> res = { get<0>(modRun.back()),get<1>(modRun.back()),get<2>(modRun.back()),get<3>(modRun.back()), weight};
+	tuple<double, double, double, double, double> res = { get<0>(modRun.back()),get<1>(modRun.back()),get<2>(modRun.back()),get<3>(modRun.back()), weight};
 	return res;
 }
 
@@ -240,8 +242,8 @@ tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt
 @param obsData, observed data for calculating likelihood value
 @return tuple containing state ints for E, L, P, M and likelihood, at the end of
 a model run with designated start and end times*/
-vector<tuple<int, int, int, int, double,double>> modStepFncPlot(modParms wp, int obsData, boost::mt19937_64 rd, string dFunc) {
-	vector<tuple<int, int, int, int,double>> modRun;
+vector<tuple<double, double, double, double, double,double>> modStepFncPlot(modParms wp, int obsData, boost::mt19937_64 rd, string dFunc) {
+	vector<tuple<double, double, double, double,double>> modRun;
 	modRun.reserve(wp.endTime - wp.startTime);
 	double weight;
 	
@@ -254,8 +256,8 @@ vector<tuple<int, int, int, int, double,double>> modStepFncPlot(modParms wp, int
 	
 	double sim = get<3>(modRun.back());
 	weight = betaBinom(obsData, sim,wp.p,wp.w);//add weights to tuple
-	tuple<int, int, int, int, double,double> res;
-	vector<tuple<int, int, int, int, double,double>> res2;
+	tuple<double, double, double, double, double,double> res;
+	vector<tuple<double, double, double, double, double,double>> res2;
 
 	for (int j = 0; j < boost::size(modRun); j++) {
 		res = { get<0>(modRun[j]),get<1>(modRun[j]),get<2>(modRun[j]),get<3>(modRun[j]), weight,get<4>(modRun[j])};
@@ -269,8 +271,8 @@ vector<tuple<int, int, int, int, double,double>> modStepFncPlot(modParms wp, int
 /*rand particle sample function
 @param samp vector of tuples containing particles E,L,M,P
 @return resamped particles*/
-vector<tuple<int, int, int, int, double>> rSamp(vector<std::tuple<int, int, int, int, double>>& samp) {
-	vector<std::tuple<int, int, int, int, double>> temp;
+vector<tuple<double, double, double, double, double>> rSamp(vector<std::tuple<double, double, double, double, double>>& samp) {
+	vector<std::tuple<double, double, double, double, double>> temp;
 	vector<double> w;// weights
 	for (auto&& i : samp)
 		w.push_back(get<4>(i)); // get weights
@@ -301,7 +303,7 @@ double rSampMat(vector<vector<double>> vP) {
 /*normalise weights
 @param particles vector of tuples for particles
 @param llsum current sum of log likelihoods in particles*/
-vector<tuple<int, int, int, int, double>> normalise(vector<tuple<int, int, int, int, double>> particles, double llSum) {
+vector<tuple<double, double, double, double, double>> normalise(vector<tuple<double, double, double, double, double>> particles, double llSum) {
 	const auto pComp = [](const auto& lhs, const auto& rhs)
 	{ return get<4>(lhs) < get<4>(rhs);};
 	const double maxVal = get<4>(*std::max_element(particles.begin(), particles.end(), pComp));
@@ -345,7 +347,7 @@ double pFilt(int n,
 		vector<int> times;
 		double ll; //log likelihood value
 		modParms wp;
-		vector<tuple<int, int, int, int, double>>  particles;
+		vector<tuple<double, double, double, double, double>>  particles;
 		particles.reserve(n);
 		vector<double> modPlotRes;
 		vector<double> modPlot;
@@ -386,6 +388,9 @@ double pFilt(int n,
 			wp.Mg = prms.Mg;
 			wp.p = prms.p;
 			wp.lK = prms.lK;
+			wp.lKs = prms.lKs;
+			wp.lKm = prms.lKm;
+
 
 			if (dFunc == "expNoClumped" || dFunc == "linearNoClumped" || dFunc == "expClumped" || dFunc == "linearClumped")
 				wp.o = 1;
@@ -438,7 +443,7 @@ double pFilt(int n,
 
 			//alternative loop for getting plot outputs from particle filter - could be coded better...
 			if (resM == true) {
-				vector < tuple<int, int, int, int, double, double>> plotRes;
+				vector < tuple<double, double, double, double, double, double>> plotRes;
 				plotResTemp.clear();
 				plotResTemp.resize(wp.endTime - wp.startTime);
 				plotResTempReff.clear();
@@ -495,8 +500,7 @@ double pFilt(int n,
 		}
 
 		//take random sample at end of resMat
-		double resNum = ll;//rSampMat(resMat);
-		cout << "ll = " << ll;
+		double resNum = ll;// rSampMat(resMat);
 
 		return resNum;
 	

@@ -113,6 +113,8 @@ modParms initParamsReader(string initParamsTxtFile, modParms initParams) {
 			if (parameter == "initParms.Mg") initParams.Mg = stod(value);
 			if (parameter == "initParms.p") initParams.p = stod(value);
 			if (parameter == "initParms.lK") initParams.lK = stod(value);
+			if (parameter == "initParms.lKs") initParams.lKs = stod(value);
+			if (parameter == "initParms.lKm") initParams.lKm = stod(value);
 
 
 		}
@@ -212,6 +214,8 @@ void pFitFunc(int particles, pMMHres results, obsDatX obsDat, modParms prms, str
 	prms.p = medianFnc(results.p);
 	prms.tau = medianFnc(results.tau);
 	prms.lK = medianFnc(results.lK);
+	prms.lKs = medianFnc(results.lKs);
+	prms.lKm = medianFnc(results.lKm);
 
 
 
@@ -300,7 +304,8 @@ void pFitFunc(int particles, pMMHres results, obsDatX obsDat, modParms prms, str
 	myfile << "initParms.uoE = " << prms.uoE << endl << "initParms.uoL  = " << prms.uoL << endl << " initParms.uP = " << prms.uP << endl << "initParms.Y = " << prms.Y << endl << "initParms.w = " << prms.w << endl
 		<< "initParms.n = " << prms.n << endl << "initParms.z1 = " << prms.z1 << endl << "initParms.z2 = " << prms.z2 << endl << "initParms.z3 = " << prms.z3 << endl << "initParms.z4 = " << prms.z4 << endl << "initParms.z5 = " << prms.z5 << endl << "initParms.z6 = " << prms.z6 << endl << "initParms.z7 = " << prms.z7 << endl << "initParms.z8 = " << prms.z8 << endl
 		<< "initParms.sf1 = " << prms.sf1 << endl << "initParms.sf2 = " << prms.sf2 << endl << "initParms.sf3 = " << prms.sf3 << endl << "initParms.sf4 = " << prms.sf4 << endl << "initParms.sf5 = " << prms.sf5 << endl << "initParms.sf6 = " << prms.sf6 << endl << endl << "initParms.sf7 = " << prms.sf7 << endl << endl << "initParms.sf8 = " << prms.sf8 << endl <<
-		"initParms.dE = " << prms.dE << endl << "initParms.dL = " << prms.dL << endl << "initParms.dP = " << prms.dP << endl << "initParms.o = " << prms.o << endl << "initParms.tau = " << prms.tau << endl << "initParms.uM = " << prms.uM << endl << "initParms.Mg = " << prms.Mg << endl << "initParms.p = " << prms.p << endl << "initParms.lK = " << prms.lK << endl;
+		"initParms.dE = " << prms.dE << endl << "initParms.dL = " << prms.dL << endl << "initParms.dP = " << prms.dP << endl << "initParms.o = " << prms.o << endl << "initParms.tau = " << prms.tau << endl << "initParms.uM = " << prms.uM << endl << "initParms.Mg = " << prms.Mg << endl << "initParms.p = " << prms.p << endl << "initParms.lK = " << prms.lK << endl
+		<< "initParms.lKs = " << prms.lKs << endl << "initParms.lKm = " << prms.lKm << endl;
 
 	orgFile.append("\\endParms.txt");
 	ofstream myfile2;
@@ -308,7 +313,8 @@ void pFitFunc(int particles, pMMHres results, obsDatX obsDat, modParms prms, str
 	myfile2 << "initParms.uoE = " << prms.uoE << endl << "initParms.uoL  = " << prms.uoL << endl << " initParms.uP = " << prms.uP << endl << "initParms.Y = " << prms.Y << endl << "initParms.w = " << prms.w << endl
 		<< "initParms.n = " << prms.n << endl << "initParms.z1 = " << prms.z1 << endl << "initParms.z2 = " << prms.z2 << endl << "initParms.z3 = " << prms.z3 << endl << "initParms.z4 = " << prms.z4 << endl << "initParms.z5 = " << prms.z5 << endl << "initParms.z6 = " << prms.z6 << endl << "initParms.z7 = " << prms.z7 << endl << "initParms.z8 = " << prms.z8 << endl
 		<< "initParms.sf1 = " << prms.sf1 << endl << "initParms.sf2 = " << prms.sf2 << endl << "initParms.sf3 = " << prms.sf3 << endl << "initParms.sf4 = " << prms.sf4 << endl << "initParms.sf5 = " << prms.sf5 << endl << "initParms.sf6 = " << prms.sf6 << endl << "initParms.sf7 = " << prms.sf7 << endl << endl << "initParms.sf8 = " << prms.sf8 << endl <<
-		"initParms.dE = " << prms.dE << endl << "initParms.dL = " << prms.dL << endl << "initParms.dP = " << prms.dP << endl << "initParms.o = " << prms.o << endl << "initParms.tau = " << prms.tau << endl << "initParms.uM = " << prms.uM << endl << "initParms.Mg = " << prms.Mg << endl << "initParms.p = " << prms.p << endl << "initParms.lK = " << prms.lK << endl;
+		"initParms.dE = " << prms.dE << endl << "initParms.dL = " << prms.dL << endl << "initParms.dP = " << prms.dP << endl << "initParms.o = " << prms.o << endl << "initParms.tau = " << prms.tau << endl << "initParms.uM = " << prms.uM << endl << "initParms.Mg = " << prms.Mg << endl << "initParms.p = " << prms.p << endl << "initParms.lK = " << prms.lK << endl
+		<< "initParms.lKs = " << prms.lKs << endl << "initParms.lKm = " << prms.lKm << endl;
 }
 
 
@@ -324,7 +330,8 @@ double resultsWriter(string fileName, string outputFolder, pMMHres results) {
 		myfile << results.uoE.at(iter) << " " << results.uoL.at(iter) << " " << results.uP.at(iter) << " " << results.Y.at(iter) << " " << results.w.at(iter)
 			<< " " << results.n.at(iter) << " " << results.z1.at(iter) << " " << results.z2.at(iter) << " " << results.z3.at(iter) << " " << results.z4.at(iter) << " " << results.z5.at(iter) << " " << results.z6.at(iter) << " " << results.z7.at(iter) << " " << results.z8.at(iter)
 			<< " " << results.sf1.at(iter) << " " << results.sf2.at(iter) << " " << results.sf3.at(iter) << " " << results.sf4.at(iter) << " " << results.sf5.at(iter) << " " << results.sf6.at(iter) << " " << results.sf7.at(iter) << " " << results.sf8.at(iter) <<
-			" " << results.dE.at(iter) << " " << results.dL.at(iter) << " " << results.dP.at(iter) << " " << results.o.at(iter) << " " << results.tau.at(iter) << " " << results.uM.at(iter) << " " << results.Mg.at(iter) << " " << results.p.at(iter) << " " << results.lK.at(iter) << " " << results.ll.at(iter) << endl;
+			" " << results.dE.at(iter) << " " << results.dL.at(iter) << " " << results.dP.at(iter) << " " << results.o.at(iter) << " " << results.tau.at(iter) << " " << results.uM.at(iter) << " " << results.Mg.at(iter) << " " << results.p.at(iter) << " " << results.lK.at(iter) <<
+			" " << results.lKs.at(iter) << " " << results.lKm.at(iter) << " " << results.ll.at(iter) << endl;
 	}
 
 	return 0.0;

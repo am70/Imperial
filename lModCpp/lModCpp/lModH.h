@@ -44,9 +44,9 @@ double medianFnc(vector<double> vec );
 //model parameters
 struct modParms {
 	double dE = 0.150; double dL = 0.269; double dP = 1.563; double uoE = 0.034; double uoL = 0.035; double uP = 0.25; double uM = 0.096; double Y = 13.25; int S = 3;
-	int tr = 7; double sf1 = 20; double sf2 = 20; double sf3 = 20; double sf4 = 20; double sf5 = 20; double sf6 = 20; double sf7 = 20; double sf8 = 20; double dt = 0.1; double n = 50; double Emax = 93.6;
-	int E0 = 177; int L0 = 8; int P0 = 1; int M0 = 7; double z1 = 5000; double z2 = 5000; double z3 = 5000; double z4 = 5000; double z5 = 5000; double z6 = 5000; double z7 = 5000; double z8 = 5000; double B = 21.19;
-	int startTime = 0; int endTime = 2000; vector<double> rF; double w = 0.01; double sf = 20; double z = 20; int fxdPrm; double o; double Mg; double p; double tau; double lK;
+	int tr = 7; double sf1 = 20; double sf2 = 20; double sf3 = 20; double sf4 = 20; double sf5 = 20; double sf6 = 20; double sf7 = 20; double sf8 = 20; double dt = 0.25; double n = 50; double Emax = 93.6;
+	double E0 = 177; double L0 = 8; double P0 = 1; double M0 = 7; double z1 = 5000; double z2 = 5000; double z3 = 5000; double z4 = 5000; double z5 = 5000; double z6 = 5000; double z7 = 5000; double z8 = 5000; double B = 21.19;
+	int startTime = 0; int endTime = 2000; vector<double> rF; double w = 0.01; double sf = 20; double z = 20; int fxdPrm; double o; double Mg; double p; double tau; double lK; double lKs; double lKm;
 };
 
 //obs dat data struct
@@ -68,14 +68,14 @@ struct obsDatX {
 double nBgP(double k, double n, double p);
 
 //vector<int> txtReader(string file);
-vector<tuple<int, int, int, int, double>> normalise(vector<tuple<int, int, int, int, double>> particles, double llSum);
-vector<tuple<int, int, int, int, double>> rSamp(vector<std::tuple<int, int, int, int, double>>& samp);
+vector<tuple<double, double, double, double, double>> normalise(vector<tuple<double, double, double, double, double>> particles, double llSum);
+vector<tuple<double, double, double, double, double>> rSamp(vector<std::tuple<double, double, double, double, double>>& samp);
 int binom(int n, double p, boost::mt19937 rd);
 luint rpois(luint lambda, boost::mt19937 rd);
 double lbeta(double a, double b);
 double betaBinom(double k, double n, double p, double w);
-vector<tuple<int, int, int, int,double>> mPmod(modParms, boost::mt19937_64 rd, string dFunc);
-tuple<int, int, int, int, double> modStepFnc(modParms wp, int obsData, boost::mt19937_64 rd, string dFunc);
+vector<tuple<double, double, double, double,double>> mPmod(modParms, boost::mt19937_64 rd, string dFunc);
+tuple<double, double, double, double, double> modStepFnc(modParms wp, int obsData, boost::mt19937_64 rd, string dFunc);
 double llFunc(int particles, modParms prms, obsDatX obsDat, string dFunc);
 double dbinom(double k, double n, double p);
 double nB(double k, double n, double r, double p);
@@ -91,7 +91,7 @@ double pFilt(int n,
 );
 
 //istate
-vector<tuple<int, int, int, int, double>> iState(int N, int time, modParms iParms, string dFunc);
+vector<tuple<double, double, double, double, double>> iState(int N, int time, modParms iParms, string dFunc);
 
 //rand 0-1 generator
 double rn01(void);
@@ -131,6 +131,8 @@ struct pMMHres {
 	vector<double> p;
 	vector<double> tau;
 	vector<double> lK;
+	vector<double> lKs;
+	vector<double> lKm;
 
 	vector<double> ll;
 };

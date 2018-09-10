@@ -3,13 +3,13 @@
 boost::mt19937 rng(std::time(0));
 
 
-vector<double> rainfall_05 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf05.txt", 0.1);
-vector<double> rainfall_07 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf07.txt", 0.1);
-vector<double> rainfall_08 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf08.txt", 0.1);
-vector<double> rainfall_04 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf04.txt", 0.1);
-vector<double> rainfall_02 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf02.txt", 0.1);
-vector<double> rainfall_01 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf01.txt", 0.1);
-vector<double> rainfall_03 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf03.txt", 0.1);
+vector<double> rainfall_05 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf05.txt", 0.25);
+vector<double> rainfall_07 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf07.txt", 0.25);
+vector<double> rainfall_08 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf08.txt", 0.25);
+vector<double> rainfall_04 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf04.txt", 0.25);
+vector<double> rainfall_02 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf02.txt", 0.25);
+vector<double> rainfall_01 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf01.txt", 0.25);
+vector<double> rainfall_03 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf03.txt", 0.25);
 
 
 
@@ -104,6 +104,10 @@ modParms parmUpdt(modParms prms, string prmName, double propPrm) {
 		prms.tau = propPrm;
 	if (prmName == "lK")
 		prms.lK = propPrm;
+	if (prmName == "lKs")
+		prms.lKs = propPrm;
+	if (prmName == "lKm")
+		prms.lKm = propPrm;
 	return prms;
 }
 
@@ -124,7 +128,6 @@ double llFunc(int particles, modParms prms, obsDatX obsDat, string dFunc) {
 			prms.sf = pow(10, prms.sf1);
 			prms.z = pow(10, prms.z1);
 			prms.rF = rainfall_03;
-
 		}
 		else if (j == 1) {
 			oDat = obsDat.garki154;
@@ -201,26 +204,23 @@ double propPrmFunc(double sd, double parm) {
 @return sum loglikelihood for each parameter*/
 double lprior(modParms prms) {
 	double res = 0;
-	boost::math::normal_distribution<double> d1(0.035, 0.0056);//uoE
+	boost::math::normal_distribution<double> d1(0.035, 0.0046);//uoE
 	res = res + (log(pdf(d1, prms.uoE)));
-	boost::math::uniform_distribution<double> u1(0.001, 0.99);//uoE unif
-	res = res + (log(pdf(u1, prms.uoE)));
 
-	boost::math::normal_distribution<double> d2(0.035, 0.0056);//uoL
+
+	boost::math::normal_distribution<double> d2(0.035, 0.0046);//uoL
 	res = res + (log(pdf(d2, prms.uoL)));
-	boost::math::uniform_distribution<double> u2(0.001, 0.99);//uoL unif
-	res = res + (log(pdf(u2, prms.uoL)));
 
-	boost::math::normal_distribution<double> d3(0.25, 0.05);//uP
+
+	boost::math::normal_distribution<double> d3(0.25, 0.02);//uP
 	res = res + (log(pdf(d3, prms.uP)));
-	boost::math::uniform_distribution<double> u3(0.001, 0.99);//uP unif
-	res = res + (log(pdf(u3, prms.uP)));
 
-	boost::math::normal_distribution<double> uM1(0.091,0.005);//uM unif
+
+	boost::math::normal_distribution<double> uM1(0.091,0.002);//uM 
 	res = res + (log(pdf(uM1, prms.uM)));
 
 
-	boost::math::normal_distribution<double> d4(13.06, 4);//Y
+	boost::math::normal_distribution<double> d4(13.06, 2);//Y
 	res = res + (log(pdf(d4, prms.Y)));
 
 	boost::math::uniform_distribution<double> d4x(0.1, 70);//Y
@@ -244,8 +244,8 @@ double lprior(modParms prms) {
 	res = res + (log(pdf(u64, prms.z4)));
 	res = res + (log(pdf(u65, prms.z5)));
 	res = res + (log(pdf(u66, prms.z6)));
-	res = res + (log(pdf(u65, prms.z7)));
-	res = res + (log(pdf(u66, prms.z8)));
+	res = res + (log(pdf(u67, prms.z7)));
+	res = res + (log(pdf(u68, prms.z8)));
 
 
 	boost::math::uniform_distribution<double> u71(1, 10);//sf1 unif
@@ -268,32 +268,32 @@ double lprior(modParms prms) {
 
 	//dE = 0.15, dL = 0.269, dP = 1.563
 
-	boost::math::uniform_distribution<double> u8(0.01, 40);//n unif
+	boost::math::uniform_distribution<double> u8(1, 20);//n unif
 	res = res + (log(pdf(u8, prms.n)));
 
-	boost::math::normal_distribution<double> d5(0.150602, 0.04);//dE
+	boost::math::normal_distribution<double> d5(0.150602, 0.02);//dE
 	res = res + (log(pdf(d5, prms.dE)));
 
-	boost::math::normal_distribution<double> d6(0.268812, 0.06);//dL
+	boost::math::normal_distribution<double> d6(0.268812, 0.025);//dL
 	res = res + (log(pdf(d6, prms.dL)));
 
-	boost::math::normal_distribution<double> d7(1, 0.1);//dP
+	boost::math::normal_distribution<double> d7(1, 0.01);//dP
 	res = res + (log(pdf(d7, prms.dP)));
 
-	boost::math::normal_distribution<double> dtau(7, 1.5);//tau
-	res = res + (log(pdf(dtau, rint(prms.tau))));
+	boost::math::normal_distribution<double> dtau(7, 1);//tau
+	res = res + (log(pdf(dtau, round(prms.tau))));
 
 
 	boost::math::uniform_distribution<double> d8(0.001,20);//o
 	res = res + (log(pdf(d8, prms.o)));
 
 
-	boost::math::uniform_distribution<double> mm(1, 10);//mg
+	boost::math::uniform_distribution<double> mm(1, 8);//mg
 	res = res + (log(pdf(mm, prms.Mg)));
 
 
-	boost::math::uniform_distribution<double> lk(0.0000001, 1);//mg
-	res = res + (log(pdf(lk, prms.lK)));
+	//boost::math::uniform_distribution<double> lk(0.0000001, 1);//mg
+	//res = res + (log(pdf(lk, prms.lK)));
 
 	return(res);
 }
@@ -379,7 +379,7 @@ pMMHres pMMHSampler(
 				cout << " uoE = " << prms.uoE << " uoL = " << prms.uoL << " uP = " << prms.uP << " uM = " << prms.uM << " Y = " << prms.Y << " w = " << prms.w << " n = " << prms.n << " z1 = " << prms.z1 << endl
 					<< " z2 = " << prms.z2 << " z3 = " << prms.z3 << " z4 = " << prms.z4 << " z5 = " << prms.z5 << " z6 = " << prms.z6 << " z7 = " << prms.z7 << " z8 = " << prms.z8
 					<< " sf1 = " << prms.sf1 << " sf2 = " << prms.sf2 << " sf3 = " << prms.sf3 << " sf4 = " << prms.sf4 << " sf5 = " << prms.sf5 << " sf6 = " << prms.sf6 << " sf7 = " << prms.sf7 << " sf8 = " << prms.sf8
-					<< "dE = " << prms.dE << " dL = " << prms.dL << " dP = " << prms.dP << " o = " << prms.o << " Mg = " << prms.Mg << " p = " << prms.p << " tau = " << prms.tau << " lK = " << prms.lK << endl;
+					<< "dE = " << prms.dE << " dL = " << prms.dL << " dP = " << prms.dP << " o = " << prms.o << " Mg = " << prms.Mg << " p = " << prms.p << " tau = " << prms.tau << " lK = " << prms.lK << " lKs = " << prms.lKs << " lKm = " << prms.lKm << endl;
 				cout << "||---------aratio--------||" << endl;
 
 
@@ -396,7 +396,6 @@ pMMHres pMMHSampler(
 				}
 				cout << endl << "||-----------------------||" << endl;
 			}
-
 
 			/*ofstream myfile;
 			myfile.open("Q:\\test.csv");
@@ -474,9 +473,21 @@ pMMHres pMMHSampler(
 				results.p.emplace_back(prms.p);
 				results.tau.emplace_back(prms.tau);
 				results.lK.emplace_back(prms.lK);
+				results.lKs.emplace_back(prms.lKs);
+				results.lKm.emplace_back(prms.lKm);
 
 
 				results.ll.emplace_back(llCur);
+
+				if ((monitoring = true && iter % (tell+5000) == 0)) {
+
+					string medFile = "\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\";
+					medFile.append(dFunc);
+					medFile.append("nTestLowTau.txt");
+					ofstream myfile;
+					myfile.open(medFile);
+					myfile << "current n median = " << medianFnc(results.n)<<" iteration = "<< iter;
+				}
 			}
 
 			parmNum++;
@@ -494,7 +505,6 @@ pMMHres pMMHSampler(
 				parmNum = 0;
 			}
 			parmIter[parmNum]++;
-
 		}
 
 	}

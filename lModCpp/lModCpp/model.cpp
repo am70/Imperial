@@ -1,6 +1,6 @@
 #include "lModH.h"
 
-vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937_64 rd, string dFunc) {
+vector<tuple<double, double, double, double,double>> mPmod(modParms parmsx, boost::mt19937_64 rd, string dFunc) {
 
 	int t = parmsx.startTime;
 	int time = parmsx.endTime;
@@ -40,26 +40,30 @@ vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937_6
 	double uEn;
 	double uLn;
 	double lK = parmsx.lK;
+	double lKs = parmsx.lKs;
+	double lKm = parmsx.lKm;
+
 	vector<double> rF = parmsx.rF;
-	vector<tuple<int, int, int, int,double>> r;
+	vector<tuple<double, double, double, double,double>> r;
 
 
 	while (t < time) {
 
 		if (t <= trx) {
 			rFsum = std::accumulate(rF.begin(), rF.begin() + (t-1) , 0.0);
-			K = ((sf*((1 / trx)*rFsum)));
+			K = ((sf*(1 / (trx*(1 - exp(-time / trx))))*rFsum));
 		}
 		else {
 			rFsum = std::accumulate(rF.begin() + ((t-1) - trx), rF.begin() + (t-1), 0.0);//t-1 at begining as c++ starts on 0
-			K =  ((sf*((1 / trx)*rFsum)));
+			K = ((sf*(1 / (trx*(1 - exp(-time / trx))))*rFsum));
 		}
-
-		// K = K+-lK*pow(K,2);
+		// K = K+lK*pow(K,2);
+		//K = lK / (1 + exp(-lKs * (K - lKm)));
+		//K = K / (1 + pow((lK / lKs), -lKm));
 
 
 		//((sf*(1 / (trx*(1 - exp(-time / trx))))*rFsum)); exp rainfall carrying cap
-
+		//((sf*((1 / trx)*rFsum))) non exp carrying cap
 	
 	
 		if (dFunc == "powerNoClumped" || dFunc == "linearNoClumped" || dFunc == "powerClumped" || dFunc == "linearClumped" || dFunc == "logisticClumped"|| dFunc == "logisticNoClumped") {
@@ -69,6 +73,7 @@ vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937_6
 			 uLn = uoL * (1 + (Y*pow(((n) / (K)), o)));
 		}
 		else {
+
 			uE = uoE * exp(((E + L) / (K)));
 			uL = uoL * exp(Y*(((E + L) / (K))));
 			 uEn = uoE * exp(((n) / (K)));
@@ -83,38 +88,38 @@ vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937_6
 			uE = 0;
 
 			if ((dE + uE)*dt < 1) {
-				boost::binomial_distribution<int> distributionBe(E, (dE + uE)*dt);
+				boost::binomial_distribution<int> distributionBe(round(E), (dE + uE)*dt);
 				Be = distributionBe(rd);
 			}
 			else {
-				boost::binomial_distribution<int> distributionBe(E, 1);
+				boost::binomial_distribution<int> distributionBe(round(E), 1);
 				Be = distributionBe(rd);
 			}
 		
 		
 	
 			if ((dL + uL)*dt < 1) {
-				boost::binomial_distribution<int> distributionBl(L, (dL + uL)*dt);
+				boost::binomial_distribution<int> distributionBl(round(L), (dL + uL)*dt);
 				Bl = distributionBl(rd);
 			}
 			else {
-				boost::binomial_distribution<int> distributionBl(L,1);
+				boost::binomial_distribution<int> distributionBl(round(L),1);
 				Bl = distributionBl(rd);
 			}
 
 
 			if ((dP + uP)*dt < 1) {
-				boost::binomial_distribution<int> distributionBp(P, (dP + uP)*dt);
+				boost::binomial_distribution<int> distributionBp(round(P), (dP + uP)*dt);
 				Bp = distributionBp(rd);
 			}
 			else {
-				boost::binomial_distribution<int> distributionBp(P, 1);
+				boost::binomial_distribution<int> distributionBp(round(P), 1);
 				Bp = distributionBp(rd);
 			}
 		
 	
 			if (M >= 1) {
-				boost::binomial_distribution<int> distributionBm(M, uM*dt);
+				boost::binomial_distribution<int> distributionBm(round(M), uM*dt);
 				Bm = distributionBm(rd);
 			}
 			else Bm = 0;
@@ -122,7 +127,7 @@ vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937_6
 
 			if (dFunc == "expClumped"|| dFunc == "linearClumped"|| dFunc == "powerClumped" || dFunc == "logisticClumped") {
 				if (M >= 1) {
-					boost::binomial_distribution<int> distributionNt(M, (dt / S));
+					boost::binomial_distribution<int> distributionNt(round(M), (dt / S));
 					nt = distributionNt(rd);
 				
 				}
@@ -130,26 +135,34 @@ vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937_6
 
 				if (n*nt > 0) {
 					boost::poisson_distribution<long unsigned int> distributionRp(n*nt);
-					E = round(E - Be + distributionRp(rd));
+					E = (E - Be + distributionRp(rd));
 				}
-				else E = round(E - Be);
+				else E = (E - Be);
 			}
-			else E = round(E - Be + M * (n*dt));
+
+			else {
+				if (M * (n*dt) > 0) {
+				//	boost::poisson_distribution<long unsigned int> distributionRp2(M * (n*dt));
+					E = (E - Be + M * (n*dt));
+				}
+				else E = (E - Be);
+				
+			}
 
 
 		if (Be >= 1) {
 			boost::binomial_distribution<int> distributionL(Be, (dE / (uE + dE)));
-			L = round(L - Bl + distributionL(rd));
+			L = (L - Bl + distributionL(rd));
 		}
 		else 
-			L = round(L - Bl);
+			L = (L - Bl);
 
 		if (Bl >= 1) {
 			boost::binomial_distribution<int> distributionP(Bl, (dL / (uL + dL)));
-			P = round(P - Bp + distributionP(rd));
+			P = (P - Bp + distributionP(rd));
 		}
 		else 
-			P = round(P - Bp);
+			P = (P - Bp);
 
 		if (Bp >= 1) {
 			boost::binomial_distribution<int> distributionM(Bp, (dP / (uP + dP)));
@@ -159,15 +172,15 @@ vector<tuple<int, int, int, int,double>> mPmod(modParms parmsx, boost::mt19937_6
 			mRan = 0; 
 
 		if (Mg > 0) {
-			boost::poisson_distribution<long unsigned int> distributionRp2(Mg);
-			M = round(M + (0.5*mRan) - Bm + distributionRp2(rd));
+			boost::poisson_distribution<long unsigned int> distributionRpMG(Mg);
+			M = (M + (0.5*mRan) - Bm + distributionRpMG(rd));
 		}
 		
 		else 
-			M = round(M + (0.5*mRan) - Bm);
+			M = (M + (0.5*mRan) - Bm);
 
-		if (M < 1)
-			M = 1;
+		//if (M < 1)
+		//	M = 1;
 
 		if (dFunc == "expClumped" || dFunc == "linearClumped" || dFunc == "powerClumped" || dFunc == "logisticClumped") {
 			rEff = 0.5*((n) / (exp(uM*S) - 1))*(1 / (1 + uE / dE))*(1 / (1 + uL / dL))*(1 / (1 + (uP) / dP));
