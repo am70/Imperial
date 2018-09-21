@@ -1,6 +1,5 @@
 #include "lModH.h"
 boost::mt19937 mrand(std::time(0));
-double inf = std::numeric_limits<double>::infinity();
 double m_pi = 3.14159265358979323846;
 
 
@@ -392,7 +391,7 @@ double pFilt(int n,
 			wp.lKm = prms.lKm;
 
 
-			if (dFunc == "expNoClumped" || dFunc == "linearNoClumped" || dFunc == "expClumped" || dFunc == "linearClumped")
+			if (dFunc == "expNoClumped" || dFunc == "linearNoClumped" || dFunc == "expClumped" || dFunc == "expNoClumped")
 				wp.o = 1;
 			else
 				wp.o = prms.o;

@@ -39,8 +39,8 @@ vector<tuple<double, double, double, double,double>> mPmod(modParms parmsx, boos
 	double Mg = parmsx.Mg;
 	double uEn;
 	double uLn;
-	double lK = parmsx.lK;
-	double lKs = parmsx.lKs;
+	double lK = pow(10,parmsx.lK);
+	double lKs = pow(10,parmsx.lKs);
 	double lKm = parmsx.lKm;
 
 	vector<double> rF = parmsx.rF;
@@ -48,18 +48,17 @@ vector<tuple<double, double, double, double,double>> mPmod(modParms parmsx, boos
 
 
 	while (t < time) {
-
 		if (t <= trx) {
-			rFsum = std::accumulate(rF.begin(), rF.begin() + (t-1) , 0.0);
-			K = ((sf*(1 / (trx*(1 - exp(-time / trx))))*rFsum));
+			rFsum = std::accumulate(rF.begin(), rF.begin() + (t - 1), 0.0);
+			K = ((sf*((1 / trx)*rFsum)));
 		}
 		else {
-			rFsum = std::accumulate(rF.begin() + ((t-1) - trx), rF.begin() + (t-1), 0.0);//t-1 at begining as c++ starts on 0
-			K = ((sf*(1 / (trx*(1 - exp(-time / trx))))*rFsum));
+			rFsum = std::accumulate(rF.begin() + ((t - 1) - trx), rF.begin() + (t - 1), 0.0);//t-1 at begining as c++ starts on 0
+			K = ((sf*((1 / trx)*rFsum)));
 		}
 		// K = K+lK*pow(K,2);
 		//K = lK / (1 + exp(-lKs * (K - lKm)));
-		//K = K / (1 + pow((lK / lKs), -lKm));
+		K = lK / (1 + pow((K / lKs), -lKm));
 
 
 		//((sf*(1 / (trx*(1 - exp(-time / trx))))*rFsum)); exp rainfall carrying cap
