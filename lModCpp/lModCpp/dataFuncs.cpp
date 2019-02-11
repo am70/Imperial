@@ -181,6 +181,9 @@ void pFitFunc(int particles, pMMHres results, obsDatX obsDat, modParms prms, str
 	vector<double> rainfall_02 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf02.txt", prms.dt);
 	vector<double> rainfall_01 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf01.txt", prms.dt);
 	vector<double> rainfall_03 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf03.txt", prms.dt);
+	//vector<double> rainfall_01_2 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf01_2.txt", prms.dt);
+	//vector<double> rainfall_02_2 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf02_2.txt", prms.dt);
+
 
 
 	prms.uoE = medianFnc(results.uoE);
@@ -266,24 +269,24 @@ void pFitFunc(int particles, pMMHres results, obsDatX obsDat, modParms prms, str
 			oDat = obsDat.garki801_2;
 			prms.sf = pow(10, prms.sf6);
 			prms.z = pow(10, prms.z6);
-			prms.rF = rainfall_01;
-			outputFile.append("\\garki801_2");
+			prms.rF = rainfall_01_2;
+			outputFile.append("\\garki801");
 		}
 		else if (j == 6) {
 			outputFile = orgFile;
 			oDat = obsDat.garki802_2;
 			prms.sf = pow(10, prms.sf7);
 			prms.z = pow(10, prms.z7);
-			prms.rF = rainfall_01;
-			outputFile.append("\\garki802_2");
+			prms.rF = rainfall_01_2;
+			outputFile.append("\\garki802");
 		}
 		else if (j == 7) {
 			outputFile = orgFile;
 			oDat = obsDat.garki553_2;
 			prms.sf = pow(10, prms.sf8);
 			prms.z = pow(10, prms.z8);
-			prms.rF = rainfall_02;
-			outputFile.append("\\garki553_2");
+			prms.rF = rainfall_02_2;
+			outputFile.append("\\garki553");
 		}
 
 		//run particle filter

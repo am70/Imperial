@@ -11,6 +11,8 @@ vector<double> rainfall_04 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\
 vector<double> rainfall_02 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf02.txt", 0.25);
 vector<double> rainfall_01 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf01.txt", 0.25);
 vector<double> rainfall_03 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf03.txt", 0.25);
+//vector<double> rainfall_01_2 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf01_2.txt", 0.25);
+//vector<double> rainfall_02_2 = txtReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\Data\\rf02_2.txt", 0.25);
 
 
 
@@ -221,7 +223,7 @@ double lprior(modParms prms, string dFunc) {
 	res = res + (log(pdf(uM1, prms.uM)));
 
 
-	boost::math::normal_distribution<double> d4(13.06, 3);//Y
+	boost::math::normal_distribution<double> d4(13.06, 2);//Y
 	res = res + (log(pdf(d4, prms.Y)));
 
 	boost::math::uniform_distribution<double> d4x(0.1, 70);//Y
@@ -265,6 +267,10 @@ double lprior(modParms prms, string dFunc) {
 		if ((log(pdf(u76, prms.sf6))) == -inf) res = -inf; else res = res;
 		if ((log(pdf(u77, prms.sf7))) == -inf) res = -inf; else res = res;
 		if ((log(pdf(u78, prms.sf8))) == -inf) res = -inf; else res = res;
+		boost::math::uniform_distribution<double> u8(1, 60);//n unif
+		if ((log(pdf(u8, prms.n))) == -inf) res = -inf; else res = res;
+		boost::math::uniform_distribution<double> d8(0.001, 5);//o
+		if ((log(pdf(d8, prms.o))) == -inf) res = -inf; else res = res;
 	}
 	if (dFunc == "powerNoClumped") {
 		boost::math::uniform_distribution<double> u71(1, 4.5);//sf1 unif
@@ -283,6 +289,10 @@ double lprior(modParms prms, string dFunc) {
 		if ((log(pdf(u76, prms.sf6))) == -inf) res = -inf; else res = res;
 		if ((log(pdf(u77, prms.sf7))) == -inf) res = -inf; else res = res;
 		if ((log(pdf(u78, prms.sf8))) == -inf) res = -inf; else res = res;
+		boost::math::uniform_distribution<double> u8(1, 60);//n unif
+		if ((log(pdf(u8, prms.n))) == -inf) res = -inf; else res = res;
+		boost::math::uniform_distribution<double> d8(0.001, 5);//o
+		if ((log(pdf(d8, prms.o))) == -inf) res = -inf; else res = res;
 	}
 	if (dFunc == "expClumped") {
 		boost::math::uniform_distribution<double> u71(1, 10);//sf1 unif
@@ -301,6 +311,8 @@ double lprior(modParms prms, string dFunc) {
 		if ((log(pdf(u76, prms.sf6))) == -inf) res = -inf; else res = res;
 		if ((log(pdf(u77, prms.sf7))) == -inf) res = -inf; else res = res;
 		if ((log(pdf(u78, prms.sf8))) == -inf) res = -inf; else res = res;
+		boost::math::uniform_distribution<double> u8(1, 75);//n unif
+		if ((log(pdf(u8, prms.n))) == -inf) res = -inf; else res = res;
 	}
 	if (dFunc == "expNoClumped") {
 		boost::math::uniform_distribution<double> u71(1, 10);//sf1 unif
@@ -319,6 +331,8 @@ double lprior(modParms prms, string dFunc) {
 		if ((log(pdf(u76, prms.sf6))) == -inf) res = -inf; else res = res;
 		if ((log(pdf(u77, prms.sf7))) == -inf) res = -inf; else res = res;
 		if ((log(pdf(u78, prms.sf8))) == -inf) res = -inf; else res = res;
+		boost::math::uniform_distribution<double> u8(1, 75);//n unif
+		if ((log(pdf(u8, prms.n))) == -inf) res = -inf; else res = res;
 	}
 	if (dFunc == "linearClumped") {
 		boost::math::uniform_distribution<double> u71(1, 10);//sf1 unif
@@ -337,6 +351,9 @@ double lprior(modParms prms, string dFunc) {
 		if ((log(pdf(u76, prms.sf6))) == -inf) res = -inf; else res = res;
 		if ((log(pdf(u77, prms.sf7))) == -inf) res = -inf; else res = res;
 		if ((log(pdf(u78, prms.sf8))) == -inf) res = -inf; else res = res;
+		boost::math::uniform_distribution<double> u8(1, 60);//n unif
+		if ((log(pdf(u8, prms.n))) == -inf) res = -inf; else res = res;
+
 	}
 	if (dFunc == "linearNoClumped") {
 		boost::math::uniform_distribution<double> u71(1, 10);//sf1 unif
@@ -355,14 +372,15 @@ double lprior(modParms prms, string dFunc) {
 		if ((log(pdf(u76, prms.sf6))) == -inf) res = -inf; else res = res;
 		if ((log(pdf(u77, prms.sf7))) == -inf) res = -inf; else res = res;
 		if ((log(pdf(u78, prms.sf8))) == -inf) res = -inf; else res = res;
+		boost::math::uniform_distribution<double> u8(1, 60);//n unif
+		if ((log(pdf(u8, prms.n))) == -inf) res = -inf; else res = res;
 	}
 
 
 
 	//dE = 0.15, dL = 0.269, dP = 1.563
 
-	boost::math::uniform_distribution<double> u8(1, 60);//n unif
-	res = res + (log(pdf(u8, prms.n)));
+	
 
 	boost::math::normal_distribution<double> d5(0.150602, 0.03);//dE
 	res = res + (log(pdf(d5, prms.dE)));
@@ -376,8 +394,7 @@ double lprior(modParms prms, string dFunc) {
 	boost::math::normal_distribution<double> dtau(7, 2.5);//tau
 	res = res + (log(pdf(dtau, round(prms.tau))));
 
-	boost::math::uniform_distribution<double> d8(0.001,20);//o
-	res = res + (log(pdf(d8, prms.o)));
+
 
 
 	boost::math::uniform_distribution<double> mm(1, 8);//mg
@@ -578,12 +595,12 @@ pMMHres pMMHSampler(
 
 				if ((monitoring = true && iter % (tell+5000) == 0)) {
 
-					string medFile = "\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\highPriorTest";
+					string medFile = "\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\TestN";
 					medFile.append(dFunc);
 					medFile.append("resUpdates.txt");
 					ofstream myfile;
 					myfile.open(medFile);
-					myfile << "current n median = " << medianFnc(results.n) << endl << "current ll = " << medianFnc(results.ll) << endl <<" iteration = "<< iter;
+					myfile << "current o median = " << medianFnc(results.o) << endl << "current n median = " << medianFnc(results.n) << endl << "current ll = " << medianFnc(results.ll) << endl <<" iteration = "<< iter;
 
 				}
 			}

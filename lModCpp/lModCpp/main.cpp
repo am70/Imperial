@@ -48,13 +48,13 @@ int main()
 			0.001, 0.001, 0.01,0.01,1,0.0001,
 			1, 0.1, 0.1,0.1,0.1,0.1,0.1,0.1,0.1,
 			0.1, 0.1, 0.1,0.1,0.1,0.1,0.1,0.1
-			,0.01,0.05,0.05,1,1,0.5,0.001,1,1,1};
+			,0.01,0.05,0.05,5,1,0.5,0.001,1,1,1};
 
 		vector<double> maxSdProps = {
 			0.05, 0.05, 0.8, 0.5,6,0.01,
 			5, 5, 5, 5,5,5,5,5,5,
-			7, 7,7,7,7,7,7,7,
-			0.1,0.1,0.1,1,1,4,0.01,5,2,1};
+			0.1, 0.1,0.1,0.1,0.1,0.1,0.1,0.1,
+			0.1,0.1,0.1,5,1,4,0.01,0,0,0};
 
 		vector<double> acptRs = {
 			0.25,0.25,0.25,0.25,0.25,0.25,
@@ -66,12 +66,12 @@ int main()
 			0,0,0,0,0,0,
 			0,0,0,0,0,0,0,0,
 			0,0,0,0,0,0,0,0,
-			0,0,0,0,0,0,0,0,0,0,0 };
+			0,0,0,0,0,0,0,0,0,0,0};
 
 
 		//Read in pMCMC options from text file to enable multiple instances to run on the cluster with differing setups
 		pmcmcOptions pmcmcOpt;
-		pmcmcOpt = optionsReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\x64\\local\\paramOptions.txt", pmcmcOpt);//read in pMCMC options
+		pmcmcOpt = optionsReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\x64\\powerNoClump\\paramOptions.txt", pmcmcOpt);//read in pMCMC options
 		string outputFolder = pmcmcOpt.outputFolder; //output folder for results
 		string dFunc = pmcmcOpt.dFunc; //Which density/egg laying functions to use: "expClumped", "linearClumped","powerClumped","expNoClumped", "linearNoClumped" or "powerNoClumped"
 
@@ -91,7 +91,7 @@ int main()
 			fitPrms,//tuple of initial parm values plus names - needed as no reflection...
 			maxSdProps,//max sd for each parameter proposal in tuner
 			pmcmcOpt.iterations,//iterations
-			pmcmcOpt.particles,//particles
+			100,//particles
 			pmcmcOpt.nburn,//nburn 
 			pmcmcOpt.monitoring,//monitoring
 			pmcmcOpt.startAdapt,//start adapt

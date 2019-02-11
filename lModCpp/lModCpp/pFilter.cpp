@@ -44,17 +44,30 @@ vector<tuple<double, double, double, double, double>> iState(int N, int time, mo
 		if (dFunc == "powerNoClumped" || dFunc == "expNoClumped" || dFunc == "linearNoClumped" || dFunc == "logisticNoClumped") n = iParms.n * (exp(S*uM) - 1) / uM;
 		
 
-		if (t <= trx) {
-			rFsum = std::accumulate(rF.begin(), rF.begin() + (t - 1), 0.0);
-			K = ((sf*(1 / (trx*(1 - exp(-time / trx))))*rFsum));
-		}
-		else {
-			rFsum = std::accumulate(rF.begin() + ((t - 1) - trx), rF.begin() + (t - 1), 0.0);//t-1 at begining as c++ starts on 0
-			K = ((sf*(1 / (trx*(1 - exp(-time / trx))))*rFsum));
-		}
+
+	
 
 		//exp carrying cap
 		if (dFunc == "expNoClumped" || dFunc == "expClumped") {
+			double calc;
+
+	/*		for (int r = 0; r <= t; r++) {
+				calc = (-(t - r)) / trx;
+				rFsum = rFsum + exp(calc) * rF[r];
+			}
+
+			K = sf * (1.0 / (trx* (1 - exp(-(t + 1) / trx)))) * rFsum;*/
+
+			if (t <= trx) {
+				rFsum = std::accumulate(rF.begin(), rF.begin() + (t - 1), 0.0);
+				K = ((sf*((1 / trx)*rFsum)));
+			}
+			else {
+				rFsum = std::accumulate(rF.begin() + ((t - 1) - trx), rF.begin() + (t - 1), 0.0);//t-1 at begining as c++ starts on 0
+				K = ((sf*((1 / trx)*rFsum)));
+			}
+
+
 			a = (0.5 * dL*dP) / (uM*(dP + uP));
 
 			uE = UoE * exp((z / K));
@@ -64,6 +77,18 @@ vector<tuple<double, double, double, double, double>> iState(int N, int time, mo
 			M = round((0.5 * dL*dP*L) / (uM*(dP + uP)));
 			P = round((2 * uM*M) / dP);
 		}
+		//else if (dFunc == "linearNoClumped" || dFunc == "linearClumped") {
+		//	//linear carrying cap
+		//	if (dFunc == "linearClumped") n = n  / (exp(S*uM) - 1)*uM;
+		//	dE = 1 / dE;
+		//	dL = 1 / dL;
+		//	dP = 1 / dP;
+		//	M = z;
+		//	double W = -0.5*(y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE) + sqrt(0.25*pow((y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE), 2) + y * ((n*UoL*dE) / (2 * UoE*uM*dL*(1 + dP * uP))));
+		//	E = rint(2 * W*uM*dL*(1 + dP * uP)*M);
+		//	L = rint(2 * uM*dL*(1 + dP * uP)*M);
+		//	P = rint(2 * dP*uM*M);
+		//}
 		else {
 			//power carrying cap
 			a = ((n / S) * dP * dL) / ((2 * uM) * (uP + dP));
@@ -77,15 +102,7 @@ vector<tuple<double, double, double, double, double>> iState(int N, int time, mo
 			M = round((dP * P) / (2 * uM));
 		}
 
-		//linear carrying cap
-		//dE = 1 / dE;
-		//dL = 1 / dL;
-		//dP = 1 / dP;
-		//M = z;
-		//double W = -0.5*(y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE) + sqrt(0.25*pow((y*(UoL / UoE) - (dE / dL) + (y - 1)*UoL*dE), 2) + y*((B*UoL*dE) / (2 * UoE*uM*dL*(1 + dP*uP))));
-		//E = rint(2*W*uM*dL*(1+dP*uP)*M);
-		//L = rint(2 * uM*dL*(1 + dP*uP)*M);
-		//P = rint(2 * dP*uM*M);
+
 
 		if (Mg > 1) {
 			boost::poisson_distribution<long unsigned int> distributionRp2(round(Mg));

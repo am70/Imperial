@@ -1,5 +1,6 @@
 #include "lModH.h"
 
+
 vector<tuple<double, double, double, double,double>> mPmod(modParms parmsx, boost::mt19937_64 rd, string dFunc) {
 
 	int t = parmsx.startTime;
@@ -16,7 +17,6 @@ vector<tuple<double, double, double, double,double>> mPmod(modParms parmsx, boos
 	double K;
 	double trx = round(parmsx.tau / parmsx.dt);
 	double dt = parmsx.dt;
-	double rFsum;
 	double  uoE = parmsx.uoE;
 	double  uoL = parmsx.uoL;
 	double  Y = parmsx.Y;
@@ -42,23 +42,55 @@ vector<tuple<double, double, double, double,double>> mPmod(modParms parmsx, boos
 	double lK = pow(10,parmsx.lK);
 	double lKs = pow(10,parmsx.lKs);
 	double lKm = parmsx.lKm;
+	double rFsum = 0.0;
+
 
 	vector<double> rF = parmsx.rF;
 	vector<tuple<double, double, double, double,double>> r;
+	vector<double> rFsum2;
 
+	for (int r = 0; r <= time; r++) {
+		rFsum2.emplace_back(exp((-(time - r)) / trx));
+	}
 
 	while (t < time) {
-		if (t <= trx) {
-			rFsum = std::accumulate(rF.begin(), rF.begin() + (t - 1), 0.0);
-			K = ((sf*((1 / trx)*rFsum)));
-		}
-		else {
-			rFsum = std::accumulate(rF.begin() + ((t - 1) - trx), rF.begin() + (t - 1), 0.0);//t-1 at begining as c++ starts on 0
-			K = ((sf*((1 / trx)*rFsum)));
-		}
+
+		
+			//rFsum = std::accumulate(rF.begin(), rF.begin() + (t-1) , 0.0);
+			//K = ((sf*(1 / (trx*(1 - exp(-time / trx))))*rFsum));
+
+			//if (t <= trx) {
+			//	rFsum = std::accumulate(rF.begin(), rF.begin() + (t - 1), 0.0);
+			//	K = ((sf*((1 / trx)*rFsum)));
+			//}
+			//else {
+			//	rFsum = std::accumulate(rF.begin() + ((t - 1) - trx), rF.begin() + (t - 1), 0.0);//t-1 at begining as c++ starts on 0
+			//	K = ((sf*((1 / trx)*rFsum)));
+			//}
+
+			//if (t <= trx) {
+			//	rFsum = std::accumulate(rF.begin(), rF.begin() + (t - 1), 0.0);
+			//	K = ((sf*(2 / (pow(trx,2))*rFsum*t+trx)));
+			//}
+			//else {
+			//	rFsum = std::accumulate(rF.begin() + ((t - 1) - trx), rF.begin() + (t - 1), 0.0);//t-1 at begining as c++ starts on 0
+			//	K = ((sf*(2 / (pow(trx, 2))*rFsum*t + trx)));
+			//}
+
+
+			for (int r = 0; r <= t; r++) {
+				 rFsum = rFsum +(rFsum2[time-t+r] *  rF[r]);
+			}
+		
+
+		K = sf * (1.0 / (trx* (1 - exp(-(t + 1) / trx)))) * rFsum;
+		//	= rFsum + exp(calc) * rF[r];
+
+
+	
 		// K = K+lK*pow(K,2);
 		//K = lK / (1 + exp(-lKs * (K - lKm)));
-		K = lK / (1 + pow((K / lKs), -lKm));
+		//K = lK / (1 + pow((K / lKs), -lKm));
 
 
 		//((sf*(1 / (trx*(1 - exp(-time / trx))))*rFsum)); exp rainfall carrying cap
@@ -180,6 +212,13 @@ vector<tuple<double, double, double, double,double>> mPmod(modParms parmsx, boos
 
 		//if (M < 1)
 		//	M = 1;
+
+		//round M up or down 50% of the time
+		//if (round(M) - M == 0.5){
+			//boost::binomial_distribution<int> distributionMtss(1, 0.5);
+			//int Mtss = distributionMtss(rd);
+			//if (Mtss == 1) M = M - 0.5; else M = round(M);
+		//}
 
 		if (dFunc == "expClumped" || dFunc == "linearClumped" || dFunc == "powerClumped" || dFunc == "logisticClumped") {
 			rEff = 0.5*((n) / (exp(uM*S) - 1))*(1 / (1 + uE / dE))*(1 / (1 + uL / dL))*(1 / (1 + (uP) / dP));
