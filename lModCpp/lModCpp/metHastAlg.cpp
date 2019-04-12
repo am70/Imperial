@@ -215,15 +215,15 @@ double lprior(modParms prms, string dFunc) {
 	res = res + (log(pdf(d2, prms.uoL)));
 
 
-	boost::math::normal_distribution<double> d3(0.25, 0.02);//uP
+	boost::math::normal_distribution<double> d3(0.25, 0.035);//uP
 	res = res + (log(pdf(d3, prms.uP)));
 
 
-	boost::math::normal_distribution<double> uM1(0.091,0.004);//uM 
+	boost::math::normal_distribution<double> uM1(0.091,0.005);//uM 
 	res = res + (log(pdf(uM1, prms.uM)));
 
 
-	boost::math::normal_distribution<double> d4(13.06, 2);//Y
+	boost::math::normal_distribution<double> d4(13.06, 2.5);//Y
 	res = res + (log(pdf(d4, prms.Y)));
 
 	boost::math::uniform_distribution<double> d4x(0.1, 70);//Y
@@ -251,14 +251,14 @@ double lprior(modParms prms, string dFunc) {
 	res = res + (log(pdf(u68, prms.z8)));
 
 	if (dFunc == "powerClumped") {
-		boost::math::uniform_distribution<double> u71(3, 7);//sf1 unif
-		boost::math::uniform_distribution<double> u72(1.5, 7);//sf2 unif
-		boost::math::uniform_distribution<double> u73(1, 7);//sf3 unif
-		boost::math::uniform_distribution<double> u74(1.5, 7);//sf4 unif
-		boost::math::uniform_distribution<double> u75(1, 7);//sf5 unif
-		boost::math::uniform_distribution<double> u76(1, 7);//sf6 unif
-		boost::math::uniform_distribution<double> u77(1.5, 7);//sf7 unif
-		boost::math::uniform_distribution<double> u78(1, 7);//sf8 unif
+		boost::math::uniform_distribution<double> u71(1,10);//sf1 unif
+		boost::math::uniform_distribution<double> u72(1, 10);//sf2 unif
+		boost::math::uniform_distribution<double> u73(1, 10);//sf3 unif
+		boost::math::uniform_distribution<double> u74(1, 10);//sf4 unif
+		boost::math::uniform_distribution<double> u75(1, 10);//sf5 unif
+		boost::math::uniform_distribution<double> u76(1, 10);//sf6 unif
+		boost::math::uniform_distribution<double> u77(1, 10);//sf7 unif
+		boost::math::uniform_distribution<double> u78(1, 10);//sf8 unif
 		if ((log(pdf(u71, prms.sf1))) == -inf) res = -inf; else res = res;
 		if ((log(pdf(u72, prms.sf2))) == -inf) res = -inf; else res = res;
 		if ((log(pdf(u73, prms.sf3))) == -inf) res = -inf; else res = res;
@@ -273,14 +273,14 @@ double lprior(modParms prms, string dFunc) {
 		if ((log(pdf(d8, prms.o))) == -inf) res = -inf; else res = res;
 	}
 	if (dFunc == "powerNoClumped") {
-		boost::math::uniform_distribution<double> u71(1, 4.5);//sf1 unif
-		boost::math::uniform_distribution<double> u72(1, 3.5);//sf2 unif
-		boost::math::uniform_distribution<double> u73(1, 4.5);//sf3 unif
-		boost::math::uniform_distribution<double> u74(1, 3.5);//sf4 unif
-		boost::math::uniform_distribution<double> u75(1, 4.5);//sf5 unif
-		boost::math::uniform_distribution<double> u76(1, 3.5);//sf6 unif
-		boost::math::uniform_distribution<double> u77(1, 7);//sf7 unif
-		boost::math::uniform_distribution<double> u78(1, 6);//sf8 unif
+		boost::math::uniform_distribution<double> u71(1, 10);//sf1 unif
+		boost::math::uniform_distribution<double> u72(1, 10);//sf2 unif
+		boost::math::uniform_distribution<double> u73(1, 10);//sf3 unif
+		boost::math::uniform_distribution<double> u74(1, 10);//sf4 unif
+		boost::math::uniform_distribution<double> u75(1, 10);//sf5 unif
+		boost::math::uniform_distribution<double> u76(1, 10);//sf6 unif
+		boost::math::uniform_distribution<double> u77(1, 10);//sf7 unif
+		boost::math::uniform_distribution<double> u78(1, 10);//sf8 unif
 		if ((log(pdf(u71, prms.sf1))) == -inf) res = -inf; else res = res;
 		if ((log(pdf(u72, prms.sf2))) == -inf) res = -inf; else res = res;
 		if ((log(pdf(u73, prms.sf3))) == -inf) res = -inf; else res = res;
@@ -311,7 +311,7 @@ double lprior(modParms prms, string dFunc) {
 		if ((log(pdf(u76, prms.sf6))) == -inf) res = -inf; else res = res;
 		if ((log(pdf(u77, prms.sf7))) == -inf) res = -inf; else res = res;
 		if ((log(pdf(u78, prms.sf8))) == -inf) res = -inf; else res = res;
-		boost::math::uniform_distribution<double> u8(1, 75);//n unif
+		boost::math::uniform_distribution<double> u8(1, 60);//n unif
 		if ((log(pdf(u8, prms.n))) == -inf) res = -inf; else res = res;
 	}
 	if (dFunc == "expNoClumped") {
@@ -331,7 +331,7 @@ double lprior(modParms prms, string dFunc) {
 		if ((log(pdf(u76, prms.sf6))) == -inf) res = -inf; else res = res;
 		if ((log(pdf(u77, prms.sf7))) == -inf) res = -inf; else res = res;
 		if ((log(pdf(u78, prms.sf8))) == -inf) res = -inf; else res = res;
-		boost::math::uniform_distribution<double> u8(1, 75);//n unif
+		boost::math::uniform_distribution<double> u8(1, 60);//n unif
 		if ((log(pdf(u8, prms.n))) == -inf) res = -inf; else res = res;
 	}
 	if (dFunc == "linearClumped") {
@@ -376,19 +376,21 @@ double lprior(modParms prms, string dFunc) {
 		if ((log(pdf(u8, prms.n))) == -inf) res = -inf; else res = res;
 	}
 
-
-
 	//dE = 0.15, dL = 0.269, dP = 1.563
 
 	
 
-	boost::math::normal_distribution<double> d5(0.150602, 0.03);//dE
+	boost::math::normal_distribution<double> d5(0.149925, 0.03);//dE
 	res = res + (log(pdf(d5, prms.dE)));
 
-	boost::math::normal_distribution<double> d6(0.2398082, 0.03);//dL
+	boost::math::normal_distribution<double> d6(0.2398082, 0.1);//dL
 	res = res + (log(pdf(d6, prms.dL)));
 
-	boost::math::normal_distribution<double> d7(1, 0.01);//dP
+	boost::math::uniform_distribution<double> d6Uni(0.1, 0.5);//dL
+	res = res + (log(pdf(d6Uni, prms.dL)));
+
+
+	boost::math::normal_distribution<double> d7(1, 0.23);//dP
 	res = res + (log(pdf(d7, prms.dP)));
 
 	boost::math::normal_distribution<double> dtau(7, 2.5);//tau
@@ -595,13 +597,18 @@ pMMHres pMMHSampler(
 
 				if ((monitoring = true && iter % (tell+5000) == 0)) {
 
-					string medFile = "\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\TestN";
+
+					string medFile = "\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\SlackPrior4Mil";
 					medFile.append(dFunc);
 					medFile.append("resUpdates.txt");
+					double o_min_value = *std::min_element(results.o.begin(), results.o.end());
+
 					ofstream myfile;
 					myfile.open(medFile);
-					myfile << "current o median = " << medianFnc(results.o) << endl << "current n median = " << medianFnc(results.n) << endl << "current ll = " << medianFnc(results.ll) << endl <<" iteration = "<< iter;
-
+					myfile << "current dP median = " << medianFnc(results.dP) << endl << "current n median = " << medianFnc(results.n) << endl << "current uoE median = " << medianFnc(results.uoE) << endl
+						<< "current dL median = " << medianFnc(results.dL) << endl << "current dE median = " << medianFnc(results.dE) << endl << "current o minimum = " << o_min_value << endl
+						<< "current o median = " << medianFnc(results.o) << endl
+						<< "current ll = " << medianFnc(results.ll) << endl << " iteration = " << iter;
 				}
 			}
 

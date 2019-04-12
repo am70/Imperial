@@ -269,24 +269,24 @@ void pFitFunc(int particles, pMMHres results, obsDatX obsDat, modParms prms, str
 			oDat = obsDat.garki801_2;
 			prms.sf = pow(10, prms.sf6);
 			prms.z = pow(10, prms.z6);
-			prms.rF = rainfall_01_2;
-			outputFile.append("\\garki801");
+			prms.rF = rainfall_01;
+			outputFile.append("\\garki801_2");
 		}
 		else if (j == 6) {
 			outputFile = orgFile;
 			oDat = obsDat.garki802_2;
 			prms.sf = pow(10, prms.sf7);
 			prms.z = pow(10, prms.z7);
-			prms.rF = rainfall_01_2;
-			outputFile.append("\\garki802");
+			prms.rF = rainfall_01;
+			outputFile.append("\\garki802_2");
 		}
 		else if (j == 7) {
 			outputFile = orgFile;
 			oDat = obsDat.garki553_2;
 			prms.sf = pow(10, prms.sf8);
 			prms.z = pow(10, prms.z8);
-			prms.rF = rainfall_02_2;
-			outputFile.append("\\garki553");
+			prms.rF = rainfall_02;
+			outputFile.append("\\garki553_2");
 		}
 
 		//run particle filter

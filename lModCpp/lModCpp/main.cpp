@@ -71,7 +71,7 @@ int main()
 
 		//Read in pMCMC options from text file to enable multiple instances to run on the cluster with differing setups
 		pmcmcOptions pmcmcOpt;
-		pmcmcOpt = optionsReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\x64\\powerNoClump\\paramOptions.txt", pmcmcOpt);//read in pMCMC options
+		pmcmcOpt = optionsReader("\\\\qdrive.dide.ic.ac.uk\\homes\\ALM210\\Imperial\\lModCpp\\x64\\linearClumped\\paramOptions.txt", pmcmcOpt);//read in pMCMC options
 		string outputFolder = pmcmcOpt.outputFolder; //output folder for results
 		string dFunc = pmcmcOpt.dFunc; //Which density/egg laying functions to use: "expClumped", "linearClumped","powerClumped","expNoClumped", "linearNoClumped" or "powerNoClumped"
 
@@ -91,7 +91,7 @@ int main()
 			fitPrms,//tuple of initial parm values plus names - needed as no reflection...
 			maxSdProps,//max sd for each parameter proposal in tuner
 			pmcmcOpt.iterations,//iterations
-			100,//particles
+			10000,//particles
 			pmcmcOpt.nburn,//nburn 
 			pmcmcOpt.monitoring,//monitoring
 			pmcmcOpt.startAdapt,//start adapt

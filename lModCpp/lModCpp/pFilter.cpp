@@ -408,7 +408,7 @@ double pFilt(int n,
 			wp.lKm = prms.lKm;
 
 
-			if (dFunc == "expNoClumped" || dFunc == "linearNoClumped" || dFunc == "expClumped" || dFunc == "expNoClumped")
+			if (dFunc == "expNoClumped" || dFunc == "linearNoClumped" || dFunc == "linearClumped" || dFunc == "expClumped")
 				wp.o = 1;
 			else
 				wp.o = prms.o;
